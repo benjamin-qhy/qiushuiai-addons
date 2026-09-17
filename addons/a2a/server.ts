@@ -20,6 +20,7 @@ export function createA2aServer(
 ) {
   let active = 0,
     closed = false;
+  let authenticating = 0;
   const requests = new Set<AbortController>();
   const quota = new Map<string, { start: number; count: number }>();
   const idleWaiters = new Set<() => void>();
@@ -34,42 +35,7 @@ export function createA2aServer(
           path,
         );
       if (!match) return new Response("Not found", { status: 404 });
-      let principal;
-      try {
-        principal = await authenticateA2a(req, cfg, secrets);
-      } catch {
-        return new Response("Authentication unavailable", { status: 503 });
-      }
-      if (closed) return new Response("A2A stopped", { status: 503 });
-      if (!principal)
-        return new Response("Unauthorized", {
-          status: 401,
-          headers: { "WWW-Authenticate": "Bearer" },
-        });
-      const target = match[1];
-      if (!authorizeTarget(config(), principal.id, target))
-        return new Response("Not found", { status: 404 });
-      const now = Date.now(),
-        bucket = quota.get(principal.id);
-      if (!bucket || now - bucket.start >= 60000)
-        quota.set(principal.id, { start: now, count: 1 });
-      else if (++bucket.count > 120)
-        return new Response("Rate limit", {
-          status: 429,
-          headers: { "Retry-After": "60" },
-        });
-      const handler = new A2aRequestHandler(target, config, store, operations);
-      if (match[2] === "agent-card.json") {
-        if (req.method !== "GET")
-          return new Response("Method not allowed", {
-            status: 405,
-            headers: { Allow: "GET" },
-          });
-        return Response.json(AgentCard.toJSON(await handler.getAgentCard()), {
-          headers: { "Cache-Control": "private, no-store" },
-        });
-      }
-      if (active >= 16)
+      if (active >= 16 || authenticating >= 16)
         return new Response("Concurrency limit", { status: 429 });
       active++;
       const controller = new AbortController();
@@ -95,7 +61,52 @@ export function createA2aServer(
           idleWaiters.clear();
         }
       };
+      let handedOff = false;
       try {
+        let principal;
+        try {
+          authenticating++;
+          const pending = authenticateA2a(req, cfg, secrets).finally(() => {
+            authenticating--;
+          });
+          principal = await abortable(pending, controller.signal);
+        } catch {
+          return new Response("Authentication unavailable", { status: 503 });
+        }
+        if (closed) return new Response("A2A stopped", { status: 503 });
+        if (!principal)
+          return new Response("Unauthorized", {
+            status: 401,
+            headers: { "WWW-Authenticate": "Bearer" },
+          });
+        const target = match[1];
+        if (!authorizeTarget(config(), principal.id, target))
+          return new Response("Not found", { status: 404 });
+        const now = Date.now(),
+          bucket = quota.get(principal.id);
+        if (!bucket || now - bucket.start >= 60000)
+          quota.set(principal.id, { start: now, count: 1 });
+        else if (++bucket.count > 120)
+          return new Response("Rate limit", {
+            status: 429,
+            headers: { "Retry-After": "60" },
+          });
+        const handler = new A2aRequestHandler(
+          target,
+          config,
+          store,
+          operations,
+        );
+        if (match[2] === "agent-card.json") {
+          if (req.method !== "GET")
+            return new Response("Method not allowed", {
+              status: 405,
+              headers: { Allow: "GET" },
+            });
+          return Response.json(AgentCard.toJSON(await handler.getAgentCard()), {
+            headers: { "Cache-Control": "private, no-store" },
+          });
+        }
         const context = new ServerCallContext({
           user: { isAuthenticated: true, userName: principal.id },
           requestedVersion: "1.0",
@@ -161,6 +172,7 @@ export function createA2aServer(
           { highWaterMark: 0 },
         );
         if (controller.signal.aborted) onAbort();
+        handedOff = true;
         return new Response(body, {
           status: response.status,
           headers: response.headers,
@@ -170,6 +182,8 @@ export function createA2aServer(
         return new Response("A2A request failed", {
           status: controller.signal.aborted ? 504 : 500,
         });
+      } finally {
+        if (!handedOff) finish();
       }
     },
     close() {
@@ -187,4 +201,24 @@ export function createA2aServer(
         : new Promise<void>((resolve) => idleWaiters.add(resolve));
     },
   };
+}
+
+/** Bound the request wait even if an external keychain provider ignores cancellation.
+ * The authenticating counter retains its slot until the provider itself settles. */
+async function abortable<T>(
+  pending: Promise<T>,
+  signal: AbortSignal,
+): Promise<T> {
+  signal.throwIfAborted();
+  let abort: () => void = () => {};
+  const cancelled = new Promise<never>((_resolve, reject) => {
+    abort = () => reject(signal.reason ?? new Error("Request closed"));
+    signal.addEventListener("abort", abort, { once: true });
+    if (signal.aborted) abort();
+  });
+  try {
+    return await Promise.race([pending, cancelled]);
+  } finally {
+    signal.removeEventListener("abort", abort);
+  }
 }

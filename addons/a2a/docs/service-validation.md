@@ -53,19 +53,21 @@ PICLAW_E2E_DISPOSABLE=1 PICLAW_A2A_PYTHON=/tmp/a2a-python-peer/bin/python \
 ## Verified results so far
 
 - All compatibility typechecks passed.
-- Complete A2A run with all explicit companion/browser/Python cases enabled: **43 passed, 385 assertions**. No skipped A2A acceptance cases in that run.
+- Complete A2A run with all explicit companion/browser/Python cases enabled: **44 passed, 391 assertions**. No skipped A2A acceptance cases in that run.
 - Broad repository unit run (excluding duplicate standalone imports and e2e entrypoints): **550 passed, 6 explicit integration skips**. Those six cases passed in the complete A2A run.
 - Compatibility suite: **176 passed** at the preceding candidate; final strict compatibility typechecks passed.
 - 29 standalone package import tests passed.
 - Five actual-host/browser cases and the independent Python SDK case passed.
 - Seven stable acceptance scenarios in `docs/acceptance.feature` map to executable tests; no step-binding claim.
 - Changed-file lint, catalog, whitespace and package dry-run passed: 32 files, about 0.46 MB unpacked; docs, licensed schema and four screenshots included.
-- Companion core full `make ci-fast`: **5,361 runtime passes, 4 skips; 25 feature checks; 9 builds** after the outbound-work admission follow-up.
+- Companion core full `make ci-fast`: **5,380 runtime passes, 4 skips; 25 feature checks; 9 builds** after the outbound-work admission and continuation-review follow-ups, against current main/Earendil 0.85.1.
 - The service remains fail-closed when the core operation API is absent. Package includes no core runtime/source imports outside explicit companion-source test fixtures.
+
+The HTTP review now counts authentication setup within the global concurrency cap and bounds request waits while retaining a cap on uncooperative credential-provider promises. A regression saturates the provider, cancels all waiters and verifies no unbounded replacement lookups.
 
 ## Known limits and release gates
 
-- The designated microVM did not respond to a read-only HTTP probe; committed captures are local disposable pane fixtures, not microVM deployment evidence.
+- Read-only Proxmox inspection located the designated `piclaw-test` VM 900 on node `radxax4`, stopped after the earlier canary restored snapshot `pre-ear0851-20260917`. Its last observed IP was `192.168.1.236`; the skill's old IP was stale. It was left stopped. A2A-specific disposable deployment approval is still required; committed captures are local pane fixtures, not microVM deployment evidence.
 - A2A core and add-on grants are separate. The authenticated add-on exposes only configured targets, while core rechecks operation authority. Tool grants retain process/filesystem authority; this is not a sandbox.
 - Inbound artifacts are the core's bounded public text. JSON and UTF-8 inline input files are supported within the advertised textual profile; URI fetching, arbitrary binary files and standalone download URLs are deliberately unsupported.
 - Client task ownership uses the verified current core budget-work ID plus endpoint URL/credential reference. Each network request rechecks host work admission; paused/exhausted or missing work fails closed. Remote provider billing remains unknown and is not represented as local model usage.

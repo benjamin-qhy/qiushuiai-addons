@@ -79,4 +79,4 @@ These start only disposable loopback listeners/temp state; no production server/
 ![Desktop settings](assets/settings-classic-1024.png)
 ![Mobile settings](assets/settings-classic-390.png)
 
-Captures are disposable local pane fixtures using current Classic/Visual styles, not production or microVM deployment. The designated microVM was unreachable during the read-only availability check.
+Captures are disposable local pane fixtures using current Classic/Visual styles, not production or microVM deployment. Read-only Proxmox inspection found the designated VM 900 stopped on radxax4 after the prior canary rollback. It was left stopped pending A2A-specific test-deployment approval.

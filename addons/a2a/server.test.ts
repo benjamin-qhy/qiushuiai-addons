@@ -13,7 +13,7 @@ afterEach(() => {
   for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
 });
 const token = "disposable-a2a-client-token-long-enough";
-function fixture() {
+function fixture(secret: () => Promise<string | null> = async () => token) {
   const dir = mkdtempSync(join(tmpdir(), "a2a-server-"));
   dirs.push(dir);
   const config: A2aConfig = {
@@ -83,12 +83,7 @@ function fixture() {
     },
   };
   const store = new A2aTaskStore(dir);
-  const server = createA2aServer(
-    () => config,
-    store,
-    adapter,
-    async () => token,
-  );
+  const server = createA2aServer(() => config, store, adapter, secret);
   const request = (
     path = "rpc",
     body?: unknown,
@@ -276,6 +271,52 @@ test("inbound request quota is principal-bound and overflow never reaches execut
     ).toBe(429);
     expect(f.calls()).toBe(0);
   } finally {
+    f.server.close();
+    await f.server.drained();
+    f.store.close();
+  }
+});
+
+test("slow credential providers are concurrency bounded before authentication and release request waits on abort", async () => {
+  let resolve!: (value: string) => void;
+  const pending = new Promise<string>((r) => {
+    resolve = r;
+  });
+  let lookups = 0;
+  const f = fixture(async () => {
+    lookups++;
+    return pending;
+  });
+  const controllers = Array.from({ length: 16 }, () => new AbortController());
+  const responses = controllers.map((controller) =>
+    f.server.handle(
+      f.request("agent-card.json", undefined, true, controller.signal),
+    ),
+  );
+  try {
+    await Bun.sleep(0);
+    expect(lookups).toBe(16);
+    expect((await f.server.handle(f.request("agent-card.json"))).status).toBe(
+      429,
+    );
+    controllers.forEach((controller) => controller.abort());
+    expect(
+      (await Promise.all(responses)).every(
+        (response) => response.status === 503,
+      ),
+    ).toBe(true);
+    expect(f.server.activeRequests()).toBe(0);
+    // Uncooperative provider calls still hold their own cap until they settle.
+    expect((await f.server.handle(f.request("agent-card.json"))).status).toBe(
+      429,
+    );
+    resolve(token);
+    await Bun.sleep(0);
+    expect((await f.server.handle(f.request("agent-card.json"))).status).toBe(
+      200,
+    );
+  } finally {
+    resolve(token);
     f.server.close();
     await f.server.drained();
     f.store.close();
