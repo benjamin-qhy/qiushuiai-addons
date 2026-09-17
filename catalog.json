@@ -5,9 +5,9 @@
     {
       "slug": "a2a",
       "name": "@rcarmo/piclaw-addon-a2a",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "type": "extension",
-      "description": "A2A v1 interoperability profile and disabled-by-default integration foundation",
+      "description": "Opt-in A2A v1 agents with authenticated JSON-RPC, durable tasks and approved endpoints",
       "path": "addons/a2a",
       "tags": [
         "a2a",
@@ -19,7 +19,7 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-a2a-0.1.0.tgz"
+        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-a2a-0.2.0.tgz"
       },
       "updatedAt": "2026-09-17",
       "owner": {

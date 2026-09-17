@@ -1,6 +1,6 @@
 # A2A v1 wire profile
 
-A1 validates a disabled integration foundation. The method matrix below distinguishes tested disposable SDK behaviour from future production capability. Cards in tests are fixtures, not published operator agents.
+This file records the A1 SDK evaluation milestone. The service candidate now implements a separate durable handler; see [current capabilities](../README.md) and [service validation](service-validation.md). The matrix below is historical A1 evidence, not the current package capability advertisement.
 
 ## Version and encoding
 

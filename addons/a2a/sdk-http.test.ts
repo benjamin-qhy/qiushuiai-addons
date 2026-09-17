@@ -396,3 +396,24 @@ test("known version fails on old tool JSON and bounded invalid configuration bef
     );
   }
 });
+
+test("unexpected runtime/storage error text is never included in the public JSON-RPC envelope", async () => {
+  const failing = {
+    getAgentCard: async () => card,
+    sendMessage: async () => {
+      throw new Error("secret fixture provider credential");
+    },
+  } as any;
+  const http = createSdkHttpHandler(failing);
+  const response = await http(
+    new Request("https://fixture/rpc", {
+      method: "POST",
+      headers: { "content-type": "application/json", "a2a-version": "1.0" },
+      body: JSON.stringify(request("secret-error", "direct")),
+    }),
+    context(),
+  );
+  const text = await response.text();
+  expect(text).not.toContain("secret fixture");
+  expect(JSON.parse(text).error.code).toBe(-32603);
+});

@@ -6,10 +6,20 @@
     "strict": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "types": ["bun-types"],
+    "types": [
+      "bun-types"
+    ],
     "skipLibCheck": true,
-    "lib": ["ESNext", "DOM"]
+    "lib": [
+      "ESNext",
+      "DOM"
+    ]
   },
-  "include": ["*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "*.ts",
+    "web/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
