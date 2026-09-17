@@ -13,7 +13,7 @@ afterEach(() => {
   }
 });
 
-async function importStandaloneAddon(slug: "autoresearch" | "cheapskate" | "codex-conversion" | "delegate" | "drawio-editor" | "editable-table" | "goal" | "image-processing" | "imap" | "kanban-editor" | "lite-term" | "m365" | "mindmap" | "observability" | "office-tools" | "office-viewer" | "plan-sidebar" | "portainer" | "proxmox" | "remote-peer" | "session-tree" | "skill-model-effort" | "smart-compaction" | "vent" | "voice-pipeline" | "win-ui" | "yolo-vibe") {
+async function importStandaloneAddon(slug: "a2a" | "autoresearch" | "cheapskate" | "codex-conversion" | "delegate" | "drawio-editor" | "editable-table" | "goal" | "image-processing" | "imap" | "kanban-editor" | "lite-term" | "m365" | "mindmap" | "observability" | "office-tools" | "office-viewer" | "plan-sidebar" | "portainer" | "proxmox" | "remote-peer" | "session-tree" | "skill-model-effort" | "smart-compaction" | "vent" | "voice-pipeline" | "win-ui" | "yolo-vibe") {
   const tempRoot = mkdtempSync(join(tmpdir(), `piclaw-addon-${slug}-`));
   tempDirs.push(tempRoot);
 
@@ -44,6 +44,14 @@ async function importStandaloneAddon(slug: "autoresearch" | "cheapskate" | "code
   }
   return import(pathToFileURL(join(packageDir, manifest.main || "index.ts")).href);
 }
+
+test("standalone piclaw-addon-a2a imports outside the monorepo root", async () => {
+  const mod = await importStandaloneAddon("a2a");
+  expect(typeof mod.default).toBe("function");
+  const tools: Array<{ execute: (...args: any[]) => Promise<any> }> = [];
+  mod.default({ registerTool: (tool: any) => tools.push(tool), on: () => undefined });
+  expect((await tools[0].execute("test", { action: "status" })).details).toMatchObject({ enabled: false, networkActive: false });
+}, 120_000);
 
 test("standalone piclaw-addon-autoresearch imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("autoresearch");
