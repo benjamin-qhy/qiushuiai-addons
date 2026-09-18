@@ -1,5 +1,10 @@
 import { Database } from "bun:sqlite";
-import { randomUUID, createHash } from "node:crypto";
+import {
+  randomUUID,
+  createHash,
+  createHmac,
+  timingSafeEqual,
+} from "node:crypto";
 
 /** Internal operator-vetted callback. Credentials are references, never wire values. */
 export interface PushCallback {
@@ -25,6 +30,11 @@ export interface PushDelivery {
   nextAttempt: number;
   expiresAt: number;
   lease: string | null;
+}
+export class PushCapacityError extends Error {
+  constructor(public readonly reason: "payload_limit" | "pending_limit") {
+    super("Push delivery capacity exceeded.");
+  }
 }
 export const PUSH_MAX_ATTEMPTS = 5;
 const MAX_PENDING = 1000,
@@ -81,7 +91,7 @@ export function validatePushPayload(taskId: string, payload: unknown): string {
     throw new Error("Push task identity mismatch.");
   const json = JSON.stringify(payload);
   if (Buffer.byteLength(json) > MAX_BYTES)
-    throw new Error("Push payload size limit.");
+    throw new PushCapacityError("payload_limit");
   return json;
 }
 function readCallback(r: any): PushCallback | null {
@@ -133,7 +143,70 @@ export class A2aPushStore {
     id TEXT PRIMARY KEY,principal TEXT NOT NULL,task_id TEXT NOT NULL,config_id TEXT NOT NULL,revision INTEGER NOT NULL,event_id TEXT NOT NULL,payload TEXT NOT NULL,payload_hash TEXT NOT NULL,
     state TEXT NOT NULL,attempts INTEGER NOT NULL,next_attempt INTEGER NOT NULL,expires_at INTEGER NOT NULL,lease TEXT,
     UNIQUE(principal,task_id,config_id,revision,event_id)) STRICT;
-    CREATE INDEX IF NOT EXISTS a2a_push_due ON a2a_push_outbox(state,next_attempt);`);
+    CREATE INDEX IF NOT EXISTS a2a_push_due ON a2a_push_outbox(state,next_attempt);
+    CREATE TABLE IF NOT EXISTS a2a_push_failures(principal TEXT NOT NULL,task_id TEXT NOT NULL,reason TEXT NOT NULL,count INTEGER NOT NULL,PRIMARY KEY(principal,task_id)) STRICT;
+    CREATE TABLE IF NOT EXISTS a2a_push_metadata(key TEXT PRIMARY KEY,value TEXT NOT NULL) STRICT;`);
+  }
+  private cursorKey(): string {
+    this.db
+      .query("INSERT OR IGNORE INTO a2a_push_metadata VALUES(?,?)")
+      .run("cursor", randomUUID() + randomUUID());
+    return (
+      this.db
+        .query("SELECT value FROM a2a_push_metadata WHERE key='cursor'")
+        .get() as { value: string }
+    ).value;
+  }
+  transaction<T>(run: () => T): T {
+    return this.db.transaction(run).immediate();
+  }
+  page(
+    principal: string,
+    taskId: string,
+    size = 4,
+    token = "",
+  ): { configs: PushCallback[]; nextPageToken: string } {
+    if (!Number.isInteger(size) || size < 1 || size > 100)
+      throw new Error("Invalid push page size.");
+    const all = this.list(principal, taskId),
+      key = this.cursorKey();
+    let after = "";
+    if (token) {
+      try {
+        const [text, signature, ...rest] = token.split(".");
+        const expected = createHmac("sha256", key).update(text).digest(),
+          actual = Buffer.from(signature, "base64url");
+        if (
+          rest.length ||
+          token.length > 2048 ||
+          expected.length !== actual.length ||
+          !timingSafeEqual(expected, actual)
+        )
+          throw new Error("invalid");
+        const value = JSON.parse(Buffer.from(text, "base64url").toString());
+        if (
+          value.principal !== principal ||
+          value.taskId !== taskId ||
+          value.size !== size ||
+          typeof value.after !== "string"
+        )
+          throw new Error("invalid");
+        after = value.after;
+      } catch {
+        throw new Error("Invalid push page token.");
+      }
+    }
+    const eligible = all.filter((c) => c.id > after),
+      configs = eligible.slice(0, size);
+    let nextPageToken = "";
+    if (eligible.length > size) {
+      const text = Buffer.from(
+        JSON.stringify({ principal, taskId, size, after: configs.at(-1)!.id }),
+      ).toString("base64url");
+      nextPageToken =
+        text + "." + createHmac("sha256", key).update(text).digest("base64url");
+    }
+    return { configs, nextPageToken };
   }
   upsert(value: Omit<PushCallback, "revision">): PushCallback {
     callbackValue(value);
@@ -230,19 +303,47 @@ export class A2aPushStore {
       )
       .run(principal, taskId, configId);
   }
+  enqueueEvent(
+    principal: string,
+    taskId: string,
+    eventId: string,
+    payload: unknown,
+  ): void {
+    try {
+      this.enqueue(principal, taskId, eventId, payload);
+    } catch (error) {
+      if (!(error instanceof PushCapacityError)) throw error;
+      // Notification backpressure must not roll back the primary task outcome.
+      this.db
+        .query(
+          "INSERT INTO a2a_push_failures VALUES(?,?,?,1) ON CONFLICT(principal,task_id) DO UPDATE SET reason=excluded.reason,count=count+1",
+        )
+        .run(principal, taskId, error.reason);
+    }
+  }
+  failures() {
+    return this.db
+      .query(
+        "SELECT reason,sum(count) AS count FROM a2a_push_failures GROUP BY reason",
+      )
+      .all();
+  }
   enqueue(
     principal: string,
     taskId: string,
     eventId: string,
     payload: unknown,
     now = Date.now(),
+    configId?: string,
   ): string[] {
     id(eventId);
     const text = validatePushPayload(taskId, payload),
       hash = createHash("sha256").update(text).digest("hex");
     return this.db
       .transaction(() => {
-        const callbacks = this.list(principal, taskId),
+        const callbacks = this.list(principal, taskId).filter(
+            (c) => !configId || c.id === configId,
+          ),
           ids: string[] = [];
         const count = this.db
           .query(
@@ -264,7 +365,7 @@ export class A2aPushStore {
             continue;
           }
           if (count.n++ >= MAX_PENDING)
-            throw new Error("Push pending quota exceeded.");
+            throw new PushCapacityError("pending_limit");
           const deliveryId = randomUUID();
           this.db
             .query(
@@ -302,7 +403,7 @@ export class A2aPushStore {
         const row = delivery(
           this.db
             .query(
-              "SELECT * FROM a2a_push_outbox WHERE state='pending' AND next_attempt<=? ORDER BY next_attempt,id LIMIT 1",
+              "SELECT o.* FROM a2a_push_outbox o WHERE o.state='pending' AND o.next_attempt<=? AND NOT EXISTS (SELECT 1 FROM a2a_push_outbox p WHERE p.principal=o.principal AND p.task_id=o.task_id AND p.config_id=o.config_id AND p.rowid<o.rowid AND p.state IN ('pending','sending')) ORDER BY o.next_attempt,o.rowid LIMIT 1",
             )
             .get(now),
         );
@@ -377,6 +478,59 @@ export class A2aPushStore {
         "UPDATE a2a_push_outbox SET state=CASE WHEN expires_at<=? OR attempts>=? THEN 'abandoned' ELSE 'pending' END,next_attempt=?,lease=NULL WHERE state='sending'",
       )
       .run(now, PUSH_MAX_ATTEMPTS, now).changes;
+  }
+  revokeTask(principal: string, taskId: string): void {
+    this.db
+      .transaction(() => {
+        this.db
+          .query(
+            "UPDATE a2a_push_outbox SET state='revoked',lease=NULL WHERE principal=? AND task_id=? AND state IN ('pending','sending')",
+          )
+          .run(principal, taskId);
+        this.db
+          .query("DELETE FROM a2a_push_configs WHERE principal=? AND task_id=?")
+          .run(principal, taskId);
+      })
+      .immediate();
+  }
+  current(delivery: PushDelivery): boolean {
+    return !!this.db
+      .query(
+        "SELECT 1 FROM a2a_push_outbox o JOIN a2a_push_configs c ON c.principal=o.principal AND c.task_id=o.task_id AND c.id=o.config_id AND c.revision=o.revision WHERE o.id=? AND o.lease=? AND o.state='sending'",
+      )
+      .get(delivery.id, delivery.lease);
+  }
+  summary() {
+    return this.db
+      .query(
+        "SELECT state,count(*) AS count FROM a2a_push_outbox GROUP BY state",
+      )
+      .all() as { state: string; count: number }[];
+  }
+  watched(): Array<{ principal: string; taskId: string }> {
+    return this.db
+      .query(
+        "SELECT DISTINCT principal,task_id AS taskId FROM a2a_push_configs ORDER BY principal,task_id LIMIT 4096",
+      )
+      .all() as { principal: string; taskId: string }[];
+  }
+  pruneTask(principal: string, taskId: string): void {
+    for (const table of [
+      "a2a_push_outbox",
+      "a2a_push_configs",
+      "a2a_push_revisions",
+      "a2a_push_failures",
+    ])
+      this.db
+        .query("DELETE FROM " + table + " WHERE principal=? AND task_id=?")
+        .run(principal, taskId);
+  }
+  pruneSettled(before: number): number {
+    return this.db
+      .query(
+        "DELETE FROM a2a_push_outbox WHERE state IN ('delivered','abandoned','revoked') AND expires_at<?",
+      )
+      .run(before).changes;
   }
   inspect(principal: string, taskId: string): PushDelivery[] {
     this.requireTask(principal, taskId);

@@ -30,7 +30,28 @@ export interface A2aPublishedAgent {
   description: string;
   enabled: boolean;
 }
+export interface PushCallbackGrant {
+  id: string;
+  principal: string;
+  targets: string[];
+  url: string;
+  credentialKey: string;
+  allowPrivate: boolean;
+  enabled: boolean;
+}
+export interface PushReceiverGrant {
+  id: string;
+  endpoint: string;
+  credentialKey: string;
+  enabled: boolean;
+}
+export interface A2aPushConfig {
+  enabled: boolean;
+  callbacks: PushCallbackGrant[];
+  receivers: PushReceiverGrant[];
+}
 export interface A2aConfig {
+  push?: A2aPushConfig;
   enabled: boolean;
   inbound: boolean;
   outbound: boolean;
@@ -107,6 +128,7 @@ export function validateConfig(value: unknown): A2aConfig {
     "principals",
     "endpoints",
     "agents",
+    "push",
   ]);
   const principals = unique(
     list(r.principals).map((v) => {
@@ -181,7 +203,21 @@ export function validateConfig(value: unknown): A2aConfig {
     throw new Error("Principal references an unpublished target.");
   const publicBaseUrl = text(r.publicBaseUrl, 2048);
   if (publicBaseUrl) endpointUrl(publicBaseUrl, false);
+  const push = r.push === undefined ? undefined : pushConfig(r.push);
+  if (
+    push?.callbacks.some(
+      (c) =>
+        !principals.some((p) => p.id === c.principal) ||
+        c.targets.some((t) => !agents.some((a) => a.id === t)),
+    )
+  )
+    throw new Error("Push callback refers to an unknown principal/target.");
+  if (
+    push?.receivers.some((c) => !endpoints.some((e) => e.alias === c.endpoint))
+  )
+    throw new Error("Push receiver refers to an unknown endpoint.");
   const config = {
+    ...(push ? { push } : {}),
     enabled: bool(r.enabled),
     inbound: bool(r.inbound),
     outbound: bool(r.outbound),
@@ -262,4 +298,55 @@ function verification(value: unknown): CardVerification {
       (k) => k.kid,
     ),
   };
+}
+
+function pushConfig(raw: unknown): A2aPushConfig {
+  const p = record(raw, ["enabled", "callbacks", "receivers"]);
+  const callbacks = unique(
+    list(p.callbacks).map((v) => {
+      const r = record(v, [
+        "id",
+        "principal",
+        "targets",
+        "url",
+        "credentialKey",
+        "allowPrivate",
+        "enabled",
+      ]);
+      const url = text(r.url, 2048),
+        allowPrivate = bool(r.allowPrivate);
+      if (endpointUrl(url, allowPrivate).href !== url)
+        throw new Error("Push URL must be canonical.");
+      return {
+        id: opaqueId(r.id),
+        principal: opaqueId(r.principal),
+        targets: unique(list(r.targets).map(opaqueId), (s) => s),
+        url,
+        credentialKey: key(r.credentialKey),
+        allowPrivate,
+        enabled: bool(r.enabled),
+      };
+    }),
+    (c) => c.id,
+  );
+  if (
+    new Set(callbacks.map((c) => JSON.stringify([c.principal, c.url]))).size !==
+    callbacks.length
+  )
+    throw new Error("Ambiguous push callback grant.");
+  const receivers = unique(
+    list(p.receivers).map((v) => {
+      const r = record(v, ["id", "endpoint", "credentialKey", "enabled"]);
+      return {
+        id: opaqueId(r.id),
+        endpoint: opaqueId(r.endpoint),
+        credentialKey: key(r.credentialKey),
+        enabled: bool(r.enabled),
+      };
+    }),
+    (c) => c.id,
+  );
+  if (new Set(receivers.map((r) => r.credentialKey)).size !== receivers.length)
+    throw new Error("Push receivers require distinct credentials.");
+  return { enabled: bool(p.enabled), callbacks, receivers };
 }

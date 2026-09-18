@@ -61,3 +61,20 @@ Feature: Opt-in A2A v1 interoperability
     And immediate disable stops transport consumers
     And both skins fit desktop and mobile widths
     # settings-browser.test.ts, service.test.ts
+
+  @a2a-push-001
+  Scenario: Deliver approved push updates without a polling client
+    Given push is explicitly enabled with an exact callback grant
+    When an independently authenticated client registers that callback for its task
+    Then task status and artifact notifications are delivered as StreamResponse JSON
+    And retries retain the same delivery ID and payload bytes
+    And a denied or replaced core grant prevents further delivery
+    # push-delivery.test.ts, python-push-peer.test.ts, host-integration.test.ts
+
+  @a2a-push-002
+  Scenario: Stop transports without corrupting durable task outcomes
+    When push is disabled or the worker restarts during uncertain delivery
+    Then active transport waits are aborted and the same pending delivery can recover
+    And oversized notification output does not roll back task completion
+    And received notifications cannot enqueue agent work or replace authorised task lookup
+    # push-lifecycle.test.ts, push-receiver.test.ts

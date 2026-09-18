@@ -1,3 +1,6 @@
+import { createPushReceiver } from "./push-receiver.js";
+import { A2aPushWorker } from "./push-worker.js";
+import { pushEnabled } from "./push-policy.js";
 import { A2aConfigStore, EMPTY_CONFIG, validateConfig } from "./config.js";
 import { A2aTaskStore } from "./task-store.js";
 import { A2aClientStore } from "./client-store.js";
@@ -26,6 +29,9 @@ export class A2aService {
   private adapter: OperationAdapter;
   private unregister: () => void;
   private stopped = false;
+  private configurationQueue: Promise<unknown> = Promise.resolve();
+  private pushWorker: A2aPushWorker | null = null;
+  private readonly receivePush: ReturnType<typeof createPushReceiver>;
   constructor(
     private readonly host: A2aHostApi,
     private readonly directory: string,
@@ -33,15 +39,44 @@ export class A2aService {
   ) {
     this.configStore = new A2aConfigStore(directory);
     this.adapter = host.operations.register();
+    this.receivePush = createPushReceiver(
+      () => this.config(),
+      () => {
+        if (!this.outboundStore)
+          this.outboundStore = new A2aClientStore(this.directory);
+        return this.outboundStore;
+      },
+      this.secrets,
+    );
+    if (
+      pushEnabled(this.config()) &&
+      !this.adapter.forPrincipal("push-runtime-check").events
+    )
+      throw new Error("Push requires durable core operation events.");
     // Host routing is registered once at startup. Handler returns 404 until explicit opt-in.
     this.unregister = host.externalRoutes.register({
       addonId: "a2a",
       prefix: "/api/addons/a2a",
       methods: ["GET", "POST"],
-      maxBodyBytes: A2A_PROFILE.maxRequestBytes,
+      maxBodyBytes: A2A_PROFILE.maxResponseBytes,
       handler: (req) => this.handle(req),
     });
     host.lifecycle.onShutdown(() => this.close());
+    this.startPush();
+  }
+  private startPush() {
+    if (this.stopped || !pushEnabled(this.config())) return;
+    this.singleUser();
+    if (!this.adapter.forPrincipal("push-runtime-check").events)
+      throw new Error("Push requires durable core operation events.");
+    if (!this.tasks) this.tasks = new A2aTaskStore(this.directory);
+    this.pushWorker = new A2aPushWorker(
+      () => this.config(),
+      this.tasks,
+      this.adapter,
+      this.secrets,
+    );
+    this.pushWorker.start();
   }
   config() {
     return this.configStore.read();
@@ -85,11 +120,29 @@ export class A2aService {
       stopped: this.stopped,
       profile: A2A_PROFILE,
       activeRequests: this.server?.activeRequests() ?? 0,
+      push: {
+        ...(this.pushWorker?.stats() ?? { running: false }),
+        outbox: this.tasks?.push.summary() ?? [],
+        capacityFailures: this.tasks?.push.failures() ?? [],
+        receiverActive: this.receivePush.active(),
+      },
     };
   }
   async setConfig(value: unknown) {
+    const next = validateConfig(value);
+    this.singleUser();
+    const pending = this.configurationQueue.then(() => this.applyConfig(next));
+    this.configurationQueue = pending.catch(() => undefined);
+    return pending;
+  }
+  private async applyConfig(value: unknown) {
     this.singleUser();
     const next = validateConfig(value);
+    if (
+      pushEnabled(next) &&
+      !this.adapter.forPrincipal("push-runtime-check").events
+    )
+      throw new Error("Push requires durable core operation events.");
     if (this.stopped) throw new Error("A2A runtime has shut down.");
     // Close active transport consumers before changing any credentials/grants. Core work persists.
     const previous = this.server;
@@ -97,12 +150,27 @@ export class A2aService {
     this.server = null;
     const client = this.outboundClient;
     this.outboundClient = null;
+    const worker = this.pushWorker;
+    this.pushWorker = null;
     const config = this.configStore.write(next);
-    await Promise.all([previous?.drained(), client?.shutdown()]);
+    await Promise.all([
+      previous?.drained(),
+      client?.shutdown(),
+      worker?.close(),
+      this.receivePush.close(),
+    ]);
+    this.startPush();
     return config;
   }
   private async handle(req: Request): Promise<Response> {
     if (this.stopped) return new Response("A2A stopped", { status: 503 });
+    const receiver = /^\/api\/addons\/a2a\/push\/([A-Za-z0-9_.-]{1,80})$/.exec(
+      new URL(req.url).pathname,
+    );
+    if (receiver) {
+      this.singleUser();
+      return this.receivePush.handle(req, receiver[1]);
+    }
     const config = this.config();
     if (!config.enabled || !config.inbound)
       return new Response("Not found", { status: 404 });
@@ -145,10 +213,17 @@ export class A2aService {
     if (this.stopped) return;
     this.stopped = true;
     this.unregister();
+    await this.configurationQueue;
     const server = this.server;
     server?.close();
     this.server = null;
-    await Promise.all([server?.drained(), this.outboundClient?.shutdown()]);
+    await Promise.all([
+      server?.drained(),
+      this.outboundClient?.shutdown(),
+      this.pushWorker?.close(),
+      this.receivePush.close(),
+    ]);
+    this.pushWorker = null;
     this.outboundClient = null;
     this.tasks?.close();
     this.tasks = null;

@@ -1,3 +1,4 @@
+import { A2aPushStore } from "./push-store.js";
 import { Database } from "bun:sqlite";
 import { mkdirSync, chmodSync } from "node:fs";
 import { join } from "node:path";
@@ -64,6 +65,7 @@ export function isTerminalTask(task: Task): boolean {
 /** Protocol-only durable state, never Piclaw's messages database. */
 export class A2aTaskStore {
   private readonly db: Database;
+  readonly push: A2aPushStore;
   constructor(directory: string) {
     mkdirSync(directory, { recursive: true, mode: 0o700 });
     const path = join(directory, "tasks-v1.sqlite");
@@ -78,6 +80,9 @@ export class A2aTaskStore {
     this.db
       .query("INSERT OR IGNORE INTO metadata VALUES(?,?)")
       .run("cursor-key", randomUUID() + randomUUID());
+    this.push = new A2aPushStore(this.db, (principal, taskId) => {
+      this.get(principal, taskId);
+    });
   }
   private row(row: unknown): TaskRecord | null {
     if (!row) return null;
@@ -245,6 +250,34 @@ export class A2aTaskStore {
             id,
             principal,
           );
+        const taskJson = Task.toJSON(record.task) as any;
+        if (record.task.artifacts.length)
+          this.push.enqueueEvent(
+            principal,
+            id,
+            "operation:" + operation.sequence + ":artifact",
+            {
+              artifactUpdate: {
+                taskId: id,
+                contextId: record.contextId,
+                artifact: taskJson.artifacts[0],
+                append: false,
+                lastChunk: true,
+              },
+            },
+          );
+        this.push.enqueueEvent(
+          principal,
+          id,
+          "operation:" + operation.sequence + ":status",
+          {
+            statusUpdate: {
+              taskId: id,
+              contextId: record.contextId,
+              status: taskJson.status,
+            },
+          },
+        );
         return this.get(principal, id);
       })
       .immediate();
@@ -255,34 +288,53 @@ export class A2aTaskStore {
     state: "rejected" | "input_required",
     reason: string,
   ): TaskRecord {
-    const record = this.get(principal, id);
-    if (isTerminalTask(record.task)) return record;
-    const now = new Date();
-    record.task.status = {
-      state:
-        state === "rejected"
-          ? TaskState.TASK_STATE_REJECTED
-          : TaskState.TASK_STATE_INPUT_REQUIRED,
-      timestamp: now.toISOString(),
-      message: Message.fromJSON({
-        messageId: randomUUID(),
-        contextId: record.contextId,
-        taskId: id,
-        role: "ROLE_AGENT",
-        parts: [{ text: reason }],
-      }),
-    };
-    this.db
-      .query(
-        "UPDATE tasks SET task_json=?,updated_at=? WHERE id=? AND principal=?",
-      )
-      .run(
-        JSON.stringify(Task.toJSON(record.task)),
-        now.toISOString(),
-        id,
-        principal,
-      );
-    return this.get(principal, id);
+    return this.db
+      .transaction(() => {
+        const record = this.get(principal, id);
+        if (isTerminalTask(record.task)) return record;
+        const now = new Date();
+        record.task.status = {
+          state:
+            state === "rejected"
+              ? TaskState.TASK_STATE_REJECTED
+              : TaskState.TASK_STATE_INPUT_REQUIRED,
+          timestamp: now.toISOString(),
+          message: Message.fromJSON({
+            messageId: randomUUID(),
+            contextId: record.contextId,
+            taskId: id,
+            role: "ROLE_AGENT",
+            parts: [{ text: reason }],
+          }),
+        };
+        this.db
+          .query(
+            "UPDATE tasks SET task_json=?,updated_at=? WHERE id=? AND principal=?",
+          )
+          .run(
+            JSON.stringify(Task.toJSON(record.task)),
+            now.toISOString(),
+            id,
+            principal,
+          );
+        this.push.enqueueEvent(
+          principal,
+          id,
+          "rejection:" +
+            createHash("sha256")
+              .update(JSON.stringify(Task.toJSON(record.task)))
+              .digest("hex"),
+          {
+            statusUpdate: {
+              taskId: id,
+              contextId: record.contextId,
+              status: (Task.toJSON(record.task) as any).status,
+            },
+          },
+        );
+        return this.get(principal, id);
+      })
+      .immediate();
   }
   list(principal: string, afterId: string | null, limit: number): TaskRecord[] {
     return this.db
@@ -482,6 +534,7 @@ export class A2aTaskStore {
         let removed = 0;
         for (const record of candidates) {
           if (!isTerminalTask(record.task)) continue;
+          this.push.pruneTask(principal, record.id);
           this.db
             .query("DELETE FROM messages WHERE principal=? AND task_id=?")
             .run(principal, record.id);

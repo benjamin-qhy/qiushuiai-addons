@@ -31,6 +31,7 @@ integration(
  const service=await withExternalAddonRegistrationContext({packageName:'@rcarmo/piclaw-addon-a2a',entryPath:${JSON.stringify(join(addon, "runtime.ts"))}},()=>Promise.resolve(new A2aService(api,${JSON.stringify(root)},async()=> 'disposable-host-credential-123456789')));
  freezeExternalAddonRoutes();
  const server=Bun.serve({hostname:'127.0.0.1',port:0,fetch:async req=>await handleExternalAddonRoutes(req,new URL(req.url).pathname)||new Response('missing',{status:404})});
+ const pushed=[];const callback=Bun.serve({hostname:'127.0.0.1',port:0,fetch:async req=>{if(req.headers.get('authorization')!=='Bearer disposable-host-credential-123456789')return new Response('no',{status:401});pushed.push(await req.json());return new Response(null,{status:204});}});
  try{
   await service.setConfig({enabled:true,inbound:true,outbound:false,publicBaseUrl:'https://fixture.invalid',principals:[{id:'alice',credentialKey:'test/alice',targets:['echo'],enabled:true}],agents:[{id:'echo',name:'Echo',description:'test',enabled:true}],endpoints:[]});
   const url=new URL('/api/addons/a2a/agents/echo/rpc',server.url);
@@ -38,12 +39,16 @@ integration(
   const req={message:{messageId:'stable-msg',role:'ROLE_USER',parts:[{text:'task request'}]},configuration:{returnImmediately:true}};
   const first=await send('SendMessage',req);const id=first.result.task.id;
   const duplicate=await send('SendMessage',req);if(duplicate.result.task.id!==id||calls!==1)throw new Error('duplicate admission');
-  await new Promise(r=>setTimeout(r,5));complete();await new Promise(r=>setTimeout(r,10));
+  const cfg=service.config();await service.setConfig({...cfg,push:{enabled:true,callbacks:[{id:'callback',principal:'alice',targets:['echo'],url:callback.url.href,credentialKey:'test/callback',allowPrivate:true,enabled:true}],receivers:[]}});
+  const push=await send('CreateTaskPushNotificationConfig',{taskId:id,id:'cfg',url:callback.url.href,authentication:{scheme:'Bearer',credentials:'disposable-host-credential-123456789'}});if(push.error)throw new Error(JSON.stringify(push.error));
+  await new Promise(r=>setTimeout(r,5));complete();
+  for(let i=0;i<60&&!pushed.some(p=>p.statusUpdate?.status?.state==='TASK_STATE_COMPLETED');i++)await new Promise(r=>setTimeout(r,100));
+  if(!pushed.some(p=>p.statusUpdate?.status?.state==='TASK_STATE_COMPLETED'))throw new Error('Push required task polling or lost completion');
   const final=await send('GetTask',{id,historyLength:0});if(final.result.status.state!=='TASK_STATE_COMPLETED'||final.result.artifacts[0].parts[0].text!=='real core public result')throw new Error('core result not mapped');
   const denied=await fetch(url,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:2,method:'GetTask',params:{id}})});if(denied.status!==401)throw new Error('auth bypass');
   const listing=await send('ListTasks',{pageSize:10,includeArtifacts:false});if(listing.result.tasks[0].artifacts!==undefined||listing.result.nextPageToken!=='')throw new Error('list wire presence');
-  console.log('A2A-HOST-PASS '+JSON.stringify({calls,state:final.result.status.state,auth:denied.status}));
- }finally{await service.close();server.stop(true);resetAddonRuntimeContributionsForTests();closeDatabase();}
+  console.log('A2A-HOST-PASS '+JSON.stringify({calls,state:final.result.status.state,auth:denied.status,pushEvents:pushed.length}));
+ }finally{await service.close();server.stop(true);callback.stop(true);resetAddonRuntimeContributionsForTests();closeDatabase();}
  `,
     );
     try {

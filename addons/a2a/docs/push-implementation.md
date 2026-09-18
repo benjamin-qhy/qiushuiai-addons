@@ -1,28 +1,64 @@
-# Push notification implementation checkpoint
+# Push candidate validation — 18 September 2026
 
-Issue #129 is in progress. **No push method, dispatcher or receiver is enabled.** `pushNotifications` remains false and existing unsupported-method errors remain intact. This work is separate from optional card trust in PR #133.
+Issue #129 adds opt-in push after card discovery PR #133. Push defaults off; no operator configuration, production listener or credential was changed during implementation. The callback profile and limits are in [push-notifications.md](push-notifications.md).
 
-## Implemented internal foundation
+## Gates
 
-`push-store.ts` provides protocol-independent delivery state over a caller-owned Bun SQLite connection. It must be constructed with the same database as task persistence, so a task-event transition and outbox enqueue can share one transaction.
+| Gate | Result |
+|---|---|
+| Strict compatibility typechecks | Passed |
+| Complete explicit A2A suite | 81 passed, 588 assertions across 20 files |
+| Repository compatibility suite | 213 passed, 8 explicit integration skips (tested in complete run) |
+| Broad repository unit suite | 586 passed, 8 explicit integration skips |
+| Standalone A2A install/import | Passed with own installed dependencies |
+| Scoped lint, catalog, whitespace, package dry-run | Passed; 52 files, about 0.91 MB unpacked |
 
-- Principal/task/config-owned callbacks store only operator-vetted URL and credential references. The future wire handler must authenticate the principal, validate the task and map callback auth to operator policy before calling the store.
-- Configuration revisions survive deletion/recreation; changing or deleting a configuration revokes its pending/inflight attempts.
-- Stable delivery ID, event ID, exact payload bytes/hash and callback revision form the durable dispatch record. Reusing an event ID with different bytes fails.
-- Claim/settlement leases stop stale workers from acknowledging a newer attempt or a revoked/replaced callback.
-- Recover uncertain sends as the same delivery ID/bytes. At-least-once duplicate notifications are possible; receivers must deduplicate. This does not resubmit the model operation.
-- Five attempts maximum, exponential delay capped at 60 seconds, 24-hour expiry, four callbacks per task, 1,000 pending/inflight deliveries per principal and 256 KiB payload limit.
-- Transaction rollback tests prove task/outbox composition can be atomic. File-backed close/reopen tests verify crash recovery and stale-lease rejection.
+The compatibility run initially exposed a fixed 700 ms timing assumption in the service lifecycle test during a concurrent dependency install. It now waits for actual delivery under a five-second bound; the disable/no-more-deliveries assertions are unchanged. The serial full gate passed.
 
-Validation at checkpoint: strict A2A typecheck, scoped lint, and three outbox tests / 29 assertions pass. No network calls or production database access.
+## Independent review
 
-## Next required work
+A separate judge reviewed policy, worker and receiver. Findings and resolutions:
 
-1. Decide and document the wire-authentication profile: the pinned spec uses `AuthenticationInfo.scheme/credentials`, but externally supplied credential values must not be persisted or logged. Map only operator-approved callbacks/credential refs and reject unapproved credentials/URLs; do not invent secret-ref wire semantics.
-2. Wire principal-owned Create/Get/List/Delete config methods to the task store. Make feature capability opt-in and fail closed. Validate terminal/deleted task and pagination behaviours.
-3. Enqueue every supported status/artifact event atomically with task changes, independently of polling/HTTP subscribers. Reconcile generic core operation events on restart without missing completion notifications.
-4. Add an abortable bounded dispatcher through the pinned-address egress transport: current grants/credential rotation/revocation checked on each attempt, redirects forbidden, response/time limits, durable retries, no task-state corruption on callback failure.
-5. Add authenticated receiving/replay policy and expected-task correlation. Independent peer tests must verify exact `StreamResponse` JSON and `application/a2a+json`, receiver idempotency and authorised task reconciliation.
-6. Add settings/diagnostics, retention cleanup, lifecycle shutdown, migration tests, standalone packaging and complete negative/independent integration evidence before exposing `pushNotifications: true`.
+- Treat core `OperationAccessError` as permanent revocation, not a network retry. Watches/configs/pending sends are revoked; unrelated work still advances.
+- Check current core ownership again after asynchronous DNS and credential setup, immediately before connection, then synchronously recheck outbox lease and callback policy. Regression revokes during the resolver and confirms zero network requests.
+- Validate callback auth types before lowercase/credential comparison. Malformed objects return `RequestMalformedError`.
+- The internal store is not a trust authority. A regression bypasses registration and inserts an unapproved callback directly; dispatch revalidation refuses it and revokes the watch.
 
-The initial A2A epic remains complete; #129 stays open. This checkpoint is not release acceptance, merge approval or permission to enable networking.
+The follow-up judge confirmed the reported auth-race and type-handling blockers resolved. Networking remains subject to exact operator grants, fresh credentials, DNS pinning, redirect rejection and per-attempt deadlines.
+
+## Executable evidence
+
+- `push-store.test.ts`: principal ownership, config revisions/tombstones, event-ID conflicts, transactional rollback, leased settlement, file-backed reopen, stable retry ID/bytes, attempts and expiry.
+- `push-delivery.test.ts`: standard JSON-RPC CRUD/capability gates, credential redaction, signed pagination, multi-callback isolation, revocation, redirect security, malformed auth, no task polling and delivery failure without task rollback.
+- `push-receiver.test.ts`: credential checks, expected remote-task correlation, duplicate/conflicting replay, endpoint replacement, stalled-body cancellation and persistence across reopen. No notification is sent to a model or used as authoritative task state.
+- `push-lifecycle.test.ts`: real stalled HTTP callback cancellation, same-ID retry on restart, real service enable/disable/shutdown with no continuing sends.
+- `python-push-peer.test.ts` / `python-push-peer.py`: independently maintained Python A2A SDK 1.1.2 creates/gets/lists/deletes a config over HTTP; a raw webhook confirms Bearer authentication, `application/a2a+json`, task identity and terminal StreamResponse without task polling.
+- `host-integration.test.ts`: actual Piclaw external route registry, operation service and durable event API in an explicitly isolated companion process. Push arrives before GetTask is called; fake executor only, no provider costs.
+- `settings-browser.test.ts`: actual side-effect registration and component contract, both skins at desktop/mobile sizes, reviewed enablement and immediate disable. The settings pane includes a separate push JSON policy field.
+
+## Reproduce
+
+```sh
+bun install --frozen-lockfile
+bun run typecheck:earendil-compat
+bun run test:earendil-compat
+bun test standalone-import.test.ts --test-name-pattern a2a
+```
+
+Explicit complete suite (companion core source must implement the merged generic operations API):
+
+```sh
+PICLAW_E2E_DISPOSABLE=1 \
+PICLAW_A2A_CORE_SOURCE=/absolute/path/to/piclaw \
+PICLAW_A2A_PYTHON=/absolute/path/to/python-with-a2a-sdk \
+PLAYWRIGHT_BROWSERS_PATH=/absolute/path/to/ms-playwright \
+  bun test --timeout 15000 addons/a2a
+```
+
+Python environment: `a2a-sdk==1.1.2`, `rfc8785==0.1.4`, cryptography. Tests use disposable local credentials/loopback servers. None contacts production peers or boots the test VM. The earlier 0.2.2 deployment receipt is historical evidence and is not presented as a push deployment test.
+
+## Supported-profile limits
+
+Bearer callbacks must match operator-approved URL/credential refs. The optional `token` field, Basic/OAuth callback auth, dynamic callback trust, signed push payloads, and remote key retrieval are unsupported. Receipt deduplication is bounded to seven days; at-least-once transport retries can repeat payloads. Receiver acknowledgements only record task correlation/hash; users reconcile through owned GetTask. Push failure never changes a completed model task. Notification capacity failures are explicit diagnostics, not proof of delivery.
+
+Merge was authorised subject to review and passing local gates. Production enablement remains a separate operator action. The initial epic and discovery work are not reopened by this optional follow-up.

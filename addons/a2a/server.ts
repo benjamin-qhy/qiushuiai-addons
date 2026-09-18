@@ -99,6 +99,7 @@ export function createA2aServer(
           config,
           store,
           operations,
+          secrets,
         );
         if (match[2] === "agent-card.json") {
           if (req.method !== "GET")

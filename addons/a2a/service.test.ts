@@ -94,7 +94,7 @@ test("disabled runtime creates no database, cannot send, registers bounded owned
       addonId: "a2a",
       prefix: "/api/addons/a2a",
       methods: ["GET", "POST"],
-      maxBodyBytes: 32768,
+      maxBodyBytes: 262144,
     });
     expect(
       (

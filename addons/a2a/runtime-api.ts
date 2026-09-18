@@ -11,6 +11,14 @@ export interface OperationClient {
     operation: PublicOperation | null;
   }>;
   get(id: string): Promise<PublicOperation>;
+  events?(
+    id: string,
+    after?: number,
+  ): Promise<{
+    snapshot: PublicOperation;
+    events: Array<{ sequence: number; snapshot: PublicOperation }>;
+    gap: boolean;
+  }>;
   cancel(id: string): Promise<{ outcome: string; operation: PublicOperation }>;
   continue(
     id: string,
