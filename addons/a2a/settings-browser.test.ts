@@ -39,7 +39,7 @@ beforeAll(async () => {
   const shim = join(root, "shim.ts");
   await Bun.write(
     shim,
-    `import {h,render} from ${JSON.stringify(preact + "/dist/preact.module.js")};import {useEffect,useState} from ${JSON.stringify(preact + "/hooks/dist/hooks.module.js")};import htm from ${JSON.stringify(htm + "/dist/htm.module.js")};import register from '/settings.js';window.__piclawPreactHtm={html:htm.bind(h),useEffect,useState};register({registerSettingsPane(p){render(h(p.render),document.getElementById('app'));}});`,
+    `import {h,render} from ${JSON.stringify(preact + "/dist/preact.module.js")};import {useEffect,useState} from ${JSON.stringify(preact + "/hooks/dist/hooks.module.js")};import htm from ${JSON.stringify(htm + "/dist/htm.module.js")};window.__piclawPreactHtm={html:htm.bind(h),useEffect,useState};window.__piclaw_web={registerSettingsPane(p){if(!p.component)throw new Error('Host requires component');render(h(p.component),document.getElementById('app'));}};await import('/settings.js');`,
   );
   const compiled = await Bun.build({
     entrypoints: [shim],

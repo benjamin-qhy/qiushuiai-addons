@@ -2,7 +2,7 @@
 
 Optional A2A v1 JSON-RPC client/server integration. **Disabled by default.** Incoming requests require bearer credentials, an add-on principal/target grant, and an independently configured core operation grant. Remote cards or messages never grant execution authority.
 
-This candidate depends on the generic operation API in [Piclaw PR #1337](https://github.com/rcarmo/piclaw/pull/1337). Older runtimes expose disabled diagnostics and cannot fall back to raw chat/enqueue. The protocol/SDK, authentication, transport, task store, operator pane and agent tool all live in this add-on.
+Requires the generic operation API in [Piclaw PR #1337](https://github.com/rcarmo/piclaw/pull/1337). Older runtimes expose disabled diagnostics and cannot fall back to raw chat/enqueue. The protocol/SDK, authentication, transport, task store, operator pane and agent tool all live in this add-on.
 
 ## Capabilities
 
@@ -79,4 +79,4 @@ These start only disposable loopback listeners/temp state; no production server/
 ![Desktop settings](assets/settings-classic-1024.png)
 ![Mobile settings](assets/settings-classic-390.png)
 
-Captures are disposable local pane fixtures using current Classic/Visual styles, not production or microVM deployment. Read-only Proxmox inspection found the designated VM 900 stopped on radxax4 after the prior canary rollback. It was left stopped pending A2A-specific test-deployment approval.
+The original captures above are local fixtures. The [packaged deployment canary](docs/deployment-canary.md) also passed on VM900/radxax4 with actual Classic/Visual desktop/mobile captures, actual AgentPool execution and independent Python client. The VM was restored to its original stopped snapshot; production remains unchanged.

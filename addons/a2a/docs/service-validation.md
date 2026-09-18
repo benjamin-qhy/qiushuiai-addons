@@ -67,12 +67,12 @@ The HTTP review now counts authentication setup within the global concurrency ca
 
 ## Known limits and release gates
 
-- Read-only Proxmox inspection located the designated `piclaw-test` VM 900 on node `radxax4`, stopped after the earlier canary restored snapshot `pre-ear0851-20260917`. Its last observed IP was `192.168.1.236`; the skill's old IP was stale. It was left stopped. A2A-specific disposable deployment approval is still required; committed captures are local pane fixtures, not microVM deployment evidence.
+- The explicitly approved [packaged deployment canary](deployment-canary.md) passed on VM900/radxax4, including actual model execution, restart/dedup/cancel, independent Python and both-skin UI. It found/fixed real web-entry registration; the original fixture now follows the host contract. Snapshot `pre-a2a-20260918` was restored and verified stopped afterward.
 - A2A core and add-on grants are separate. The authenticated add-on exposes only configured targets, while core rechecks operation authority. Tool grants retain process/filesystem authority; this is not a sandbox.
 - Inbound artifacts are the core's bounded public text. JSON and UTF-8 inline input files are supported within the advertised textual profile; URI fetching, arbitrary binary files and standalone download URLs are deliberately unsupported.
 - Client task ownership uses the verified current core budget-work ID plus endpoint URL/credential reference. Each network request rechecks host work admission; paused/exhausted or missing work fails closed. Remote provider billing remains unknown and is not represented as local model usage.
 - Reconnect is snapshot/status reconciliation, not invented SSE replay guarantees. Incremental artifact duplicates without a protocol sequence cannot be guessed away.
 - Unknown sends/continuations require operator or peer reconciliation rather than automatic replay of potentially side-effecting work. No distributed leases or exactly-once side-effect claim.
-- This evidence proves tested local contracts and independent SDK/wire compatibility. It is not a third-party deployment certification or permission to enable public networking.
+- This evidence proves tested local contracts and independent SDK/wire compatibility. The packaged canary adds actual isolated runtime deployment evidence. Neither test grants permission to enable production/public networking.
 
-The first-release epic remains open until required issues/PRs are reviewed, all acceptance gaps are resolved, and authorised merge/release steps are complete. Optional root discovery/card signing and push notifications are not initial-release blockers.
+Merge approval was explicitly given after the isolated deployment gate. The first-release epic closes only after the approved PRs merge and final issue/evidence links are verified. Optional root discovery/card signing and push notifications are not initial-release blockers.

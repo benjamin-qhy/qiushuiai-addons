@@ -268,6 +268,10 @@ ${tasks ? JSON.stringify(tasks, null, 2) : "Refresh diagnostics to inspect princ
     id: "a2a",
     label: "A2A",
     order: 191,
-    render: Panel,
+    icon: 'agents',
+    component: Panel,
   });
 }
+
+// Host loads web entries for side effects in both Classic and Visual.
+register((globalThis as any).__piclaw_web);

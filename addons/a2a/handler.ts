@@ -75,7 +75,7 @@ export class A2aRequestHandler implements A2ARequestHandler {
     return AgentCard.fromJSON({
       name: agent.name,
       description: agent.description,
-      version: "0.2.1",
+      version: "0.2.2",
       supportedInterfaces: [
         {
           url: new URL(
