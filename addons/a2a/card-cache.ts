@@ -97,10 +97,18 @@ export class AgentCardCache {
     const cap = endpoint.cardCacheMaxAgeSeconds ?? 0;
     let entry = cap > 0 ? this.entries.get(key) : undefined;
     if (entry && entry.expires > now) {
-      if (endpoint.cardVerification)
-        await verifyCard(entry.raw, endpoint.cardVerification, secrets, now);
-      signal?.throwIfAborted();
-      return structuredClone(entry.raw);
+      try {
+        if (endpoint.cardVerification)
+          await verifyCard(entry.raw, endpoint.cardVerification, secrets, now);
+        signal?.throwIfAborted();
+        return structuredClone(entry.raw);
+      } catch {
+        // A rotated key may sign a replacement card while HTTP TTL is still fresh.
+        // Discard the untrusted bytes and validator; refetch once, never stale-fallback.
+        this.entries.delete(key);
+        entry = undefined;
+        signal?.throwIfAborted();
+      }
     }
     const headers = new Headers({ "A2A-Version": "1.0" });
     if (entry?.etag) headers.set("If-None-Match", entry.etag);
