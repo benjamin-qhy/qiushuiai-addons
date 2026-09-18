@@ -1,3 +1,4 @@
+import type { CardSigning, CardVerification } from "./card-security.js";
 import {
   readFileSync,
   mkdirSync,
@@ -18,9 +19,12 @@ export interface A2aEndpoint {
   cardUrl: string;
   credentialKey?: string;
   allowPrivate: boolean;
+  cardCacheMaxAgeSeconds?: number;
+  cardVerification?: CardVerification;
   enabled: boolean;
 }
 export interface A2aPublishedAgent {
+  cardSigning?: CardSigning;
   id: string;
   name: string;
   description: string;
@@ -125,6 +129,8 @@ export function validateConfig(value: unknown): A2aConfig {
         "cardUrl",
         "credentialKey",
         "allowPrivate",
+        "cardCacheMaxAgeSeconds",
+        "cardVerification",
         "enabled",
       ]);
       const allowPrivate = bool(p.allowPrivate),
@@ -135,6 +141,12 @@ export function validateConfig(value: unknown): A2aConfig {
         cardUrl,
         ...(p.credentialKey ? { credentialKey: key(p.credentialKey) } : {}),
         allowPrivate,
+        ...(p.cardCacheMaxAgeSeconds === undefined
+          ? {}
+          : { cardCacheMaxAgeSeconds: cacheSeconds(p.cardCacheMaxAgeSeconds) }),
+        ...(p.cardVerification === undefined
+          ? {}
+          : { cardVerification: verification(p.cardVerification) }),
         enabled: bool(p.enabled),
       };
     }),
@@ -142,8 +154,17 @@ export function validateConfig(value: unknown): A2aConfig {
   );
   const agents = unique(
     list(r.agents).map((v) => {
-      const p = record(v, ["id", "name", "description", "enabled"]);
+      const p = record(v, [
+        "id",
+        "name",
+        "description",
+        "enabled",
+        "cardSigning",
+      ]);
       return {
+        ...(p.cardSigning === undefined
+          ? {}
+          : { cardSigning: signing(p.cardSigning) }),
         id: opaqueId(p.id),
         name: text(p.name),
         description: text(p.description, 1024),
@@ -198,4 +219,47 @@ export class A2aConfigStore {
     renameSync(tmp, path);
     return config;
   }
+}
+
+function cacheSeconds(value: unknown): number {
+  if (!Number.isInteger(value) || Number(value) < 0 || Number(value) > 300)
+    throw new Error("Card cache limit must be 0..300 seconds.");
+  return Number(value);
+}
+function signing(value: unknown): CardSigning {
+  const v = record(value, ["kid", "privateKeyRef"]);
+  return { kid: opaqueId(v.kid), privateKeyRef: key(v.privateKeyRef) };
+}
+function verification(value: unknown): CardVerification {
+  const v = record(value, ["keys"]);
+  const keys = list(v.keys);
+  if (keys.length < 1 || keys.length > 8)
+    throw new Error("One to eight card trust keys required.");
+  return {
+    keys: unique(
+      keys.map((item) => {
+        const r = record(item, [
+          "kid",
+          "publicKeyRef",
+          "notBefore",
+          "expiresAt",
+        ]);
+        const notBefore = text(r.notBefore),
+          expiresAt = text(r.expiresAt);
+        if (
+          !Number.isFinite(Date.parse(notBefore)) ||
+          !Number.isFinite(Date.parse(expiresAt)) ||
+          Date.parse(notBefore) >= Date.parse(expiresAt)
+        )
+          throw new Error("Invalid card trust key validity window.");
+        return {
+          kid: opaqueId(r.kid),
+          publicKeyRef: key(r.publicKeyRef),
+          notBefore,
+          expiresAt,
+        };
+      }),
+      (k) => k.kid,
+    ),
+  };
 }

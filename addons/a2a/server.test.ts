@@ -13,7 +13,9 @@ afterEach(() => {
   for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
 });
 const token = "disposable-a2a-client-token-long-enough";
-function fixture(secret: () => Promise<string | null> = async () => token) {
+function fixture(
+  secret: (name: string) => Promise<string | null> = async () => token,
+) {
   const dir = mkdtempSync(join(tmpdir(), "a2a-server-"));
   dirs.push(dir);
   const config: A2aConfig = {
@@ -317,6 +319,111 @@ test("slow credential providers are concurrency bounded before authentication an
     );
   } finally {
     resolve(token);
+    f.server.close();
+    await f.server.drained();
+    f.store.close();
+  }
+});
+
+test("authenticated signed Agent Card revalidates privately and revocation prevents conditional disclosure", async () => {
+  const { generateKeyPair, exportJWK } = await import("jose");
+  const { verifyCard } = await import("./card-security.js");
+  const pair = await generateKeyPair("EdDSA", {
+    crv: "Ed25519",
+    extractable: true,
+  });
+  const privateJson = JSON.stringify(await exportJWK(pair.privateKey)),
+    publicJson = JSON.stringify(await exportJWK(pair.publicKey));
+  const f = fixture(async (name) => (name === "signing" ? privateJson : token));
+  f.config.agents[0].cardSigning = { kid: "server", privateKeyRef: "signing" };
+  try {
+    const first = await f.server.handle(f.request("agent-card.json"));
+    const etag = first.headers.get("etag")!;
+    const card = await first.json();
+    expect(first.headers.get("vary")).toBe("Authorization");
+    expect(first.headers.get("cache-control")).toBe("private, no-cache");
+    await verifyCard(
+      card,
+      {
+        keys: [
+          {
+            kid: "server",
+            publicKeyRef: "public",
+            notBefore: "2020-01-01",
+            expiresAt: "2099-01-01",
+          },
+        ],
+      },
+      async () => publicJson,
+    );
+    const req = f.request("agent-card.json");
+    req.headers.set("If-None-Match", etag);
+    expect((await f.server.handle(req)).status).toBe(304);
+    const noAuth = f.request("agent-card.json", undefined, false);
+    noAuth.headers.set("If-None-Match", etag);
+    expect((await f.server.handle(noAuth)).status).toBe(401);
+    f.config.agents[0].description = "changed";
+    const changed = await f.server.handle(req);
+    expect(changed.status).toBe(200);
+    expect(changed.headers.get("etag")).not.toBe(etag);
+    f.config.principals[0].enabled = false;
+    expect((await f.server.handle(req)).status).toBe(401);
+  } finally {
+    f.server.close();
+    await f.server.drained();
+    f.store.close();
+  }
+});
+
+test("fixed well-known proxy alias preserves target and credential gates without adding root runtime routes", async () => {
+  const f = fixture();
+  const proxy = Bun.serve({
+    hostname: "127.0.0.1",
+    port: 0,
+    fetch(req) {
+      const path = new URL(req.url).pathname;
+      if (path !== "/.well-known/agent-card.json")
+        return new Response("no alias", { status: 404 });
+      return f.server.handle(
+        new Request(
+          "https://example.invalid/api/addons/a2a/agents/echo/agent-card.json",
+          { method: req.method, headers: req.headers, signal: req.signal },
+        ),
+      );
+    },
+  });
+  try {
+    expect(
+      (await fetch(new URL("/.well-known/agent-card.json", proxy.url))).status,
+    ).toBe(401);
+    const auth = { authorization: "Bearer " + token };
+    const card = await fetch(
+      new URL("/.well-known/agent-card.json", proxy.url),
+      { headers: auth },
+    );
+    expect(card.status).toBe(200);
+    const raw = await card.json();
+    expect(raw.supportedInterfaces[0].url).toBe(
+      "https://example.invalid/api/addons/a2a/agents/echo/rpc",
+    );
+    expect(
+      (
+        await fetch(
+          new URL("/.well-known/agent-card.json/private", proxy.url),
+          { headers: auth },
+        )
+      ).status,
+    ).toBe(404);
+    f.config.enabled = false;
+    expect(
+      (
+        await fetch(new URL("/.well-known/agent-card.json", proxy.url), {
+          headers: auth,
+        })
+      ).status,
+    ).toBe(404);
+  } finally {
+    proxy.stop(true);
     f.server.close();
     await f.server.drained();
     f.store.close();

@@ -75,7 +75,7 @@ export function pinnedEndpointFetch(
           timeout: 30000,
         },
         (res) => {
-          if ((res.statusCode || 0) >= 300 && (res.statusCode || 0) < 400) {
+          if ((res.statusCode || 0) >= 300 && (res.statusCode || 0) < 400 && res.statusCode !== 304) {
             res.destroy();
             reject(new Error("A2A redirects are not permitted."));
             return;

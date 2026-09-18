@@ -260,7 +260,7 @@ ${tasks ? JSON.stringify(tasks, null, 2) : "Refresh diagnostics to inspect princ
       <p>
         Agent Card URL: /api/addons/a2a/agents/&lt;id&gt;/agent-card.json.
         Bearer authentication is required. Token values belong in Keychain
-        settings. No connection test here executes remote work.
+        settings. Optional endpoint cardCacheMaxAgeSeconds and cardVerification keys, and published-agent cardSigning references, are configured in the JSON lists above. No connection test here executes remote work.
       </p>
     </section>`;
   }
