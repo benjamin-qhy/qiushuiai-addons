@@ -5,7 +5,7 @@ Candidate for optional issue #128; not deployed or enabled on production. All ne
 | Gate | Result |
 |---|---|
 | All compatibility typechecks | Passed |
-| Full A2A suite with companion core, browser and both Python checks enabled | 59 passed, 474 assertions across 15 files |
+| Full A2A suite with companion core, browser and both Python checks enabled | 62 passed, 488 assertions across 15 files |
 | Repository compatibility tests | 192 passed, 7 opt-in skips; skipped checks passed in full run above |
 | Standalone A2A import with its own dependency install | Passed |
 | Offline protobuf field-map regeneration check | Passed: 21 reachable message definitions |
@@ -34,3 +34,7 @@ The normative v1.0.1 snapshot retains required empty fields. The pinned JS SDK c
 Caching defaults off. Server signing and required client verification are separate explicit settings. Ed25519 with local keychain references is the only signature profile implemented; remote JWK URLs and extended/public redacted cards remain unsupported/unadvertised. The proxy configuration is a tested pattern for an operator-managed reverse proxy, not an automatically installed server change. Signatures do not replace authentication, principal/target grants, DNS pinning or current-work budget admission.
 
 Issue #129 push callbacks remain disabled until their separate durable-outbox, receiver-authentication and SSRF/replay acceptance work is complete. The initial A2A epic stays closed; neither follow-up is declared merged by this receipt.
+
+## Independent merge review
+
+A separate judge review identified (1) a fresh cached card remaining stuck after trust-key rotation and (2) default reconstruction permitting remote required-field omission. Fixed by evicting cached bytes/ETag and refetching once on trust failure, and rejecting missing/null remote required fields. A follow-up tightened local signing to reconstruct omitted SDK defaults only, never explicit null. Regression tests cover rotation refetch, missing/null/nested required values and local omitted-vs-null signing. Final judge confirmed the blockers resolved; the complete 62-test gate passed. No production enablement.

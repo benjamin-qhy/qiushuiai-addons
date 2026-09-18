@@ -200,5 +200,75 @@ test("cached signed cards recheck key expiry and rotated local key bytes on ever
   await expect(
     cache.get(ep, "work", fetcher, resolve, undefined, 3000),
   ).rejects.toThrow("No trusted");
-  expect(calls).toBe(1);
+  expect(calls).toBe(3);
+});
+
+test("fresh cache trust failure refetches new signed bytes unconditionally after key rotation", async () => {
+  const { generateKeyPair, exportJWK } = await import("jose");
+  const { signCard } = await import("./card-security.js");
+  const make = async () => {
+    const pair = await generateKeyPair("EdDSA", {
+      crv: "Ed25519",
+      extractable: true,
+    });
+    return {
+      public: JSON.stringify(await exportJWK(pair.publicKey)),
+      private: JSON.stringify(await exportJWK(pair.privateKey)),
+    };
+  };
+  let current = await make();
+  const secrets = async (name: string) =>
+    name === "public"
+      ? current.public
+      : name === "private"
+        ? current.private
+        : "bearer";
+  const raw = {
+    name: "signed",
+    description: "",
+    version: "1",
+    capabilities: {},
+    skills: [],
+    supportedInterfaces: [],
+    defaultInputModes: [],
+    defaultOutputModes: [],
+  };
+  let signed = await signCard(
+    raw,
+    { kid: "k", privateKeyRef: "private" },
+    secrets,
+  );
+  let calls = 0;
+  const tags: (string | null)[] = [];
+  const fetcher = (async (_input: RequestInfo | URL, init?: RequestInit) => {
+    calls++;
+    tags.push(new Headers(init?.headers).get("if-none-match"));
+    return Response.json(signed, {
+      headers: { ETag: '"v' + calls + '"', "Cache-Control": "max-age=60" },
+    });
+  }) as unknown as typeof fetch;
+  const cache = new AgentCardCache(),
+    ep = {
+      ...endpoint(),
+      cardVerification: {
+        keys: [
+          {
+            kid: "k",
+            publicKeyRef: "public",
+            notBefore: "2020-01-01",
+            expiresAt: "2099-01-01",
+          },
+        ],
+      },
+    };
+  await cache.get(ep, "work", fetcher, secrets);
+  current = await make();
+  signed = await signCard(
+    { ...raw, name: "rotated" },
+    { kid: "k", privateKeyRef: "private" },
+    secrets,
+  );
+  expect((await cache.get(ep, "work", fetcher, secrets)).name).toBe("rotated");
+  expect(calls).toBe(2);
+  expect(tags).toEqual([null, null]);
 });

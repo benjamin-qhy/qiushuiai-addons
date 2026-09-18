@@ -85,8 +85,14 @@ function empty(value: unknown) {
     (object(value) && Object.keys(value).length === 0)
   );
 }
-function scalar(value: unknown, type: string, depth: number): unknown {
-  if (definitions[type]) return normalizeMessage(value, type, depth + 1);
+function scalar(
+  value: unknown,
+  type: string,
+  depth: number,
+  reconstruct: boolean,
+): unknown {
+  if (definitions[type])
+    return normalizeMessage(value, type, depth + 1, reconstruct);
   if (type === "google.protobuf.Struct") {
     if (!object(value)) throw new Error("Invalid card Struct");
     canonicalJson(value);
@@ -107,6 +113,7 @@ function normalizeMessage(
   value: unknown,
   type: string,
   depth = 0,
+  reconstruct = false,
 ): Record<string, unknown> {
   if (depth > 24 || !object(value))
     throw new Error("Invalid Agent Card object");
@@ -120,18 +127,23 @@ function normalizeMessage(
     let raw = value[key];
     if (raw === undefined || raw === null) {
       if (!rule.required) continue;
+      if (!reconstruct || raw === null)
+        throw new Error(`Missing required Agent Card field: ${type}.${key}`);
       raw = defaultValue(rule);
     }
     let normalized: unknown;
     if (rule.repeated) {
       if (!Array.isArray(raw)) throw new Error("Invalid card repeated field");
-      normalized = raw.map((v) => scalar(v, rule.type, depth));
+      normalized = raw.map((v) => scalar(v, rule.type, depth, reconstruct));
     } else if (rule.map) {
       if (!object(raw)) throw new Error("Invalid card map");
       normalized = Object.fromEntries(
-        Object.entries(raw).map(([k, v]) => [k, scalar(v, rule.type, depth)]),
+        Object.entries(raw).map(([k, v]) => [
+          k,
+          scalar(v, rule.type, depth, reconstruct),
+        ]),
       );
-    } else normalized = scalar(raw, rule.type, depth);
+    } else normalized = scalar(raw, rule.type, depth, reconstruct);
     if (rule.required || rule.presence || !empty(normalized))
       out[key] = normalized;
   }
@@ -258,7 +270,9 @@ export async function signCard(
 ): Promise<Record<string, unknown>> {
   const secret = await resolve(policy.privateKeyRef);
   if (!secret) throw new Error("Agent Card signing key unavailable");
-  const normalized = normalizeMessage(raw, "AgentCard");
+  // Only locally generated SDK cards may need omitted defaults restored before
+  // signing. Remote signed input is always presence-checked by canonicalAgentCard.
+  const normalized = normalizeMessage(raw, "AgentCard", 0, true);
   const key = await importJWK(jwk(secret, true), "EdDSA");
   const signature = await new FlattenedSign(
     new TextEncoder().encode(canonicalJson(normalized)),

@@ -273,3 +273,59 @@ test("JSON canonical input rejects duplicate escaped keys and excessive nesting 
   ])
     expect(() => parseCardJson(value)).toThrow();
 });
+
+test("remote verification rejects absent/null required fields even when defaults could reconstruct signed bytes", async () => {
+  const k = await keys();
+  const signed = await signCard(
+    {
+      ...unsigned(),
+      description: "",
+      skills: [{ id: "s", name: "", description: "", tags: [] }],
+    },
+    { kid: "key-1", privateKeyRef: "private" },
+    k.resolve,
+  );
+  await verifyCard(signed, policy(), k.resolve, now);
+  for (const key of [
+    "description",
+    "skills",
+    "capabilities",
+    "defaultInputModes",
+  ]) {
+    const missing = structuredClone(signed);
+    delete missing[key];
+    await expect(verifyCard(missing, policy(), k.resolve, now)).rejects.toThrow(
+      "Missing required",
+    );
+    const nulled = { ...signed, [key]: null };
+    await expect(verifyCard(nulled, policy(), k.resolve, now)).rejects.toThrow(
+      "Missing required",
+    );
+  }
+  const nested = structuredClone(signed) as any;
+  delete nested.skills[0].name;
+  await expect(verifyCard(nested, policy(), k.resolve, now)).rejects.toThrow(
+    "Missing required",
+  );
+});
+
+test("local signer repairs SDK omissions only, never explicit null required fields", async () => {
+  const k = await keys();
+  const local = { ...unsigned(), description: undefined };
+  expect(
+    (
+      await signCard(
+        local,
+        { kid: "key-1", privateKeyRef: "private" },
+        k.resolve,
+      )
+    ).description,
+  ).toBe("");
+  await expect(
+    signCard(
+      { ...unsigned(), description: null },
+      { kid: "key-1", privateKeyRef: "private" },
+      k.resolve,
+    ),
+  ).rejects.toThrow("Missing required");
+});
