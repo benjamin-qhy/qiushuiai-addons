@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { settingsStyles } from "./styles.ts";
 const ADDON_ID = "delegate";
 const API = `/agent/addons/api/${ADDON_ID}`;
 
@@ -155,7 +156,7 @@ function DelegateSettings() {
     saveConfigPatch({ excluded_models: patterns }, "Saved model exclusions.");
   }, [excludedModelsText, saveConfigPatch]);
 
-  if (!config) return html`<div style="padding:1rem;color:var(--text-secondary)">Loading delegate settings…</div>`;
+  if (!config) return html`<div class="delegate-settings"><style>${settingsStyles}</style><p class="settings-addon-status" role="status">Loading delegate settings…</p></div>`;
 
   const enabledSet = new Set(Array.isArray(config.searchable_providers)
     ? config.searchable_providers
@@ -166,98 +167,109 @@ function DelegateSettings() {
   const q = filter.trim().toLowerCase();
   const visibleProviders = providers.filter((provider) => !q || provider.provider.toLowerCase().includes(q));
 
-  const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.45rem 0" };
-  const I = { width: "100%", padding: "6px 10px", background: "var(--bg-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)", borderRadius: "6px", fontSize: "0.84rem" };
-  const H = { margin: "1.2rem 0 0.45rem", fontSize: "0.9rem", color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.3rem" };
-  const buttonStyle = "padding:4px 10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:0.82rem";
-  const cardStyle = { padding: "0.55rem 0.65rem", border: "1px solid var(--border-color)", borderRadius: "7px", background: "var(--bg-secondary)" };
-
   return html`
-    <div style="padding:0.5rem 0;">
-      <h4 style=${H}>Catalog status</h4>
-      <div style=${{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: "0.45rem", marginBottom: "0.6rem" }}>
-        <div style=${cardStyle}><div style="font-size:1.05rem;font-weight:600">${runtimeCatalog.model_count || 0}</div><div style="font-size:0.72rem;color:var(--text-secondary)">Runtime models</div></div>
-        <div style=${cardStyle}><div style="font-size:1.05rem;font-weight:600">${executableCatalog.model_count || 0}</div><div style="font-size:0.72rem;color:var(--text-secondary)">Child CLI models</div></div>
-        <div style=${cardStyle}><div style="font-size:1.05rem;font-weight:600">${executableCatalog.candidate_count || 0}</div><div style="font-size:0.72rem;color:var(--text-secondary)">Approved models</div></div>
-        <div style=${cardStyle}><div style="font-size:1.05rem;font-weight:600">${runtimeOnlyModels.length}</div><div style="font-size:0.72rem;color:var(--text-secondary)">Runtime-only</div></div>
-        <div style=${cardStyle}><div style="font-size:1.05rem;font-weight:600">${unclassifiedModels.length}</div><div style="font-size:0.72rem;color:var(--text-secondary)">Unclassified CLI</div></div>
+    <div class="delegate-settings">
+      <style>${settingsStyles}</style>
+      <section class="settings-addon-section">
+      <h4>Catalog status</h4>
+      <div class="delegate-metrics">
+        <div class="delegate-metric"><div class="delegate-metric-count">${runtimeCatalog.model_count || 0}</div><div class="settings-addon-help">Runtime models</div></div>
+        <div class="delegate-metric"><div class="delegate-metric-count">${executableCatalog.model_count || 0}</div><div class="settings-addon-help">Child CLI models</div></div>
+        <div class="delegate-metric"><div class="delegate-metric-count">${executableCatalog.candidate_count || 0}</div><div class="settings-addon-help">Approved models</div></div>
+        <div class="delegate-metric"><div class="delegate-metric-count">${runtimeOnlyModels.length}</div><div class="settings-addon-help">Runtime-only</div></div>
+        <div class="delegate-metric"><div class="delegate-metric-count">${unclassifiedModels.length}</div><div class="settings-addon-help">Unclassified CLI</div></div>
       </div>
-      <div style=${{ fontSize: "0.76rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+      <div class="settings-addon-help">
         <div>Current: <code>${runtimeCatalog.current_model || "not captured"}</code>${runtimeCatalog.current_classification?.tier ? ` · T${runtimeCatalog.current_classification.tier} · ${runtimeCatalog.current_classification.rule}` : " · unclassified"}</div>
         <div>Executable cache: ${formatAge(cache.refreshed_at)} · refreshed ${formatTimestamp(cache.refreshed_at)} · ${cache.stale ? "stale/retrying" : "fresh"}</div>
         ${cli && html`<div>CLI: <code>${cli}</code></div>`}
-        ${discoveryError && html`<div style=${{ color: "var(--danger-color)" }}>Last refresh error: ${discoveryError} (last known-good catalog retained)</div>`}
+        ${discoveryError && html`<div class="settings-addon-error" role="alert">Last refresh error: ${discoveryError} (last known-good catalog retained)</div>`}
       </div>
+      </section>
 
-      <h4 style=${H}>Approved providers</h4>
-      <div style=${{ fontSize: "0.78rem", color: "var(--text-secondary)", lineHeight: 1.45, marginBottom: "0.7rem" }}>
+      <section class="settings-addon-section">
+      <h4>Approved providers</h4>
+      <p class="settings-addon-help" id="delegate-provider-help">
         No provider is approved by default. Delegate can launch models only from providers marked <strong>Approved</strong>. Runtime-only Piclaw models are diagnostic only and cannot be selected.
+      </p>
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="delegate-provider-filter">Filter providers</label>
+        <div class="settings-addon-control-group">
+        <input id="delegate-provider-filter" class="settings-addon-control" aria-describedby="delegate-provider-help" type="search" value=${filter} placeholder="Filter providers…" onInput=${(e) => setFilter(e.target.value)} />
+        <button type="button" disabled=${saving} onClick=${() => load(true)}>Refresh</button>
+        </div>
       </div>
-      <div style=${{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "0.65rem" }}>
-        <input style=${I} type="search" value=${filter} placeholder="Filter providers…" onInput=${(e) => setFilter(e.target.value)} />
-        <button type="button" style=${buttonStyle} disabled=${saving} onClick=${() => load(true)}>Refresh</button>
-      </div>
-      <div style=${{ display: "grid", gap: "0.35rem" }}>
+      <div>
         ${visibleProviders.map((provider) => {
           const mode = resolveProviderMode(provider.provider, enabledSet);
           const radioName = `delegate-provider-mode-${provider.provider}`;
           return html`
-            <div key=${provider.provider} style=${S}>
-              <div role="radiogroup" aria-label=${`${provider.provider} mode`} style=${{ display: "flex", alignItems: "center", gap: "0.65rem", minWidth: "14.8rem" }}>
+            <div key=${provider.provider} class="delegate-provider-row">
+              <div role="radiogroup" aria-label=${`${provider.provider} mode`} class="settings-addon-control-group">
                 ${["approved", "exclude"].map((option) => html`
-                  <label key=${option} style=${{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                  <label key=${option} class="delegate-radio settings-addon-label">
                     <input type="radio" name=${radioName} value=${option} checked=${mode === (option === "approved" ? "search" : option)} disabled=${saving}
                       onChange=${() => saveProviderMode(provider.provider, option === "approved" ? "search" : option, providers.map((item) => item.provider), enabledSet)} />
                     <span>${option[0].toUpperCase()}${option.slice(1)}</span>
                   </label>`)}
               </div>
-              <span style=${{ minWidth: "150px", fontFamily: "var(--font-mono, monospace)", fontSize: "0.82rem" }}>${provider.provider}</span>
-              <span style=${{ color: "var(--text-secondary)", fontSize: "0.76rem" }}>${provider.modelCount} models${mode === "exclude" ? (provider.defaultExcluded ? " · default excluded" : " · excluded") : ""}</span>
+              <span class="delegate-provider-name">${provider.provider}</span>
+              <span class="settings-addon-help">${provider.modelCount} models${mode === "exclude" ? (provider.defaultExcluded ? " · default excluded" : " · excluded") : ""}</span>
             </div>`;
         })}
       </div>
+      </section>
 
-      <h4 style=${H}>Excluded model patterns</h4>
-      <div style=${{ fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: "0.45rem" }}>
+      <section class="settings-addon-section">
+      <h4>Excluded model patterns</h4>
+      <div class="settings-addon-field">
+      <label class="settings-addon-label" for="delegate-exclusions">Excluded model patterns</label>
+      <p class="settings-addon-help" id="delegate-exclusions-help">
         Hard model exclusions, one per line or comma-separated. Supports exact ids, substrings, or <code>*</code> wildcards. Matching models are blocked from automatic selection, fallback, and explicit model selection. Effective provider exclusions: ${effectiveExclusions.providers?.join(", ") || "none"}.
+      </p>
+      <textarea id="delegate-exclusions" class="settings-addon-control" aria-describedby="delegate-exclusions-help" style="min-height:74px;font-family:var(--font-mono, monospace)" value=${excludedModelsText} disabled=${saving} placeholder="gpt-4o\n*/experimental-*" onInput=${(e) => setExcludedModelsText(e.target.value)} />
       </div>
-      <textarea style=${{ ...I, minHeight: "74px", resize: "vertical", fontFamily: "var(--font-mono, monospace)" }} value=${excludedModelsText} disabled=${saving} placeholder="gpt-4o\n*/experimental-*" onInput=${(e) => setExcludedModelsText(e.target.value)} />
-      <div style=${{ display: "flex", justifyContent: "flex-end", marginTop: "0.4rem" }}>
-        <button type="button" style=${buttonStyle} disabled=${saving} onClick=${saveExcludedModels}>Save exclusions</button>
+      <div class="settings-addon-actions">
+        <button type="button" disabled=${saving} onClick=${saveExcludedModels}>Save exclusions</button>
       </div>
+      </section>
 
-      <h4 style=${H}>Approved delegate models</h4>
-      <div style=${{ fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: "0.45rem" }}>
+      <section class="settings-addon-section">
+      <h4>Approved delegate models</h4>
+      <p class="settings-addon-help">
         Delegate can launch only these ${candidates.length} models, whether selected automatically, requested explicitly by an agent, or used as a fallback. Each model is from an approved provider, matches the ordered model policy, exists in the child CLI catalog, and does not match an exclusion.
-      </div>
-      <div style=${{ maxHeight: "180px", overflow: "auto", border: "1px solid var(--border-color)", borderRadius: "6px" }}>
+      </p>
+      <div class="delegate-scroll" style="max-height:180px">
         ${candidates.slice(0, 80).map((candidate) => html`
-          <div key=${candidate.id} title=${candidate.classificationReason} style=${{ display: "grid", gridTemplateColumns: "3rem 1fr", gap: "0.5rem", padding: "0.4rem 0.5rem", borderBottom: "1px solid var(--border-color)", fontSize: "0.76rem" }}>
-            <span style="color:var(--text-secondary)">T${candidate.tier}</span>
+          <div key=${candidate.id} title=${candidate.classificationReason} class="delegate-candidate">
+            <span class="settings-addon-help">T${candidate.tier}</span>
             <span>
               <code>${candidate.id}</code>
-              <span style="color:var(--text-secondary)"> · ${candidate.family} · ${candidate.classificationRule}</span>
-              <div style="color:var(--text-secondary);font-size:0.7rem;margin-top:0.15rem">images=${candidate.supportsImages === true ? "yes" : candidate.supportsImages === false ? "no" : "?"} · reasoning=${candidate.reasoning === true ? "yes" : candidate.reasoning === false ? "no" : "?"} · context=${compactTokens(candidate.contextWindow)} · output=${compactTokens(candidate.maxOutputTokens)}</div>
+              <span class="settings-addon-help"> · ${candidate.family} · ${candidate.classificationRule}</span>
+              <div class="settings-addon-help">images=${candidate.supportsImages === true ? "yes" : candidate.supportsImages === false ? "no" : "?"} · reasoning=${candidate.reasoning === true ? "yes" : candidate.reasoning === false ? "no" : "?"} · context=${compactTokens(candidate.contextWindow)} · output=${compactTokens(candidate.maxOutputTokens)}</div>
             </span>
           </div>`)}
       </div>
+      </section>
 
-      <h4 style=${H}>Catalog differences and rejections</h4>
-      <div style=${{ fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: "0.45rem" }}>
+      <section class="settings-addon-section">
+      <h4>Catalog differences and rejections</h4>
+      <p class="settings-addon-help">
         Runtime-only models are known to Piclaw but not executable by the child CLI. Rejected CLI models cannot be used by Delegate because their provider is unapproved, the model is excluded, or the model is unclassified.
-      </div>
-      <div style=${{ maxHeight: "190px", overflow: "auto", border: "1px solid var(--border-color)", borderRadius: "6px" }}>
-        ${runtimeOnlyModels.length === 0 && rejectedModels.length === 0 && html`<div style="padding:0.5rem;font-size:0.76rem;color:var(--text-secondary)">No catalog differences or rejected models.</div>`}
+      </p>
+      <div class="delegate-scroll" style="max-height:190px">
+        ${runtimeOnlyModels.length === 0 && rejectedModels.length === 0 && html`<p class="settings-addon-help">No catalog differences or rejected models.</p>`}
         ${runtimeOnlyModels.slice(0, 50).map((model) => html`
-          <div key=${`runtime:${model.fullId}`} style="padding:0.35rem 0.5rem;border-bottom:1px solid var(--border-color);font-size:0.74rem">
-            <code>${model.fullId}</code> <span style="color:var(--text-secondary)">runtime-only · ${model.classification?.status === "classified" ? `T${model.classification.tier} ${model.classification.rule}` : model.classification?.reason}</span>
+          <div key=${`runtime:${model.fullId}`} class="delegate-rejection settings-addon-help">
+            <code>${model.fullId}</code> <span>runtime-only · ${model.classification?.status === "classified" ? `T${model.classification.tier} ${model.classification.rule}` : model.classification?.reason}</span>
           </div>`)}
         ${rejectedModels.slice(0, 80).map((model) => html`
-          <div key=${`rejected:${model.fullId}`} style="padding:0.35rem 0.5rem;border-bottom:1px solid var(--border-color);font-size:0.74rem">
-            <code>${model.fullId}</code> <span style="color:var(--text-secondary)">rejected · ${model.rejection_reason}</span>
+          <div key=${`rejected:${model.fullId}`} class="delegate-rejection settings-addon-help">
+            <code>${model.fullId}</code> <span>rejected · ${model.rejection_reason}</span>
           </div>`)}
       </div>
-      ${message && html`<div style=${{ marginTop: "0.75rem", fontSize: "0.8rem", color: /failed|error/i.test(message) ? "var(--danger-color)" : "var(--accent-color)" }}>${message}</div>`}
+      </section>
+      ${message && html`<div class=${/failed|error/i.test(message) ? "settings-addon-error" : "settings-addon-status"} role=${/failed|error/i.test(message) ? "alert" : "status"}>${message}</div>`}
     </div>`;
 }
 

@@ -105,6 +105,19 @@ The browser pane reads configuration from `/agent/addons/api/delegate/config` an
 
 Each discovered provider has one mutually exclusive mode: **Approved** or **Exclude**. Changing modes writes a complete partition to the persisted `searchable_providers` and `excluded_providers` fields. The legacy field name `searchable_providers` now stores the operator-approved provider list. A missing or empty list approves no providers.
 
+The pane opts into the shared `settings-addon-*` controls from Piclaw #1318.
+It keeps pane-owned catalogue cards, wrapping provider rows and bounded scroll
+lists. A pane-scoped fallback CSS layer keeps older supported hosts readable;
+host styles take precedence when available. Save payloads, failed-save rollback,
+refresh behaviour and approval rules are unchanged.
+
+`settings-browser.test.ts` checks these interactions through mocked APIs in
+Classic, Visual and a standalone older-host fixture. From the repository root,
+set `PICLAW_E2E_DISPOSABLE=1`,
+`PICLAW_SETTINGS_CORE_SOURCE=/absolute/path/to/piclaw` and an installed
+`PLAYWRIGHT_BROWSERS_PATH`, then run `bun test addons/delegate/settings-browser.test.ts`.
+No child delegate or provider is invoked by these browser tests.
+
 ## Model catalogs and caching
 
 Delegate keeps these roles separate:
