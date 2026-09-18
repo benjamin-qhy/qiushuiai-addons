@@ -1,0 +1,74 @@
+{
+  "name": "@rcarmo/piclaw-addon-a2a",
+  "version": "0.1.0",
+  "description": "A2A v1 interoperability profile and disabled-by-default integration foundation",
+  "type": "module",
+  "main": "index.ts",
+  "files": [
+    "*.ts",
+    "!*.test.ts",
+    "skills",
+    "docs",
+    "protocol",
+    "LICENSE",
+    "README.md"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rcarmo/piclaw-addons",
+    "directory": "addons/a2a"
+  },
+  "piclaw": {
+    "type": "extension",
+    "compatibleVersions": ">=3.0.1",
+    "tags": [
+      "a2a",
+      "agents",
+      "interoperability"
+    ],
+    "category": "Integrations"
+  },
+  "pi": {
+    "extensions": [
+      "index.ts"
+    ],
+    "runtime": {
+      "entries": [
+        "runtime.ts"
+      ],
+      "load": "startup"
+    },
+    "skills": [
+      "skills"
+    ]
+  },
+  "engines": {
+    "bun": ">=1.4.1"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "dependencies": {
+    "@a2a-js/sdk": "1.1.0"
+  },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "keywords": [
+    "piclaw-addon",
+    "pi-package",
+    "a2a"
+  ],
+  "agents": {
+    "skills": [
+      {
+        "name": "a2a",
+        "path": "skills/a2a/SKILL.md",
+        "description": "Inspect the disabled A2A v1 interoperability profile; no agent calls or publication in this milestone."
+      }
+    ]
+  }
+}
