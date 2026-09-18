@@ -35,6 +35,17 @@ function validateRemoteResult(value: any): void {
   }
 }
 
+export function endpointIdentity(endpoint: A2aEndpoint): string {
+  return createHash("sha256")
+    .update(
+      JSON.stringify([
+        endpoint.alias,
+        endpoint.cardUrl,
+        endpoint.credentialKey ?? null,
+      ]),
+    )
+    .digest("hex");
+}
 export interface A2aClientCall {
   scope: string;
   endpoint: string;
@@ -108,19 +119,9 @@ export class A2aOutboundClient {
   }
   private storageEndpoint(alias: string): string {
     const endpoint = this.endpoint(alias);
-    return createHash("sha256")
-      .update(
-        JSON.stringify([
-          endpoint.alias,
-          endpoint.cardUrl,
-          endpoint.credentialKey ?? null,
-        ]),
-      )
-      .digest("hex");
+    return endpointIdentity(endpoint);
   }
-  private async connection(
-    call: A2aClientCall,
-  ): Promise<{
+  private async connection(call: A2aClientCall): Promise<{
     client: Client;
     card: AgentCard;
     rawCard: Record<string, unknown>;

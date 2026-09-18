@@ -301,7 +301,10 @@ test("version, envelope, role, legacy parts and unsupported capabilities fail be
   const tenant = request("tenant", "direct");
   Object.assign(tenant.params, { tenant: "other" });
   expect((await (await post(tenant)).json()).error.code).toBe(-32602);
-  for (const method of A2A_PROFILE.unsupportedMethods) {
+  for (const method of [
+    ...A2A_PROFILE.unsupportedMethods,
+    ...A2A_PROFILE.optInPushMethods,
+  ]) {
     const data = await (
       await post({ jsonrpc: "2.0", id: method, method, params: {} })
     ).json();

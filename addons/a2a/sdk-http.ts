@@ -115,16 +115,56 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
     // Reject 0.3 and missing versions. No fallback/implicit compatibility surface.
     if (req.headers.get("a2a-version") !== A2A_PROFILE.wireVersion)
       return rpcError(id, -32009, "Unsupported A2A version");
-    if (A2A_PROFILE.unsupportedMethods.includes(request.method as never))
+    if (
+      [
+        ...A2A_PROFILE.unsupportedMethods,
+        ...A2A_PROFILE.optInPushMethods,
+      ].includes(request.method as never) &&
+      !(
+        request.method.includes("PushNotification") &&
+        (await handler.getAgentCard()).capabilities?.pushNotifications
+      )
+    )
       return rpcError(
         id,
         request.method.includes("PushNotification") ? -32003 : -32004,
         "Operation not supported",
       );
-    if (!A2A_PROFILE.methods.includes(request.method as never))
+    if (
+      !A2A_PROFILE.methods.includes(request.method as never) &&
+      !A2A_PROFILE.unsupportedMethods.includes(request.method as never) &&
+      !A2A_PROFILE.optInPushMethods.includes(request.method as never)
+    )
       return rpcError(id, -32601, "Method not found");
     if (!object(request.params)) return rpcError(id, -32602, "Invalid params");
     const params = request.params;
+    if (request.method.includes("PushNotification")) {
+      if (
+        typeof params.taskId !== "string" ||
+        !params.taskId ||
+        params.taskId.length > 128
+      )
+        return rpcError(id, -32602, "Invalid push task ID");
+      if (
+        params.id !== undefined &&
+        (typeof params.id !== "string" || params.id.length > 128)
+      )
+        return rpcError(id, -32602, "Invalid push config ID");
+      if (
+        params.pageSize !== undefined &&
+        (!Number.isInteger(params.pageSize) || Number(params.pageSize) < 0)
+      )
+        return rpcError(id, -32602, "Invalid push page size");
+      if (
+        request.method === "CreateTaskPushNotificationConfig" &&
+        (typeof params.url !== "string" ||
+          params.url.length > 2048 ||
+          !object(params.authentication) ||
+          typeof params.authentication.scheme !== "string" ||
+          typeof params.authentication.credentials !== "string")
+      )
+        return rpcError(id, -32602, "Invalid callback authentication");
+    }
     // Tenant and caller identity come from the authenticated adapter, never wire data.
     if ("tenant" in params)
       return rpcError(id, -32602, "Wire tenant is not accepted");
@@ -171,8 +211,19 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
             Number(config.historyLength) < 0)
         )
           return rpcError(id, -32602, "Invalid historyLength");
-        if (config.taskPushNotificationConfig !== undefined)
-          return rpcError(id, -32003, "Push notifications not supported");
+        if (config.taskPushNotificationConfig !== undefined) {
+          if (!(await handler.getAgentCard()).capabilities?.pushNotifications)
+            return rpcError(id, -32003, "Push notifications not supported");
+          const push = config.taskPushNotificationConfig;
+          if (
+            !object(push) ||
+            typeof push.url !== "string" ||
+            !object(push.authentication) ||
+            typeof push.authentication.scheme !== "string" ||
+            typeof push.authentication.credentials !== "string"
+          )
+            return rpcError(id, -32602, "Invalid push configuration");
+        }
       }
     }
     if (

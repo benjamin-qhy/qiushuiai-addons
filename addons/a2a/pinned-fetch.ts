@@ -12,6 +12,8 @@ import { validateOutboundUrl, type SecretResolver } from "./security.js";
 export function pinnedEndpointFetch(
   endpoint: A2aEndpoint,
   resolveSecret: SecretResolver,
+  beforeConnect?: () => void | Promise<void>,
+  maxRequestBytes = 64 * 1024,
 ): typeof fetch {
   return (async (input: RequestInfo | URL, init: RequestInit = {}) => {
     const url = new URL(input instanceof Request ? input.url : String(input));
@@ -56,8 +58,10 @@ export function pinnedEndpointFetch(
           : body instanceof ArrayBuffer
             ? Buffer.from(body)
             : Buffer.from(body.buffer, body.byteOffset, body.byteLength);
-    if (data && data.byteLength > 64 * 1024)
+    if (data && data.byteLength > maxRequestBytes)
       throw new Error("A2A outbound body limit.");
+    await beforeConnect?.();
+    signal?.throwIfAborted();
     return await new Promise<Response>((resolve, reject) => {
       const send = url.protocol === "https:" ? httpsRequest : httpRequest;
       const selected = addresses[0];
@@ -75,7 +79,11 @@ export function pinnedEndpointFetch(
           timeout: 30000,
         },
         (res) => {
-          if ((res.statusCode || 0) >= 300 && (res.statusCode || 0) < 400 && res.statusCode !== 304) {
+          if (
+            (res.statusCode || 0) >= 300 &&
+            (res.statusCode || 0) < 400 &&
+            res.statusCode !== 304
+          ) {
             res.destroy();
             reject(new Error("A2A redirects are not permitted."));
             return;

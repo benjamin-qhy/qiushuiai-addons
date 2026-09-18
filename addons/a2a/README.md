@@ -16,13 +16,18 @@ Requires the generic operation API in [Piclaw PR #1337](https://github.com/rcarm
 | Runtime | Generic admitted operation, independent durable result storage, explicit continuation/cancel and conservative restart reconciliation |
 | Outbound | Approved endpoint aliases, pinned-address transport, bearer keychain refs; local task ownership by current verified work scope |
 | Optional cards | Private ETag revalidation, work/credential-scoped cache, pinned Ed25519 signing/verification; operator-configured well-known proxy alias |
-| Excluded | Legacy protocol 0.3 compatibility, gRPC/REST bindings, extended/public redacted cards, push callbacks, multi-hop/family exposure |
+| Optional push | Approved authenticated callbacks, durable bounded outbox and task-scoped receive-only inbox; separately disabled by default |
+| Excluded | Legacy protocol 0.3 compatibility, gRPC/REST bindings, extended/public redacted cards, multi-hop/family exposure |
 
 The official SDK is pinned to `@a2a-js/sdk@1.1.0` with versioned schema/provenance under [protocol/](protocol/provenance.json). The production handler uses its codecs/error/dispatch/client layers; it does not use the SDK demo task store or event-bus execution handler. Those demos cannot independently persist terminal results after consumers disconnect.
 
 ## Optional discovery and card trust
 
 See [Agent Card discovery and trust](docs/card-discovery.md) for an exact reverse-proxy well-known alias, optional endpoint cache TTL (0–300 seconds), pinned public-key validity/rotation, and keychain-backed server signing. Defaults remain uncached and unsigned; signatures never grant execution rights. No remote JWK URLs are fetched.
+
+## Optional push
+
+See [push notifications](docs/push-notifications.md) for the separate opt-in, exact callback URL/principal grants, Bearer credential matching, durable retry and receive-only task correlation. Push is not enabled by card discovery or signing.
 
 ## Configure safely
 
@@ -56,7 +61,7 @@ Responses are labelled untrusted, truncated at 32 KiB in tool output, and never 
 - Outbound: same-origin interface selection, 64 KiB request, 128 KiB card, 2 MiB response/stream; 16 active calls and 30-second end-to-end scope. Credential refs are resolved fresh, never persisted in task stores.
 - Tasks/contexts/messages live in `tasks-v1.sqlite`; outbound identities in `outbound-v1.sqlite`, under the host-owned add-on directory. Modes are private and writes transactional. Task IDs/context reuse/page tokens are caller-bound. List ordering is latest status first and cursors are HMAC-protected/filter-bound.
 - Core operation results persist independently of HTTP consumers. Reads reconcile durable protocol state; restart does not blindly replay uncertain execution. A pending/unknown continuation cannot be resent without explicit reconciliation. Operator-only terminal pruning is exposed by `POST /agent/addons/api/a2a/tasks` with `{principal,before}`; nonterminal and other-principal records are retained.
-- Push/extended-card methods return explicit unsupported errors. Unexpected provider/store exception text is suppressed in public JSON-RPC responses.
+- Push methods return explicit unsupported errors while disabled; extended-card methods remain unsupported. Unexpected provider/store exception text is suppressed in public JSON-RPC responses.
 
 ## Evidence and tests
 

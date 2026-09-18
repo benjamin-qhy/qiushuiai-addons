@@ -16,13 +16,13 @@ export const A2A_PROFILE = Object.freeze({
     "CancelTask",
     "SubscribeToTask",
   ] as const,
-  unsupportedMethods: [
+  optInPushMethods: [
     "CreateTaskPushNotificationConfig",
     "GetTaskPushNotificationConfig",
     "ListTaskPushNotificationConfigs",
     "DeleteTaskPushNotificationConfig",
-    "GetExtendedAgentCard",
   ] as const,
+  unsupportedMethods: ["GetExtendedAgentCard"] as const,
   maxRequestBytes: 32 * 1024,
   maxResponseBytes: 256 * 1024,
   maxStreamFrameBytes: 256 * 1024,

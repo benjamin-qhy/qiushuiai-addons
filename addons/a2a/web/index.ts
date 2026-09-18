@@ -31,7 +31,10 @@ export default function register(api: any) {
     const [config, setConfig] = useState(defaults),
       [principals, setPrincipals] = useState("[]"),
       [agents, setAgents] = useState("[]"),
-      [endpoints, setEndpoints] = useState("[]");
+      [endpoints, setEndpoints] = useState("[]"),
+      [push, setPush] = useState(
+        ' {"enabled":false,"callbacks":[],"receivers":[]}'.trim(),
+      );
     const [busy, setBusy] = useState(true),
       [error, setError] = useState(""),
       [notice, setNotice] = useState(""),
@@ -43,6 +46,13 @@ export default function register(api: any) {
       setPrincipals(JSON.stringify(next.principals || [], null, 2));
       setAgents(JSON.stringify(next.agents || [], null, 2));
       setEndpoints(JSON.stringify(next.endpoints || [], null, 2));
+      setPush(
+        JSON.stringify(
+          next.push || { enabled: false, callbacks: [], receivers: [] },
+          null,
+          2,
+        ),
+      );
       setConfirm(false);
     }
     useEffect(() => {
@@ -78,6 +88,7 @@ export default function register(api: any) {
               principals: JSON.parse(principals),
               agents: JSON.parse(agents),
               endpoints: JSON.parse(endpoints),
+              push: JSON.parse(push),
             };
         const result = await request("config", next);
         populate(result.config);
@@ -219,6 +230,7 @@ export default function register(api: any) {
       ${json("Published agents (JSON)", agents, setAgents, 'Example: [{"id":"summarise","name":"Summarise","description":"Public text task","enabled":true}]')}
       ${json("Inbound principals (JSON)", principals, setPrincipals, 'Example: [{"id":"client","credentialKey":"a2a/client","targets":["summarise"],"enabled":true}]. Use keychain entry names only, never token values.')}
       ${json("Outbound endpoints (JSON)", endpoints, setEndpoints, 'Example: [{"alias":"lab","cardUrl":"https://agent.example/card","credentialKey":"a2a/lab","allowPrivate":false,"enabled":true}]. Private-address permission is an explicit network grant.')}
+      ${json("Push callbacks and receivers (JSON)", push, setPush, "Disabled by default. Callbacks require exact principal/target/URL and credentialKey grants. Receivers bind an endpoint alias to a distinct credentialKey. Use keychain names only. Enabling does not change core execution grants.")}
       <label class="a2a-confirm"
         ><input
           type="checkbox"
@@ -260,7 +272,9 @@ ${tasks ? JSON.stringify(tasks, null, 2) : "Refresh diagnostics to inspect princ
       <p>
         Agent Card URL: /api/addons/a2a/agents/&lt;id&gt;/agent-card.json.
         Bearer authentication is required. Token values belong in Keychain
-        settings. Optional endpoint cardCacheMaxAgeSeconds and cardVerification keys, and published-agent cardSigning references, are configured in the JSON lists above. No connection test here executes remote work.
+        settings. Optional endpoint cardCacheMaxAgeSeconds and cardVerification
+        keys, and published-agent cardSigning references, are configured in the
+        JSON lists above. No connection test here executes remote work.
       </p>
     </section>`;
   }
@@ -268,7 +282,7 @@ ${tasks ? JSON.stringify(tasks, null, 2) : "Refresh diagnostics to inspect princ
     id: "a2a",
     label: "A2A",
     order: 191,
-    icon: 'agents',
+    icon: "agents",
     component: Panel,
   });
 }

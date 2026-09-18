@@ -1,5 +1,17 @@
+import { randomUUID } from "node:crypto";
+import {
+  pushEnabled,
+  validateWireCallback,
+  wireCallback,
+} from "./push-policy.js";
+import { resolveA2aSecret, type SecretResolver } from "./security.js";
 import { partsText, SUPPORTED_MODES } from "./parts.js";
 import {
+  TaskPushNotificationConfig,
+  type GetTaskPushNotificationConfigRequest,
+  type DeleteTaskPushNotificationConfigRequest,
+  type ListTaskPushNotificationConfigsRequest,
+  type ListTaskPushNotificationConfigsResponse,
   AgentCard,
   Message,
   Task,
@@ -60,6 +72,7 @@ export class A2aRequestHandler implements A2ARequestHandler {
     private readonly config: () => A2aConfig,
     private readonly store: A2aTaskStore,
     private readonly operations: OperationAdapter,
+    private readonly secrets: SecretResolver = resolveA2aSecret,
   ) {}
   private owner(context: ServerCallContext) {
     const id = caller(context);
@@ -75,7 +88,7 @@ export class A2aRequestHandler implements A2ARequestHandler {
     return AgentCard.fromJSON({
       name: agent.name,
       description: agent.description,
-      version: "0.3.1",
+      version: "0.4.0",
       supportedInterfaces: [
         {
           url: new URL(
@@ -88,7 +101,7 @@ export class A2aRequestHandler implements A2ARequestHandler {
       ],
       capabilities: {
         streaming: true,
-        pushNotifications: false,
+        pushNotifications: pushEnabled(config),
         extendedAgentCard: false,
       },
       defaultInputModes: SUPPORTED_MODES,
@@ -115,9 +128,18 @@ export class A2aRequestHandler implements A2ARequestHandler {
   private async refresh(principal: string, id: string): Promise<TaskRecord> {
     const record = this.checked(principal, id);
     if (!record.operationId) return record;
-    const operation = await this.operations
-      .forPrincipal(principal)
-      .get(record.operationId);
+    const client = this.operations.forPrincipal(principal);
+    if (
+      pushEnabled(this.config()) &&
+      this.store.push.list(principal, id).length &&
+      client.events
+    ) {
+      const batch = await client.events(record.operationId, record.sequence);
+      for (const event of batch.events)
+        this.store.sync(principal, id, event.snapshot);
+      return this.store.sync(principal, id, batch.snapshot);
+    }
+    const operation = await client.get(record.operationId);
     return this.store.sync(principal, id, operation);
   }
   private async admit(
@@ -157,13 +179,11 @@ export class A2aRequestHandler implements A2ARequestHandler {
           .update("a2a:" + current.id)
           .digest("hex");
         try {
-          const receipt = await this.operations
-            .forPrincipal(principal)
-            .admit({
-              target: this.target,
-              idempotencyKey: key,
-              text: partsText(current.task.history[0]),
-            });
+          const receipt = await this.operations.forPrincipal(principal).admit({
+            target: this.target,
+            idempotencyKey: key,
+            text: partsText(current.task.history[0]),
+          });
           if (!receipt.operation) {
             this.store.completeContinuation(principal, message.messageId);
             return this.store.reject(
@@ -206,8 +226,26 @@ export class A2aRequestHandler implements A2ARequestHandler {
       }
       return this.refresh(principal, current.id);
     }
+    const suppliedPush = params.configuration?.taskPushNotificationConfig;
+    if (suppliedPush)
+      await validateWireCallback(
+        this.config(),
+        principal,
+        this.target,
+        { ...suppliedPush, taskId: "pending" },
+        this.secrets,
+      );
     const reserved = this.store.reserve(principal, this.target, message),
       record = reserved.record;
+    if (suppliedPush)
+      await this.createTaskPushNotificationConfig(
+        {
+          ...suppliedPush,
+          taskId: record.id,
+          id: suppliedPush.id || "send-default",
+        },
+        context,
+      );
     if (record.operationId || isTerminalTask(record.task))
       return this.refresh(principal, record.id);
     // Stable key derives from principal-scoped task ID; ambiguous admission retry finds the same core operation.
@@ -377,17 +415,99 @@ export class A2aRequestHandler implements A2ARequestHandler {
   async getAuthenticatedExtendedAgentCard(): Promise<never> {
     throw new UnsupportedOperationError();
   }
-  async createTaskPushNotificationConfig(): Promise<never> {
-    throw new PushNotificationNotSupportedError();
+
+  async createTaskPushNotificationConfig(
+    params: TaskPushNotificationConfig,
+    context: ServerCallContext,
+  ): Promise<TaskPushNotificationConfig> {
+    const principal = this.owner(context);
+    if (!pushEnabled(this.config()))
+      throw new PushNotificationNotSupportedError();
+    const task = this.checked(principal, params.taskId);
+    const grant = await validateWireCallback(
+      this.config(),
+      principal,
+      this.target,
+      params,
+      this.secrets,
+    );
+    (
+      context.state.get(REQUEST_SIGNAL) as AbortSignal | undefined
+    )?.throwIfAborted();
+    this.owner(context);
+    if (
+      JSON.stringify(
+        this.config().push?.callbacks.find((c) => c.id === grant.id),
+      ) !== JSON.stringify(grant)
+    )
+      throw new TaskNotFoundError();
+    return this.store.push.transaction(() => {
+      const callbackId = params.id || randomUUID();
+      const previous = this.store.push.get(principal, task.id, callbackId);
+      const callback = this.store.push.upsert({
+        principal,
+        taskId: task.id,
+        id: callbackId,
+        url: grant.url,
+        credentialKey: grant.credentialKey,
+        allowPrivate: grant.allowPrivate,
+      });
+      if (!previous || previous.revision !== callback.revision)
+        this.store.push.enqueue(
+          principal,
+          task.id,
+          "initial:" + callback.id + ":" + callback.revision,
+          { task: Task.toJSON(taskView(task.task, 0)) },
+          Date.now(),
+          callback.id,
+        );
+      return wireCallback(callback);
+    });
   }
-  async getTaskPushNotificationConfig(): Promise<never> {
-    throw new PushNotificationNotSupportedError();
+  async getTaskPushNotificationConfig(
+    params: GetTaskPushNotificationConfigRequest,
+    context: ServerCallContext,
+  ): Promise<TaskPushNotificationConfig> {
+    const principal = this.owner(context);
+    if (!pushEnabled(this.config()))
+      throw new PushNotificationNotSupportedError();
+    this.checked(principal, params.taskId);
+    const callback = this.store.push.get(principal, params.taskId, params.id);
+    if (!callback) throw new TaskNotFoundError();
+    return wireCallback(callback);
   }
-  async listTaskPushNotificationConfigs(): Promise<never> {
-    throw new PushNotificationNotSupportedError();
+  async listTaskPushNotificationConfigs(
+    params: ListTaskPushNotificationConfigsRequest,
+    context: ServerCallContext,
+  ): Promise<ListTaskPushNotificationConfigsResponse> {
+    const principal = this.owner(context);
+    if (!pushEnabled(this.config()))
+      throw new PushNotificationNotSupportedError();
+    this.checked(principal, params.taskId);
+    try {
+      const page = this.store.push.page(
+        principal,
+        params.taskId,
+        params.pageSize || 4,
+        params.pageToken,
+      );
+      return {
+        configs: page.configs.map(wireCallback),
+        nextPageToken: page.nextPageToken,
+      };
+    } catch {
+      throw new RequestMalformedError("Invalid push pagination.");
+    }
   }
-  async deleteTaskPushNotificationConfig(): Promise<never> {
-    throw new PushNotificationNotSupportedError();
+  async deleteTaskPushNotificationConfig(
+    params: DeleteTaskPushNotificationConfigRequest,
+    context: ServerCallContext,
+  ): Promise<void> {
+    const principal = this.owner(context);
+    if (!pushEnabled(this.config()))
+      throw new PushNotificationNotSupportedError();
+    this.checked(principal, params.taskId);
+    this.store.push.delete(principal, params.taskId, params.id);
   }
 }
 async function pause(signal?: AbortSignal) {
