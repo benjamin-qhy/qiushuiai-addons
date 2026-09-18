@@ -15,9 +15,14 @@ Requires the generic operation API in [Piclaw PR #1337](https://github.com/rcarm
 | Results | Caller-owned text artifact; bounded task history; immutable terminal state |
 | Runtime | Generic admitted operation, independent durable result storage, explicit continuation/cancel and conservative restart reconciliation |
 | Outbound | Approved endpoint aliases, pinned-address transport, bearer keychain refs; local task ownership by current verified work scope |
-| Excluded | 0.3 compatibility, gRPC/REST bindings, root well-known alias, extended/signed cards, push callbacks, multi-hop/family exposure |
+| Optional cards | Private ETag revalidation, work/credential-scoped cache, pinned Ed25519 signing/verification; operator-configured well-known proxy alias |
+| Excluded | Legacy protocol 0.3 compatibility, gRPC/REST bindings, extended/public redacted cards, push callbacks, multi-hop/family exposure |
 
 The official SDK is pinned to `@a2a-js/sdk@1.1.0` with versioned schema/provenance under [protocol/](protocol/provenance.json). The production handler uses its codecs/error/dispatch/client layers; it does not use the SDK demo task store or event-bus execution handler. Those demos cannot independently persist terminal results after consumers disconnect.
+
+## Optional discovery and card trust
+
+See [Agent Card discovery and trust](docs/card-discovery.md) for an exact reverse-proxy well-known alias, optional endpoint cache TTL (0–300 seconds), pinned public-key validity/rotation, and keychain-backed server signing. Defaults remain uncached and unsigned; signatures never grant execution rights. No remote JWK URLs are fetched.
 
 ## Configure safely
 

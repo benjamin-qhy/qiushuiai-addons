@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { signCard } from "./card-security.js";
 import { AgentCard } from "@a2a-js/sdk";
 import { ServerCallContext } from "@a2a-js/sdk/server";
 import { A2aRequestHandler, REQUEST_SIGNAL } from "./handler.js";
@@ -21,6 +23,7 @@ export function createA2aServer(
   let active = 0,
     closed = false;
   let authenticating = 0;
+  let signingPending = 0;
   const requests = new Set<AbortController>();
   const quota = new Map<string, { start: number; count: number }>();
   const idleWaiters = new Set<() => void>();
@@ -35,7 +38,7 @@ export function createA2aServer(
           path,
         );
       if (!match) return new Response("Not found", { status: 404 });
-      if (active >= 16 || authenticating >= 16)
+      if (active >= 16 || authenticating >= 16 || signingPending >= 16)
         return new Response("Concurrency limit", { status: 429 });
       active++;
       const controller = new AbortController();
@@ -103,9 +106,43 @@ export function createA2aServer(
               status: 405,
               headers: { Allow: "GET" },
             });
-          return Response.json(AgentCard.toJSON(await handler.getAgentCard()), {
-            headers: { "Cache-Control": "private, no-store" },
-          });
+          const raw = AgentCard.toJSON(await handler.getAgentCard()) as Record<
+            string,
+            unknown
+          >;
+          const signing = config().agents.find(
+            (a) => a.id === target,
+          )?.cardSigning;
+          let card = raw;
+          if (signing) {
+            signingPending++;
+            const pending = signCard(raw, signing, secrets).finally(() => {
+              signingPending--;
+            });
+            card = await abortable(pending, controller.signal);
+          }
+          controller.signal.throwIfAborted();
+          if (
+            !authorizeTarget(config(), principal.id, target) ||
+            JSON.stringify(
+              config().agents.find((a) => a.id === target)?.cardSigning,
+            ) !== JSON.stringify(signing)
+          )
+            return new Response("Not found", { status: 404 });
+          const etag =
+            '"' +
+            createHash("sha256")
+              .update(JSON.stringify([principal.id, card]))
+              .digest("hex") +
+            '"';
+          const headers = {
+            "Cache-Control": "private, no-cache",
+            ETag: etag,
+            Vary: "Authorization",
+          };
+          if (req.headers.get("if-none-match") === etag)
+            return new Response(null, { status: 304, headers });
+          return Response.json(card, { headers });
         }
         const context = new ServerCallContext({
           user: { isAuthenticated: true, userName: principal.id },

@@ -25,5 +25,11 @@
     "bun": "1.4.1",
     "platform": "Linux"
   },
-  "retrieved": "2026-09-17"
+  "retrieved": "2026-09-17",
+  "agentCardPresence": {
+    "source": "a2a.proto",
+    "generator": "build-card-fields.ts",
+    "rules": "card-fields.json",
+    "verification": "Python a2a-sdk 1.1.2 protobuf descriptors + rfc8785 0.1.4 + cryptography"
+  }
 }

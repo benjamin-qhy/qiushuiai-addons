@@ -15,4 +15,4 @@ Start with `a2a({action:"status"})`. If runtime capability is unavailable or dis
 
 Use Settings → A2A and the direct backend config API for reviewed endpoint/principal/publication configuration. Token values belong in keychain references. Core operation grants are a separate operator authority; installation does not grant model/tool execution. Text-only is the initial safe grant. Family/isolated modes and Iroh pairing remain separate and unchanged.
 
-See [README](../../README.md) for wire profile, credential policy, limits, restart semantics and disposable tests. No URI fetching, binary content, push callbacks, root alias, REST/gRPC or legacy 0.3 support is advertised.
+See [README](../../README.md) for wire profile, credential policy, limits, restart semantics and disposable tests. Optional card trust/cache and an operator-configured exact proxy alias are documented in [card discovery](../../docs/card-discovery.md). Configure local keychain refs only; never trust card-supplied key URLs. No URI fetching, binary content, push callbacks, extended/public cards, REST/gRPC or legacy protocol 0.3 is advertised.

@@ -185,3 +185,82 @@ test("pinned loopback fixture sends only explicit credential and refuses redirec
     other.stop(true);
   }
 });
+
+test("card trust config permits references only and validates cache bounds and key validity", () => {
+  const cfg = config();
+  cfg.endpoints = [
+    {
+      alias: "verified",
+      enabled: true,
+      allowPrivate: false,
+      cardUrl: "https://fixture.invalid/.well-known/agent-card.json",
+      cardCacheMaxAgeSeconds: 60,
+      cardVerification: {
+        keys: [
+          {
+            kid: "k1",
+            publicKeyRef: "a2a/public-key",
+            notBefore: "2026-01-01T00:00:00Z",
+            expiresAt: "2027-01-01T00:00:00Z",
+          },
+        ],
+      },
+    },
+  ];
+  cfg.agents[0].cardSigning = { kid: "k1", privateKeyRef: "a2a/signing" };
+  expect(validateConfig(cfg)).toEqual(cfg);
+  expect(() =>
+    validateConfig({
+      ...cfg,
+      endpoints: [{ ...cfg.endpoints[0], cardCacheMaxAgeSeconds: 301 }],
+    }),
+  ).toThrow();
+  expect(() =>
+    validateConfig({
+      ...cfg,
+      endpoints: [{ ...cfg.endpoints[0], cardVerification: { keys: [] } }],
+    }),
+  ).toThrow();
+  expect(() =>
+    validateConfig({
+      ...cfg,
+      agents: [
+        {
+          ...cfg.agents[0],
+          cardSigning: {
+            kid: "k1",
+            privateKeyRef: "a2a/signing",
+            privateKey: "secret",
+          },
+        },
+      ],
+    }),
+  ).toThrow();
+});
+
+test("pinned transport returns conditional 304 without treating it as a redirect", async () => {
+  const server = Bun.serve({
+    hostname: "127.0.0.1",
+    port: 0,
+    fetch: () =>
+      new Response(null, { status: 304, headers: { ETag: '"same"' } }),
+  });
+  try {
+    const transport = pinnedEndpointFetch(
+      {
+        alias: "fixture",
+        enabled: true,
+        allowPrivate: true,
+        cardUrl: server.url.href,
+      },
+      async () => null,
+    );
+    const response = await transport(server.url, {
+      headers: { "if-none-match": '"same"' },
+    });
+    expect(response.status).toBe(304);
+    expect(await response.text()).toBe("");
+  } finally {
+    server.stop(true);
+  }
+});

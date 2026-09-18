@@ -1,6 +1,6 @@
 {
   "name": "@rcarmo/piclaw-addon-a2a",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Opt-in A2A v1 agents with authenticated JSON-RPC, durable tasks and approved endpoints",
   "type": "module",
   "main": "index.ts",
@@ -58,7 +58,8 @@
     "typebox": "*"
   },
   "dependencies": {
-    "@a2a-js/sdk": "1.1.0"
+    "@a2a-js/sdk": "1.1.0",
+    "jose": "6.2.12"
   },
   "scripts": {
     "test": "bun test",

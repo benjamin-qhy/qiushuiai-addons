@@ -1,3 +1,4 @@
+import { AgentCardCache } from "./card-cache.js";
 import {
   AgentCard,
   Message,
@@ -41,6 +42,7 @@ export interface A2aClientCall {
 }
 export class A2aOutboundClient {
   private closed = false;
+  private readonly cards = new AgentCardCache();
   private active = new Set<AbortController>();
   private waiters = new Set<() => void>();
   private callScope(call: A2aClientCall) {
@@ -82,6 +84,7 @@ export class A2aOutboundClient {
   }
   shutdown() {
     this.closed = true;
+    this.cards.clear();
     for (const controller of this.active)
       controller.abort(new Error("A2A client shutdown"));
     return this.active.size
@@ -117,29 +120,27 @@ export class A2aOutboundClient {
   }
   private async connection(
     call: A2aClientCall,
-  ): Promise<{ client: Client; card: AgentCard }> {
+  ): Promise<{
+    client: Client;
+    card: AgentCard;
+    rawCard: Record<string, unknown>;
+  }> {
     if (!call.scope || call.scope.length > 256)
       throw new Error("Calling work scope required.");
     const endpoint = this.endpoint(call.endpoint),
       fetcher = pinnedEndpointFetch(endpoint, this.secrets);
-    const cardResponse = await fetcher(endpoint.cardUrl, {
-      signal: call.signal,
-      headers: { "A2A-Version": "1.0" },
-    });
-    if (!cardResponse.ok)
-      throw new Error(`Agent Card request failed (${cardResponse.status}).`);
-    const text = await cardResponse.text();
-    if (Buffer.byteLength(text) > 128 * 1024)
-      throw new Error("Agent Card size limit.");
-    const raw = JSON.parse(text);
+    const raw = await this.cards.get(
+      endpoint,
+      call.scope,
+      fetcher,
+      this.secrets,
+      call.signal,
+    );
+    call.signal?.throwIfAborted();
     if (
-      !raw ||
-      !Array.isArray(raw.supportedInterfaces) ||
-      raw.supportedInterfaces.length > 16 ||
-      !Array.isArray(raw.skills) ||
-      raw.skills.length > 128
+      JSON.stringify(this.endpoint(call.endpoint)) !== JSON.stringify(endpoint)
     )
-      throw new Error("Invalid Agent Card.");
+      throw new Error("Agent Card policy changed during discovery.");
     const card = AgentCard.fromJSON(raw);
     const selected = card.supportedInterfaces.find(
       (i) =>
@@ -176,14 +177,15 @@ export class A2aOutboundClient {
       transports: [new JsonRpcTransportFactory({ fetchImpl: guarded })],
       clientConfig: { polling: true },
     }).createFromAgentCard(pinned);
-    return { client, card: pinned };
+    return { client, card: pinned, rawCard: raw };
   }
   discover(call: A2aClientCall) {
     return this.run(call, (bound) => this.discoverInternal(bound));
   }
   private async discoverInternal(call: A2aClientCall) {
-    const { card } = await this.connection(call);
-    return AgentCard.toJSON(card);
+    const { rawCard } = await this.connection(call);
+    // Preserve signed wire field presence; SDK serialization can omit required defaults.
+    return rawCard;
   }
   send(
     call: A2aClientCall,

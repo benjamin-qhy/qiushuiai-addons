@@ -67,3 +67,9 @@ test("normative protobuf bytes and package SDK version match the committed prove
   expect(pkg.pi.runtime).toEqual({ entries: ["runtime.ts"], load: "startup" });
   expect(provenance.schema.version).toBe(A2A_PROFILE.specification);
 });
+
+
+test('committed Agent Card presence map reproduces from the pinned offline proto',async()=>{
+ const process=Bun.spawn([Bun.which('bun')!,new URL('./protocol/build-card-fields.ts',import.meta.url).pathname,'--check'],{stdout:'pipe',stderr:'pipe'});
+ const [out,err,code]=await Promise.all([new Response(process.stdout).text(),new Response(process.stderr).text(),process.exited]);expect(code,err).toBe(0);expect(out).toContain('verified');
+});
