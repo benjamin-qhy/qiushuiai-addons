@@ -26,7 +26,7 @@ Open Settings → Add-ons → A2A. The pane uses `/agent/addons/api/a2a` directl
 1. Keep Enable A2A off while configuring.
 2. Add a published agent, for example `[{"id":"summarise","name":"Summarise","description":"Public text task","enabled":true}]`.
 3. Add a principal: `[{"id":"client","credentialKey":"a2a/client","targets":["summarise"],"enabled":true}]`. Use a random bearer credential of at least 24 characters in the keychain. Shared credential references between principals are rejected.
-4. Configure the corresponding host `domains.operations` grant with `addonId: "a2a"`, that principal and target. Start text-only (empty tools). See Piclaw's generic [operation guide](https://github.com/rcarmo/piclaw/blob/feat/addon-operations/docs/addon-operations.md). Add-on installation/config cannot create those core grants.
+4. Configure the corresponding host `domains.operations` grant with `addonId: "a2a"`, that principal and target. Start text-only (empty tools). See Piclaw's generic [operation guide](https://github.com/rcarmo/piclaw/blob/main/docs/addon-operations.md). Add-on installation/config cannot create those core grants.
 5. Set the public HTTPS origin and inbound toggle; review grants and confirm enablement. Publish only the explicit card URL. Reverse proxy must preserve response SSE and HTTPS; cross-origin/browser credentials are not used.
 6. Outbound endpoints need an explicit alias/card URL and optional keychain reference. `allowPrivate` defaults false in operator examples and must be deliberately enabled for private networks/loopback fixtures. Every DNS result is checked and one validated address is pinned into the real connection; redirects and cross-origin credentials are refused.
 
