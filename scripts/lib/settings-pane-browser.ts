@@ -1,7 +1,7 @@
 /** Disposable component fixture. Core owns actual Settings-host integration. */
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, extname, join, resolve } from "node:path";
 
 export const settingsBrowserEnabled = process.env.PICLAW_E2E_DISPOSABLE === "1"
   && !!process.env.PICLAW_SETTINGS_CORE_SOURCE;
@@ -22,9 +22,9 @@ export async function settingsPaneFixture(entry: string) {
       import htm from ${JSON.stringify(join(core, "node_modules/htm/dist/htm.module.js"))};
       globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
       globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component})=>render(h(component),document.getElementById('app')),notifySettingsPanesChanged:()=>{}};
-      await import(${JSON.stringify(entry)});
+      await import('/addon/index.ts');
     `);
-    const built = await Bun.build({ entrypoints: [shim], target: "browser", plugins: [{
+    const built = await Bun.build({ entrypoints: [shim], target: "browser", external: ["/addon/index.ts"], plugins: [{
       name: "single-preact", setup(build) {
         build.onResolve({ filter: /^preact$/ }, () => ({ path: preact + "/dist/preact.module.js" }));
       },
@@ -34,6 +34,17 @@ export async function settingsPaneFixture(entry: string) {
     server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(req) {
       const url = new URL(req.url);
       if (url.pathname === "/ui.js") return new Response(js, { headers: { "content-type": "text/javascript" } });
+      // Production serves exact asset paths and transpiles each module; it does
+      // not bundle or resolve a missing .js import to a neighbouring .ts file.
+      if (url.pathname.startsWith("/addon/")) {
+        const directory = dirname(entry);
+        const path = resolve(directory, url.pathname.slice("/addon/".length));
+        if (!path.startsWith(directory + "/")) return new Response(null, { status: 404 });
+        const file = Bun.file(path);
+        if (!await file.exists()) return new Response(null, { status: 404 });
+        const code = new Bun.Transpiler({ loader: extname(path) === ".ts" ? "ts" : "js" }).transformSync(await file.text());
+        return new Response(code, { headers: { "content-type": "text/javascript" } });
+      }
       if (url.pathname.startsWith("/static/") && !url.pathname.includes("..")) {
         const file = Bun.file(join(core, "runtime/web", url.pathname));
         return await file.exists() ? new Response(file) : new Response(null, { status: 404 });
@@ -51,6 +62,7 @@ export async function settingsPaneFixture(entry: string) {
     return {
       async page(skin: string, width = 390) {
         const page = await browser.newPage({ viewport: { width, height: 900 } });
+        page.setDefaultTimeout(5000);
         const errors: string[] = [];
         page.on("pageerror", (e: Error) => errors.push(e.message));
         await page.route("**/*", (route: any) => new URL(route.request().url()).origin === server!.url.origin ? route.continue() : route.abort());

@@ -8,7 +8,7 @@
  *   - Showing keychain key presence indicator (✓/✗)
  */
 // @ts-nocheck
-import { settingsStyles } from "./styles.js";
+import { settingsStyles } from "./styles.ts";
 const ADDON_ID = "sample-addon";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const DEFAULT_KEYCHAIN_ENTRY = "sample-addon/api-key";

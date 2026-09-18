@@ -630,6 +630,7 @@ anthropic       claude-sonnet-4.6  200K     32K      yes       yes
     expect(source).not.toContain('minWidth: "14.8rem"');
     expect(source).not.toContain('const buttonStyle');
     expect(css).toContain('@layer delegate-settings-fallback');
+    expect(source).toContain('from "./styles.ts"');
     expect(source).toContain('role="radiogroup"');
     expect(source).toContain('type="radio"');
     expect(source).not.toContain('type="checkbox"');

@@ -23,6 +23,7 @@ test("sample settings uses labelled host controls with scoped older-host fallbac
   expect(source).toContain('class="settings-addon-control-group"');
   expect(source).not.toContain('148px');
   expect(css).toContain('@layer sample-addon-settings-fallback');
+  expect(source).toContain('from "./styles.ts"');
   expect(source).toContain('parentElement?.querySelector?.(\'input[type="password"]\')');
 });
 

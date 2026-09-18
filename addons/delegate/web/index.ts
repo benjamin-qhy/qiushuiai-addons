@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { settingsStyles } from "./styles.js";
+import { settingsStyles } from "./styles.ts";
 const ADDON_ID = "delegate";
 const API = `/agent/addons/api/${ADDON_ID}`;
 
