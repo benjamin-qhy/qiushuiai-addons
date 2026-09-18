@@ -34,6 +34,13 @@ await fetch("/agent/addons/api/sample-addon/config", {
 - **Password field** — a secret (API key), saved directly to the keychain with a Save button
 - **Key presence indicator** — ✓/✗ showing whether the keychain entry exists
 
+The pane uses the host's `settings-addon-*` field, label, help, control-group
+and status classes. Hosts with the Settings authoring contract from Piclaw #1318
+supply same-skin styling; `web/styles.ts` keeps older supported hosts readable
+using a pane-scoped CSS layer with lower priority than host styles. Configuration
+and keychain behaviour are unchanged. Password and Save remain in the same
+control group; secrets never enter the config API.
+
 ![Sample Addon settings pane on a test instance](./assets/settings-pane-microvm.png)
 
 ### 2. Direct backend config API
@@ -94,6 +101,13 @@ Secret configured: yes
 This add-on includes `tests/features/settings.feature` plus Playwright step definitions under `tests/steps/`.
 The add-on catalog's E2E harness turns those Gherkin scenarios into runnable Playwright tests and, in CI, publishes a PDF/HTML report with the package and add-on page.
 
+The scenarios require the UI to save successfully; their API reads only verify
+persistence, and cannot substitute for a failed UI save. `settings-browser.test.ts`
+also tests mocked config/keychain requests and errors with no live server. From
+the repository root, opt in with `PICLAW_E2E_DISPOSABLE=1`,
+`PICLAW_SETTINGS_CORE_SOURCE=/absolute/path/to/piclaw` and an installed
+`PLAYWRIGHT_BROWSERS_PATH`, then run `bun test addons/sample-addon/settings-browser.test.ts`.
+
 ## Storage model
 
 | What | Where |
@@ -110,6 +124,7 @@ addons/sample-addon/
 ├── package.json          # Addon manifest
 ├── index.ts              # Extension entry: direct config API, KV config, keychain secret, test tool
 ├── web/index.ts          # Settings pane: checkbox, text, password, keychain save
+├── web/styles.ts         # Pane-scoped older-host fallback styles
 ├── compat/extension-kv.ts # KV store compat shim (copy to your addon)
 ├── tests/                # Gherkin UX tests and Playwright step definitions
 └── README.md             # This file

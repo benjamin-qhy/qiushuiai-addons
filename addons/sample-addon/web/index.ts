@@ -8,6 +8,7 @@
  *   - Showing keychain key presence indicator (✓/✗)
  */
 // @ts-nocheck
+import { settingsStyles } from "./styles.js";
 const ADDON_ID = "sample-addon";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const DEFAULT_KEYCHAIN_ENTRY = "sample-addon/api-key";
@@ -117,64 +118,64 @@ function SampleAddonSettings() {
     }
   }, [keyInput, cfg]);
 
-  if (!cfg) return html`<div style="padding:1rem;color:var(--text-secondary)">Loading…</div>`;
-
-  // ── Styles ─────────────────────────────────────────────────────
-  const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.4rem 0" };
-  const L = { minWidth: "140px", color: "var(--text-secondary)", fontSize: "0.85rem" };
-  const I = { flex: 1, padding: "4px 8px", background: "var(--bg-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)", borderRadius: "4px", fontSize: "0.85rem" };
-  const H = { margin: "1.2rem 0 0.4rem", fontSize: "0.9rem", color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.3rem" };
-  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "-0.15rem 0 0.4rem 148px" }}>${t}</div>`;
+  if (!cfg) return html`<div class="sample-addon-settings"><style>${settingsStyles}</style><p class="settings-addon-status" role="status">Loading…</p></div>`;
 
   return html`
-    <div style="padding:0.5rem 0;">
+    <div class="sample-addon-settings">
+      <style>${settingsStyles}</style>
+      <section class="settings-addon-section">
+      <h4>General</h4>
 
-      <h4 style=${H}>General</h4>
-
-      <label style=${S}>
-        <span style=${L}>Enabled</span>
+      <label class="settings-addon-control-group settings-addon-label">
+        <span>Enabled</span>
         <input type="checkbox" checked=${cfg.enabled}
           onChange=${(e) => save({ enabled: e.target.checked })} disabled=${saving} />
       </label>
 
-      <label style=${S}>
-        <span style=${L}>Greeting</span>
-        <input key=${`greeting-${cfg.greeting ?? ""}`} type="text" defaultValue=${cfg.greeting ?? ""} style=${I}
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="sample-addon-greeting">Greeting</label>
+        <input id="sample-addon-greeting" class="settings-addon-control" aria-describedby="sample-addon-greeting-help" key=${`greeting-${cfg.greeting ?? ""}`} type="text" defaultValue=${cfg.greeting ?? ""}
           placeholder="Hello from sample addon!"
           onInput=${(e) => setGreetingDraft(e.target.value)}
           onChange=${(e) => setGreetingDraft(e.target.value)}
           onBlur=${(e) => { const value = e.target.value; if (value !== (cfg.greeting ?? "")) save({ greeting: value }); }}
           onKeyDown=${(e) => { if (e.key === "Enter") e.target.blur(); }}
           disabled=${saving} />
-      </label>
-      ${hint("A non-secret value stored in the runtime database (SQLite KV).")}
+        <span id="sample-addon-greeting-help" class="settings-addon-help">A non-secret value stored in the runtime database (SQLite KV).</span>
+      </div>
+      </section>
 
-      <h4 style=${H}>Secret (keychain)</h4>
-
-      <div style=${S}>
-        <span style=${L}>API key</span>
-        <input key=${hasKey ? "api-key-stored" : "api-key-empty"} type="password" defaultValue="" style=${{ ...I, fontFamily: "var(--font-mono, monospace)" }}
+      <section class="settings-addon-section">
+      <h4>Secret (keychain)</h4>
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="sample-addon-api-key">API key</label>
+        <div class="settings-addon-control-group">
+        <input id="sample-addon-api-key" class="settings-addon-control" aria-describedby="sample-addon-api-key-help" key=${hasKey ? "api-key-stored" : "api-key-empty"} type="password" defaultValue="" style="font-family:var(--font-mono, monospace)"
           placeholder=${hasKey ? "••••••• (stored in keychain)" : "paste secret here"}
           onInput=${(e) => setKeyInput(e.target.value)}
           onChange=${(e) => setKeyInput(e.target.value)}
           onKeyDown=${(e) => { if (e.key === "Enter") saveSecret(e.target.value); }}
           disabled=${saving} />
-        <button style="padding:4px 10px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:0.82rem"
+        <button type="button"
           onClick=${(e) => saveSecret(e.currentTarget?.parentElement?.querySelector?.('input[type="password"]')?.value ?? keyInput)} disabled=${saving}>Save</button>
         ${hasKey
           ? html`<span style="font-size:0.72rem;color:var(--accent-color,#2563eb);font-weight:600" title="Key in keychain">✓</span>`
           : html`<span style="font-size:0.72rem;color:var(--danger-color,#dc2626);font-weight:600" title="No key">✗</span>`
         }
+        </div>
+        <span id="sample-addon-api-key-help" class="settings-addon-help">Saved to keychain as ${cfg.secret_keychain || DEFAULT_KEYCHAIN_ENTRY}. Restart required after changing.</span>
       </div>
-      ${hint("Saved to keychain as " + (cfg.secret_keychain || DEFAULT_KEYCHAIN_ENTRY) + ". Restart required after changing.")}
+      </section>
 
-      <h4 style=${H}>Test</h4>
-      <div style=${{ fontSize: "0.85rem", color: "var(--text-secondary)", margin: "0.4rem 0" }}>
+      <section class="settings-addon-section">
+      <h4>Test</h4>
+      <p class="settings-addon-help">
         Use the <code>sample_test</code> tool in any chat to verify the addon is working.
         It returns the greeting and whether the secret is configured.
-      </div>
+      </p>
+      </section>
 
-      ${msg && html`<div style=${{ marginTop: "0.75rem", fontSize: "0.8rem", color: msg.includes("failed") || msg.includes("Failed") ? "var(--danger-color)" : "var(--accent-color)" }}>${msg}</div>`}
+      ${msg && html`<div class=${/failed/i.test(msg) ? "settings-addon-error" : "settings-addon-status"} role=${/failed/i.test(msg) ? "alert" : "status"}>${msg}</div>`}
     </div>`;
 }
 
