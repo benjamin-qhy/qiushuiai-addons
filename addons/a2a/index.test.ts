@@ -4,7 +4,7 @@ import addon from "./index.js";
 import { getA2aRuntimeStatus, requireA2aExecutionReady } from "./runtime.js";
 import { A2A_PROFILE } from "./profile.js";
 
-test("profile stage registers only bounded read-only status/profile, no network or host routes", async () => {
+test("absent runtime fails closed; diagnostics and registration perform no network", async () => {
   const tools: any[] = [];
   const hooks = new Map<string, () => { skillPaths: string[] }>();
   let network = 0;
@@ -23,19 +23,25 @@ test("profile stage registers only bounded read-only status/profile, no network 
     expect(tools[0].parameters.properties.action.enum).toEqual([
       "status",
       "profile",
+      "discover",
+      "send",
+      "get",
+      "cancel",
+      "subscribe",
+      "list",
     ]);
     const status = await tools[0].execute("test", { action: "status" });
     expect(status.details).toMatchObject({
       enabled: false,
-      stage: "profile-validation",
+      stage: "runtime-unavailable",
       networkActive: false,
     });
     expect(status.content[0].text.length).toBeLessThan(4096);
     await expect(tools[0].execute("test", { action: "send" })).rejects.toThrow(
-      "Unsupported A2A action",
+      "operations API",
     );
     expect(getA2aRuntimeStatus().enabled).toBe(false);
-    expect(() => requireA2aExecutionReady()).toThrow("disabled");
+    expect(() => requireA2aExecutionReady()).toThrow("operations API");
     expect(hooks.has("resources_discover")).toBe(true);
     for (const path of hooks.get("resources_discover")!().skillPaths)
       expect(await Bun.file(path).exists()).toBe(true);

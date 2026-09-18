@@ -1,7 +1,7 @@
 {
   "name": "@rcarmo/piclaw-addon-a2a",
-  "version": "0.1.0",
-  "description": "A2A v1 interoperability profile and disabled-by-default integration foundation",
+  "version": "0.2.2",
+  "description": "Opt-in A2A v1 agents with authenticated JSON-RPC, durable tasks and approved endpoints",
   "type": "module",
   "main": "index.ts",
   "files": [
@@ -11,7 +11,9 @@
     "docs",
     "protocol",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "web",
+    "assets"
   ],
   "license": "MIT",
   "repository": {
@@ -41,7 +43,12 @@
     },
     "skills": [
       "skills"
-    ]
+    ],
+    "web": {
+      "entries": [
+        "web/index.ts"
+      ]
+    }
   },
   "engines": {
     "bun": ">=1.4.1"
@@ -67,7 +74,7 @@
       {
         "name": "a2a",
         "path": "skills/a2a/SKILL.md",
-        "description": "Inspect the disabled A2A v1 interoperability profile; no agent calls or publication in this milestone."
+        "description": "Call explicitly approved A2A v1 endpoint aliases and inspect caller-owned tasks; opt-in principal and core grants required."
       }
     ]
   }

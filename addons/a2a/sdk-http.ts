@@ -1,3 +1,4 @@
+import { validateParts } from "./parts.js";
 /** Framework-free Request/Response binding, used by the disposable profile fixtures.
  * Authentication, target policy and durable storage MUST wrap this before host registration.
  * This module does not register a route or open a socket.
@@ -28,7 +29,7 @@ function rpcError(
     { status },
   );
 }
-async function boundedBody(req: Request): Promise<string> {
+async function boundedBody(req: Request, signal: AbortSignal): Promise<string> {
   const declared = req.headers.get("content-length");
   if (
     declared &&
@@ -38,10 +39,17 @@ async function boundedBody(req: Request): Promise<string> {
   if (!req.body) return "";
   const reader = req.body.getReader();
   const chunks: Uint8Array[] = [];
+  const abort = () => {
+    void reader.cancel(signal.reason).catch(() => false);
+  };
+  signal.addEventListener("abort", abort, { once: true });
+  if (signal.aborted) abort();
   let size = 0;
   try {
     while (true) {
+      signal.throwIfAborted();
       const part = await reader.read();
+      signal.throwIfAborted();
       if (part.done) break;
       size += part.value.byteLength;
       if (size > A2A_PROFILE.maxRequestBytes) {
@@ -51,6 +59,7 @@ async function boundedBody(req: Request): Promise<string> {
       chunks.push(part.value);
     }
   } finally {
+    signal.removeEventListener("abort", abort);
     reader.releaseLock();
   }
   const bytes = new Uint8Array(size);
@@ -66,6 +75,7 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
   return async (
     req: Request,
     context: ServerCallContext,
+    signal: AbortSignal = req.signal,
   ): Promise<Response> => {
     if (req.method !== "POST")
       return new Response("Method not allowed", {
@@ -81,7 +91,7 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
       return new Response("Unsupported media type", { status: 415 });
     let body: string;
     try {
-      body = await boundedBody(req);
+      body = await boundedBody(req, signal);
     } catch {
       return rpcError(null, -32600, "Request body invalid or too large", 413);
     }
@@ -132,16 +142,20 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
         !msg.parts.length
       )
         return rpcError(id, -32602, "Invalid message");
-      // A1 deliberately validates a text-only profile. Other typed parts land in A7.
       if (
-        msg.parts.some(
-          (p) =>
-            !object(p) ||
-            typeof p.text !== "string" ||
-            ["raw", "url", "data", "file", "kind"].some((k) => k in p),
+        msg.messageId.length > 128 ||
+        ["contextId", "taskId"].some(
+          (key) =>
+            msg[key] !== undefined &&
+            (typeof msg[key] !== "string" || String(msg[key]).length > 128),
         )
       )
-        return rpcError(id, -32005, "Unsupported content type");
+        return rpcError(id, -32602, "Invalid message identity");
+      try {
+        validateParts(msg.parts);
+      } catch {
+        return rpcError(id, -32005, "Unsupported or invalid content parts");
+      }
       if (params.configuration !== undefined) {
         if (!object(params.configuration))
           return rpcError(id, -32602, "Invalid configuration");
@@ -161,6 +175,36 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
           return rpcError(id, -32003, "Push notifications not supported");
       }
     }
+    if (
+      params.historyLength !== undefined &&
+      (!Number.isSafeInteger(params.historyLength) ||
+        Number(params.historyLength) < 0)
+    )
+      return rpcError(id, -32602, "Invalid historyLength");
+    if (
+      ["GetTask", "CancelTask", "SubscribeToTask"].includes(request.method) &&
+      (typeof params.id !== "string" || !params.id || params.id.length > 128)
+    )
+      return rpcError(id, -32602, "Invalid task ID");
+    if (request.method === "ListTasks") {
+      if (
+        params.pageSize !== undefined &&
+        (!Number.isInteger(params.pageSize) ||
+          Number(params.pageSize) < 1 ||
+          Number(params.pageSize) > 100)
+      )
+        return rpcError(id, -32602, "Invalid pageSize");
+      if (
+        params.pageToken !== undefined &&
+        (typeof params.pageToken !== "string" || params.pageToken.length > 4096)
+      )
+        return rpcError(id, -32602, "Invalid pageToken");
+      if (
+        params.includeArtifacts !== undefined &&
+        typeof params.includeArtifacts !== "boolean"
+      )
+        return rpcError(id, -32602, "Invalid includeArtifacts");
+    }
     const result = await rpc.handle(
       request,
       new ServerCallContext({
@@ -171,8 +215,18 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
         state: context.state,
       }),
     );
+    const publicEnvelope = (value: typeof result | unknown): unknown => {
+      const envelope = value as any;
+      if (envelope?.error?.code === -32603)
+        return {
+          jsonrpc: "2.0",
+          id: envelope.id ?? id,
+          error: { code: -32603, message: "Internal A2A request error." },
+        };
+      return value;
+    };
     if (!("next" in result)) {
-      const text = JSON.stringify(result);
+      const text = JSON.stringify(publicEnvelope(result));
       if (Buffer.byteLength(text) > A2A_PROFILE.maxResponseBytes)
         return rpcError(id, -32603, "Response limit exceeded");
       return new Response(text, {
@@ -192,7 +246,7 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
       {
         async pull(controller) {
           try {
-            req.signal.throwIfAborted();
+            signal.throwIfAborted();
             const next = await iterator.next();
             if (ended) return;
             if (next.done) {
@@ -201,7 +255,7 @@ export function createSdkHttpHandler(handler: A2ARequestHandler) {
               return;
             }
             const data = encoder.encode(
-              "data: " + JSON.stringify(next.value) + "\n\n",
+              "data: " + JSON.stringify(publicEnvelope(next.value)) + "\n\n",
             );
             total += data.byteLength;
             if (
