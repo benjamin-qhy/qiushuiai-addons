@@ -54,6 +54,8 @@ export async function runAction(
     case "policy":
       service.setPolicy(String(input.peer ?? ""), input);
       break;
+    case "remote_permissions":
+      return service.remotePermissions(String(input.peer ?? ""));
     case "advertise":
       await service.advertise(
         String(input.local_agent ?? ""),
@@ -144,6 +146,7 @@ export default function remotePeer(pi: ExtensionAPI) {
             "rotate",
             "alias",
             "policy",
+            "remote_permissions",
             "advertise",
             "unadvertise",
             "ping",
@@ -157,6 +160,18 @@ export default function remotePeer(pi: ExtensionAPI) {
         ticket: { type: "string" },
         alias: { type: "string" },
         confirmation: { type: "string" },
+        expected_epoch: { type: "string" },
+        expected_policy: {
+          type: "object",
+          properties: {
+            scope: { type: "string" },
+            modes: { type: "array", items: { type: "string" } },
+            agents: { type: "array", items: { type: "string" } },
+            files: { type: "boolean" },
+          },
+          required: ["scope", "modes", "agents", "files"],
+          additionalProperties: false,
+        },
         scope: {
           type: "string",
           enum: ["none", "inbox-only", "named-agents", "all-advertised"],

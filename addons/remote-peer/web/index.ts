@@ -2,7 +2,8 @@
 const ui = globalThis.__piclawPreactHtm || globalThis.__piclawPreact;
 const html = ui?.html,
   useState = ui?.useState,
-  useEffect = ui?.useEffect;
+  useEffect = ui?.useEffect,
+  useRef = ui?.useRef;
 async function api(action, body) {
   const response = await fetch("/agent/addons/api/remote-peer/" + action, {
     method: body === undefined ? "GET" : "POST",
@@ -17,7 +18,135 @@ async function api(action, body) {
   if (!response.ok) throw Error(data.error || "Request failed");
   return data;
 }
+
+function peerPolicy(peer) {
+  return { scope: peer.scope, modes: [...peer.modes], agents: [...peer.agents], files: peer.files === true };
+}
+function policyKey(policy) {
+  return JSON.stringify([policy.scope, policy.modes, policy.agents, policy.files]);
+}
+function needsConfirmation(policy) {
+  return !["none", "inbox-only"].includes(policy.scope) || policy.modes.some(m => m !== "queue") || policy.files;
+}
+function PeerPermissions({ peer, advertised, busy, enabled, onApply }) {
+  const [draft, setDraft] = useState(() => peerPolicy(peer)),
+    [savedPolicy, setSavedPolicy] = useState(() => peerPolicy(peer)),
+    [savedEpoch, setSavedEpoch] = useState(peer.epoch),
+    [editing, setEditing] = useState(false),
+    [confirmation, setConfirmation] = useState(""),
+    [saving, setSaving] = useState(false),
+    [status, setStatus] = useState(""),
+    [error, setError] = useState(""),
+    [remote, setRemote] = useState(null),
+    [remoteBusy, setRemoteBusy] = useState(false),
+    [remoteError, setRemoteError] = useState("");
+  const prefix = "remote-peer-policy-" + peer.id;
+  const saved = peerPolicy(peer);
+  const baseline = policyKey(savedPolicy);
+  const dirty = policyKey(draft) !== baseline;
+  const conflict = editing && policyKey(saved) !== baseline;
+  const locked = busy || saving || !enabled;
+  const selectable = [...new Set([...draft.agents, ...advertised.map(a => a.alias)])];
+  function reset(keepEditing) {
+    setDraft(peerPolicy(peer)); setSavedPolicy(peerPolicy(peer)); setSavedEpoch(peer.epoch);
+    setEditing(keepEditing); setConfirmation(""); setError(""); setStatus("");
+  }
+  function change(patch) { setDraft(current => ({ ...current, ...patch })); setConfirmation(""); setError(""); setStatus(""); }
+  function toggle(key, value, checked) {
+    change({ [key]: checked ? [...draft[key], value] : draft[key].filter(v => v !== value) });
+  }
+  async function apply() {
+    if (locked || !dirty || conflict) return;
+    setSaving(true); setError(""); setStatus("");
+    try {
+      const reloaded = await onApply(peer.id, draft, confirmation, savedPolicy, savedEpoch);
+      setDraft(peerPolicy(reloaded)); setSavedPolicy(peerPolicy(reloaded)); setSavedEpoch(reloaded.epoch);
+      setEditing(false); setConfirmation("");
+      setStatus("Incoming permissions saved and reloaded. The peer must refresh its directory to see these changes.");
+    } catch (e) { setError(e.message || "Could not apply permissions. Your edits are retained."); }
+    finally { setSaving(false); }
+  }
+  async function refreshRemote() {
+    setRemoteBusy(true); setRemoteError("");
+    try {
+      const data = await api("dashboard", { action: "remote_permissions", peer: peer.id });
+      if (data.result?.peerId !== peer.id) throw Error("Peer changed while refreshing permissions.");
+      setRemote(data.result);
+    } catch (e) { setRemoteError(e.message || "Remote permissions unavailable."); }
+    finally { setRemoteBusy(false); }
+  }
+  return html`<div class="remote-peer-permissions">
+    <style>${`
+      @layer remote-peer-permissions-fallback {
+        .remote-peer-permissions .settings-addon-field { display:flex;flex-direction:column;gap:6px;min-width:0;margin:12px 0; }
+        .remote-peer-permissions .settings-addon-control { box-sizing:border-box;max-width:100%;min-width:0;padding:6px 10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-primary);color:var(--text-primary); }
+        .remote-peer-permissions .settings-addon-actions { display:flex;gap:8px;flex-wrap:wrap;align-items:center; }
+        .remote-peer-permissions .settings-addon-help { color:var(--text-secondary);font-size:.85em;overflow-wrap:anywhere; }
+        .remote-peer-permissions .settings-addon-error { color:var(--danger-color); }
+        .remote-peer-permissions button { padding:6px 14px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-hover,var(--bg-secondary));color:var(--text-primary);cursor:pointer; }
+        .remote-peer-permissions :is(button,input,select):focus-visible { outline:2px solid var(--accent-color);outline-offset:2px; }
+        .remote-peer-permissions :disabled { opacity:.5; }
+      }
+      .remote-peer-permissions fieldset { min-width:0;margin:12px 0;padding:10px;border:1px solid var(--border-color);border-radius:6px; }
+      .remote-peer-permissions .remote-peer-checks { display:flex;gap:8px;flex-wrap:wrap; }
+      .remote-peer-permissions .remote-peer-checks label { display:inline-flex;gap:6px;align-items:center;overflow-wrap:anywhere; }
+      .remote-peer-permissions .remote-peer-saved { overflow-wrap:anywhere; }
+    `}</style>
+    <section class="settings-addon-section" aria-label="Incoming permissions">
+      <h5>Incoming — what this peer may send to this instance</h5>
+      <p class="settings-addon-help">You control these permissions for ${peer.alias} only. They do not grant remote tool execution.</p>
+      <p class="remote-peer-saved">Saved: ${saved.scope} · ${saved.modes.join(", ")} · incoming files ${saved.files ? "enabled" : "disabled"}${saved.agents.length ? " · named agents: " + saved.agents.join(", ") : ""}</p>
+      <p class="settings-addon-help" id=${prefix + "-limits"}>Protocol limits: up to 4 files, 16 MiB each, 32 MiB total. Enabling incoming files here lets this peer send files here; sending files to the peer depends on its own permissions.</p>
+      ${!editing ? html`<button disabled=${locked} onClick=${() => reset(true)}>Edit incoming permissions</button>` : html`
+        <fieldset disabled=${locked}>
+          <legend>Incoming policy for ${peer.alias}</legend>
+          <div class="settings-addon-field">
+            <label class="settings-addon-label" for=${prefix + "-scope"}>Incoming scope</label>
+            <select id=${prefix + "-scope"} class="settings-addon-control" value=${draft.scope} onChange=${e => change({ scope: e.target.value })}>
+              <option value="none">None — deny messages</option><option value="inbox-only">Inbox only</option>
+              <option value="named-agents">Inbox and selected advertised agents</option><option value="all-advertised">Inbox and all advertised agents</option>
+            </select>
+          </div>
+          <fieldset><legend>Delivery modes</legend><div class="remote-peer-checks">
+            ${["queue", "auto", "steer"].map(mode => html`<label><input type="checkbox" checked=${draft.modes.includes(mode)} onChange=${e => toggle("modes", mode, e.target.checked)} />${mode}</label>`)}
+          </div>${!draft.modes.length && html`<p class="settings-addon-error" role="alert">Select at least one delivery mode.</p>`}</fieldset>
+          <fieldset><legend>Named agents</legend>
+            <p class="settings-addon-help">Selections apply to named-agent scope and are retained when changing only files or scope.</p>
+            <div class="remote-peer-checks">${selectable.map(name => html`<label><input type="checkbox" disabled=${draft.scope !== "named-agents"} checked=${draft.agents.includes(name)} onChange=${e => toggle("agents", name, e.target.checked)} />@${name}${advertised.some(a => a.alias === name) ? "" : " (not currently advertised)"}</label>`)}</div>
+            ${!selectable.length && html`<p class="settings-addon-help">No locally advertised agents.</p>`}
+          </fieldset>
+          <label><input type="checkbox" aria-describedby=${prefix + "-limits"} checked=${draft.files} onChange=${e => change({ files: e.target.checked })} /> Allow this peer to send files here</label>
+          ${dirty && needsConfirmation(draft) && html`<div class="settings-addon-field">
+            <label class="settings-addon-label" for=${prefix + "-confirmation"}>Confirm wider incoming access</label>
+            <input id=${prefix + "-confirmation"} class="settings-addon-control" autocomplete="off" value=${confirmation} placeholder="ALLOW REMOTE ACCESS" onInput=${e => setConfirmation(e.target.value)} aria-describedby=${prefix + "-confirm-help"} />
+            <span id=${prefix + "-confirm-help"} class="settings-addon-help">Type ALLOW REMOTE ACCESS to apply this broader policy.</span>
+          </div>`}
+        </fieldset>
+        ${conflict && html`<p class="settings-addon-error" role="alert">Saved permissions changed while you were editing. Revert to reload them before applying.</p>`}
+        <p class="settings-addon-status" role="status">${saving ? "Applying incoming permissions…" : dirty ? "Unsaved changes" : "No unsaved changes"}</p>
+        <div class="settings-addon-actions">
+          <button disabled=${locked || !dirty || conflict || !draft.modes.length || (needsConfirmation(draft) && confirmation !== "ALLOW REMOTE ACCESS")} onClick=${apply}>Apply</button>
+          <button disabled=${saving} onClick=${() => reset(true)}>Revert</button>
+          <button disabled=${saving} onClick=${() => reset(false)}>Cancel</button>
+        </div>`}
+      ${error && html`<p class="settings-addon-error" role="alert">${error} Your edits are retained; retry or Revert.</p>`}
+      ${status && html`<p class="settings-addon-status" role="status">${status}</p>`}
+    </section>
+    <section class="settings-addon-section" aria-label="Outgoing permissions">
+      <h5>Outgoing — what this instance may send to this peer</h5>
+      <p class="settings-addon-help">Read-only advertisement controlled by ${peer.alias}. Local incoming edits do not enable files at the destination.</p>
+      <button disabled=${busy || remoteBusy || !enabled} onClick=${refreshRemote}>${remoteBusy ? "Refreshing remote permissions…" : "Refresh remote permissions"}</button>
+      <p role="status" class="settings-addon-status">${remote ? "Last fetched " + new Date(remote.fetchedAt).toLocaleString() + (remoteError || !enabled || Date.now() - Date.parse(remote.fetchedAt) > 30000 ? " — stale; refresh required." : " — snapshot only; sending rechecks permissions.") : "Remote permissions unavailable — not fetched."}</p>
+      ${remoteError && html`<p class="settings-addon-error" role="alert">Remote permissions unavailable: ${remoteError}${remote ? " Last fetched snapshot is stale." : ""}</p>`}
+      ${remote && html`<div class="remote-peer-saved"><p>Remote inbox: ${remote.inbox ? "allowed" : "not advertised"} · modes: ${remote.modes.join(", ")} · outgoing files ${remote.files ? "enabled" : "disabled"}</p>
+        <p>Advertised remote agents: ${remote.agents.length ? remote.agents.map(a => "@" + a.name + " (" + a.modes.join(", ") + ")").join("; ") : "none"}</p>
+        <p class="settings-addon-help">Local protocol sending limits: ${remote.limits.maxFiles} files, ${remote.limits.maxFileBytes / 1048576} MiB each, ${remote.limits.maxTotalBytes / 1048576} MiB total.</p></div>`}
+    </section>
+  </div>`;
+}
 function RemotePeerSettings() {
+  const dashboardGeneration = useRef(0);
+  const policySaving = useRef(false);
   const [state, setState] = useState(null),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
@@ -27,15 +156,33 @@ function RemotePeerSettings() {
     [localTicket, setLocalTicket] = useState(""),
     [relayText, setRelayText] = useState("");
   async function refresh() {
+    if (policySaving.current) return;
+    const generation = ++dashboardGeneration.current;
     try {
       const value = await api("dashboard");
+      if (generation !== dashboardGeneration.current) return;
       setState(value);
       setRelayText(
         (previous) => previous || JSON.stringify(value.config.relays, null, 2),
       );
     } catch (e) {
-      setError(e.message);
+      if (generation === dashboardGeneration.current) setError(e.message);
     }
+  }
+  async function applyPolicy(peerId, draft, confirmation, expectedPolicy, expectedEpoch) {
+    if (policySaving.current) throw Error("A permission update is already in progress.");
+    policySaving.current = true;
+    ++dashboardGeneration.current;
+    setBusy(true);
+    try {
+      await api("dashboard", { action: "policy", peer: peerId, ...draft, confirmation, expected_policy: expectedPolicy, expected_epoch: expectedEpoch });
+      const generation = ++dashboardGeneration.current;
+      const value = await api("dashboard");
+      const peer = value.peers.find(p => p.id === peerId && p.status === "paired");
+      if (!peer || peer.epoch !== expectedEpoch || policyKey(peerPolicy(peer)) !== policyKey(draft)) throw Error("Saved policy could not be verified.");
+      if (generation === dashboardGeneration.current) setState(value);
+      return peer;
+    } finally { policySaving.current = false; setBusy(false); }
   }
   useEffect(() => {
     void refresh();
@@ -104,16 +251,19 @@ function RemotePeerSettings() {
     alignItems: "center",
     margin: "8px 0",
   };
-  const input = {
-    background: "var(--bg-primary)",
-    color: "var(--text-primary)",
-    border: "1px solid var(--border-color)",
-    padding: "6px",
-    borderRadius: "5px",
-    minWidth: "180px",
-    flex: 1,
-  };
-  return html`<div style="max-width:900px">
+  return html`<div class="remote-peer-settings" style="max-width:900px;min-width:0">
+    <style>${`
+      @layer remote-peer-fields-fallback {
+        .remote-peer-settings .settings-addon-field { display:flex;flex-direction:column;gap:6px;min-width:0;margin:12px 0; }
+        .remote-peer-settings .settings-addon-label { font-size:.88em;color:var(--text-secondary); }
+        .remote-peer-settings .settings-addon-control { box-sizing:border-box;width:280px;min-width:0;max-width:100%;padding:6px 10px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-primary);color:var(--text-primary);font-size:.88em; }
+        .remote-peer-settings textarea.settings-addon-control { resize:vertical; }
+        .remote-peer-settings .settings-addon-control:focus-visible { outline:2px solid var(--accent-color);outline-offset:2px; }
+        .remote-peer-settings .settings-addon-control:disabled { opacity:.5; }
+        @media(max-width:640px) { .remote-peer-settings .settings-addon-control { width:100%; } }
+      }
+      .remote-peer-settings code { overflow-wrap:anywhere; }
+    `}</style>
     <section style=${box}>
       <h4>Iroh Remote Peer</h4>
       <p>
@@ -128,9 +278,11 @@ function RemotePeerSettings() {
             disabled=${busy}
             onChange=${(e) => config({ enabled: e.target.checked })}
           />
-          Enable Remote Peer</label
-        ><input
-          style=${input}
+          Enable Remote Peer</label>
+      </div>
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="remote-peer-instance-name">Instance name</label>
+        <input id="remote-peer-instance-name" class="settings-addon-control" type="text"
           placeholder="Instance name"
           defaultValue=${c.instanceName}
           onBlur=${(e) => {
@@ -189,26 +341,27 @@ function RemotePeerSettings() {
         >
           Generate ticket</button
         >${localTicket &&
-        html`<textarea
+        html`<div class="settings-addon-field"><label class="settings-addon-label" for="remote-peer-local-ticket">Local endpoint ticket</label><textarea
+            id="remote-peer-local-ticket" class="settings-addon-control"
             readonly
             rows="3"
-            style=${input}
             value=${localTicket}
-          /><button onClick=${() => copy(localTicket)}>Copy ticket</button>`}
+          /></div><button onClick=${() => copy(localTicket)}>Copy ticket</button>`}
       </details>
     </section>
     <section style=${box}>
       <h4>Add peer</h4>
-      <div style=${row}>
-        <input
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="remote-peer-client-id">Peer client ID</label>
+        <input id="remote-peer-client-id" class="settings-addon-control" type="text"
           aria-label="Peer client ID"
-          style=${input}
           value=${client}
           onInput=${(e) => setClient(e.target.value)}
           placeholder="Paste client ID: PCL1-…"
-        /><input
+        /></div><div class="settings-addon-field">
+        <label class="settings-addon-label" for="remote-peer-alias">Peer alias</label>
+        <input id="remote-peer-alias" class="settings-addon-control" type="text"
           aria-label="Peer alias"
-          style=${input}
           value=${alias}
           onInput=${(e) => setAlias(e.target.value)}
           placeholder="Local alias (optional)"
@@ -216,12 +369,12 @@ function RemotePeerSettings() {
       </div>
       <details>
         <summary>Optional endpoint ticket</summary>
-        <textarea
-          style=${input}
+        <div class="settings-addon-field"><label class="settings-addon-label" for="remote-peer-ticket">Peer endpoint ticket</label><textarea
+          id="remote-peer-ticket" class="settings-addon-control"
           rows="2"
           value=${ticket}
           onInput=${(e) => setTicket(e.target.value)}
-        />
+        /></div>
       </details>
       <button
         disabled=${busy || !c.enabled || !client.trim()}
@@ -255,8 +408,9 @@ function RemotePeerSettings() {
         Advertises the public client ID locally and lists untrusted nearby
         candidates. Does not auto-pair.
       </p>
-      <input
-        style=${input}
+      <div class="settings-addon-field">
+      <label class="settings-addon-label" for="remote-peer-interface">IPv4 interface (optional)</label>
+      <input id="remote-peer-interface" class="settings-addon-control" type="text"
         placeholder="IPv4 interface (optional)"
         defaultValue=${c.mdnsInterface}
         onBlur=${(e) => {
@@ -264,6 +418,7 @@ function RemotePeerSettings() {
             config({ mdnsInterface: e.target.value });
         }}
       />
+      </div>
       <p>
         ${state.discovery.active ? "Discovery active" : "Discovery stopped"}
         ${state.discovery.error || ""}
@@ -288,7 +443,7 @@ function RemotePeerSettings() {
       ${!state.peers.length && html`<p>No paired clients.</p>`}
       ${state.peers.map(
         (peer) =>
-          html`<div style=${box}>
+          html`<div style=${box} key=${peer.id + ":" + peer.epoch} data-peer-id=${peer.id}>
             <strong>${peer.alias}</strong> ${peer.name} · ${peer.status}
             <div style="overflow-wrap:anywhere">
               <code>${peer.clientId}</code>
@@ -354,50 +509,7 @@ function RemotePeerSettings() {
               </button>
             </div>
             ${peer.status === "paired" &&
-            html`<details>
-              <summary>Incoming permissions</summary>
-              <p>
-                ${peer.scope} · ${peer.modes.join(", ")} · files
-                ${peer.files ? "on" : "off"}
-              </p>
-              <button
-                disabled=${busy}
-                onClick=${() => {
-                  const scope = prompt(
-                    "Scope: none, inbox-only, named-agents, all-advertised",
-                    peer.scope,
-                  );
-                  if (!scope) return;
-                  const modes = prompt(
-                    "Modes (comma-separated): queue, auto, steer",
-                    peer.modes.join(","),
-                  );
-                  if (!modes) return;
-                  const agents = prompt(
-                    "Named aliases (comma-separated)",
-                    peer.agents.join(","),
-                  );
-                  const files = window.confirm("Allow bounded file transfers?");
-                  const confirmation =
-                    prompt("Type ALLOW REMOTE ACCESS for wider permissions") ||
-                    "";
-                  run({
-                    action: "policy",
-                    peer: peer.id,
-                    scope,
-                    modes: modes.split(",").map((s) => s.trim()),
-                    agents: (agents || "")
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                    files,
-                    confirmation,
-                  });
-                }}
-              >
-                Edit permissions
-              </button>
-            </details>`}
+            html`<${PeerPermissions} peer=${peer} advertised=${state.advertised} busy=${busy} enabled=${c.enabled} onApply=${applyPolicy} />`}
           </div>`,
       )}
     </section>
@@ -413,8 +525,9 @@ function RemotePeerSettings() {
             </button>
           </div>`,
       )}
-      <select
-        style=${input}
+      <div class="settings-addon-field">
+      <label class="settings-addon-label" for="remote-peer-advertise">Advertise a local agent</label>
+      <select id="remote-peer-advertise" class="settings-addon-control"
         defaultValue=""
         onChange=${(e) => {
           const local = e.target.value;
@@ -435,11 +548,13 @@ function RemotePeerSettings() {
           (a) => html`<option value=${a.agent_name}>${a.agent_name}</option>`,
         )}
       </select>
+      </div>
     </section>
     <section style=${box}>
       <h4>Relays</h4>
-      <select
-        style=${input}
+      <div class="settings-addon-field">
+      <label class="settings-addon-label" for="remote-peer-relay-mode">Relay mode</label>
+      <select id="remote-peer-relay-mode" class="settings-addon-control"
         value=${c.relayMode}
         disabled=${busy}
         onChange=${(e) => {
@@ -457,16 +572,18 @@ function RemotePeerSettings() {
         <option value="custom">Custom relays</option>
         <option value="disabled">No relays (direct only)</option>
       </select>
-      <p>
+      </div>
+      <p id="remote-peer-relay-help" class="settings-addon-help">
         Custom list: HTTPS URL and optional authTokenKeychain reference. Never
         paste a secret here.
       </p>
-      <textarea
-        style=${input}
+      <div class="settings-addon-field">
+      <label class="settings-addon-label" for="remote-peer-relays">Custom relays (JSON)</label>
+      <textarea id="remote-peer-relays" class="settings-addon-control" aria-describedby="remote-peer-relay-help"
         rows="3"
         value=${relayText}
         onInput=${(e) => setRelayText(e.target.value)}
-      /><button
+      /></div><button
         disabled=${busy}
         onClick=${() => {
           try {

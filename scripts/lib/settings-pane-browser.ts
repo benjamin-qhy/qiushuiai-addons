@@ -6,7 +6,7 @@ import { dirname, extname, join, resolve } from "node:path";
 export const settingsBrowserEnabled = process.env.PICLAW_E2E_DISPOSABLE === "1"
   && !!process.env.PICLAW_SETTINGS_CORE_SOURCE;
 
-export async function settingsPaneFixture(entry: string) {
+export async function settingsPaneFixture(entry: string, options: { realHost?: boolean } = {}) {
   const core = process.env.PICLAW_SETTINGS_CORE_SOURCE!;
   if (!settingsBrowserEnabled || !core.startsWith("/")) throw new Error("Explicit disposable companion core required");
   const { chromium } = await import(join(core, "node_modules/playwright/index.mjs"));
@@ -20,9 +20,31 @@ export async function settingsPaneFixture(entry: string) {
       import {h,render} from ${JSON.stringify(preact + "/dist/preact.module.js")};
       import * as hooks from ${JSON.stringify(preact + "/hooks/dist/hooks.module.js")};
       import htm from ${JSON.stringify(join(core, "node_modules/htm/dist/htm.module.js"))};
-      globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
-      globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component})=>render(h(component),document.getElementById('app')),notifySettingsPanesChanged:()=>{}};
-      await import('/addon/index.ts');
+      const skin=new URLSearchParams(location.search).get('skin');
+      const root=document.getElementById('app');
+      if (${options.realHost === true} && skin==='classic') {
+        const vendor=await import(${JSON.stringify(join(core, "runtime/web/src/vendor/preact-htm.js"))});
+        const registry=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings/pane-registry.ts"))});
+        const {requestOpenSettingsDialog}=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings-dialog-events.ts"))});
+        const {SettingsDialogContent}=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings-dialog.ts"))});
+        globalThis.__piclawPreactHtm=vendor;
+        globalThis.__piclawSettingsPaneRegistry=registry;
+        await import('/addon/index.ts');
+        requestOpenSettingsDialog({section:registry.getRegisteredSettingsPanes()[0].id});
+        vendor.render(vendor.h(SettingsDialogContent,{onClose:()=>{}}),root);
+      } else if (${options.realHost === true} && skin==='visual') {
+        const registry=await import(${JSON.stringify(join(core, "runtime/web/static/visual/frontend/src/panels/settings/pane-registry.ts"))});
+        const {SettingsPanel}=await import(${JSON.stringify(join(core, "runtime/web/static/visual/frontend/src/panels/SettingsPanel.tsx"))});
+        globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
+        globalThis.__piclawSettingsPaneRegistry={...registry,registerSettingsPane:registry.registerAddonSettingsPane};
+        await import('/addon/index.ts');
+        localStorage.setItem('piclaw-settings-category',registry.getRegisteredPanes().find(p=>p.source==='addon').id);
+        render(h(SettingsPanel),root);
+      } else {
+        globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
+        globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component})=>render(h(component),root),notifySettingsPanesChanged:()=>{}};
+        await import('/addon/index.ts');
+      }
     `);
     const built = await Bun.build({ entrypoints: [shim], target: "browser", external: ["/addon/index.ts"], plugins: [{
       name: "single-preact", setup(build) {
@@ -33,6 +55,7 @@ export async function settingsPaneFixture(entry: string) {
     const js = await built.outputs[0].text();
     server = Bun.serve({ hostname: "127.0.0.1", port: 0, async fetch(req) {
       const url = new URL(req.url);
+      if (url.pathname === "/agent/settings-data") return Response.json({});
       if (url.pathname === "/ui.js") return new Response(js, { headers: { "content-type": "text/javascript" } });
       // Production serves exact asset paths and transpiles each module; it does
       // not bundle or resolve a missing .js import to a neighbouring .ts file.
@@ -52,10 +75,10 @@ export async function settingsPaneFixture(entry: string) {
       if (url.pathname !== "/") return new Response("Unexpected fixture request", { status: 404 });
       const skin = url.searchParams.get("skin");
       const modern = skin === "classic" || skin === "visual";
-      const cls = modern ? `${skin === "classic" ? "settings-content" : "settings-panel__content"} settings-addon-pane` : "";
+      const cls = modern && !options.realHost ? `${skin === "classic" ? "settings-content" : "settings-panel__content"} settings-addon-pane` : "";
       return new Response(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
         ${modern ? `<link rel="stylesheet" href="/static/${skin}/css/styles.css">` : ""}
-        <style>:root{--bg-primary:#fff;--bg-secondary:#f7f9fa;--text-primary:#18212a;--text-secondary:#54606c;--border-color:#b7bfc7;--accent-color:#2783b8;--danger-color:#b3261e}body{margin:0;overflow:auto;font:15px system-ui}#app{box-sizing:border-box;width:100%;max-width:850px;height:auto;min-height:0;padding:12px;overflow:visible}</style>
+        <style>:root{--bg-primary:#fff;--bg-secondary:#f7f9fa;--text-primary:#18212a;--text-secondary:#54606c;--border-color:#b7bfc7;--accent-color:#2783b8;--danger-color:#b3261e}body{margin:0;overflow:auto;font:15px system-ui}#app{box-sizing:border-box;width:100%;${options.realHost && modern ? "height:100vh" : "max-width:850px;height:auto;min-height:0;padding:12px;overflow:visible"}}</style>
         </head><body><main id="app" class="${cls}"></main><script type="module" src="/ui.js"></script></body></html>`, { headers: { "content-type": "text/html" } });
     } });
     browser = await chromium.launch({ headless: true });

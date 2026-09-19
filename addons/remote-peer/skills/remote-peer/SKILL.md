@@ -10,7 +10,9 @@ Operators pair clients in Settings by pasting `PCL1-…` client IDs, comparing i
 
 Agents use `chat({action:"directory"})` and only returned addresses/modes, such as `lab!inbox` and `lab!@research`. Send workspace `files` or `media_ids`; do not encode binary in message text. Use stable `idempotency_key` values for uncertain retries. Reply to supplied `peer!reply.…` addresses unchanged.
 
-Operator `remote_peer` actions: `status`, `identity`, `ticket`, `pair`, `accept`, `deny`, `revoke`, `forget`, `alias`, `policy`, `advertise`, `unadvertise`, `ping`, `retry`, `work_send`, `work_review`. Pair uses `client_id` with optional `alias` and `ticket`. Acceptance/revocation/removal require full client-ID confirmation. Wider incoming permissions require `ALLOW REMOTE ACCESS`.
+Operator `remote_peer` actions: `status`, `identity`, `ticket`, `pair`, `accept`, `deny`, `revoke`, `forget`, `alias`, `policy`, `remote_permissions`, `advertise`, `unadvertise`, `ping`, `retry`, `work_send`, `work_review`. Pair uses `client_id` with optional `alias` and `ticket`. Acceptance/revocation/removal require full client-ID confirmation. Wider incoming permissions require `ALLOW REMOTE ACCESS`.
+
+Settings exposes per-peer incoming drafts with Apply/Cancel/Revert and a separate read-only outgoing advertisement. `remote_permissions` explicitly refreshes one paired peer's remote roster; it does not grant permissions. To send files to a peer, the receiver must enable incoming files for this instance, then the sender refreshes its directory. File-only edits preserve scope, named agents and modes. No networking is enabled automatically.
 
 Pairing grants no direct remote tool execution. Work proposals and execute-labelled requests both require review and a locally supplied result.
 

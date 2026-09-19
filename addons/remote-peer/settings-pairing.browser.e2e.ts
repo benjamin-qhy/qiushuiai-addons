@@ -136,27 +136,31 @@ try {
   selected = a;
   await page.reload();
   await page.getByText(/paired/).waitFor();
-  await page
-    .locator("summary")
-    .filter({ hasText: "Incoming permissions" })
-    .click();
-  const answers = [
-    "named-agents",
-    "queue,auto",
-    "",
-    "dismiss",
-    "ALLOW REMOTE ACCESS",
-  ];
-  page.on("dialog", async (d: any) => {
-    const answer = answers.shift();
-    if (answer === "dismiss") await d.dismiss();
-    else await d.accept(answer ?? "");
-  });
-  await page.getByRole("button", { name: "Edit permissions" }).click();
-  await page.getByText(/named-agents · queue, auto · files\s*off/).waitFor();
+  await page.getByRole("button", { name: "Edit incoming permissions" }).click();
+  await page.getByLabel("Incoming scope", { exact: true }).selectOption("named-agents");
+  await page.getByRole("checkbox", { name: "auto", exact: true }).check();
+  await page.getByLabel("Confirm wider incoming access").fill("ALLOW REMOTE ACCESS");
+  await page.getByRole("button", { name: "Apply", exact: true }).click();
+  await page.getByText(/Incoming permissions saved and reloaded/).waitFor();
+  await page.getByText(/Saved: named-agents · queue, auto · incoming files disabled/).waitFor();
+  await page.getByRole("button", { name: "Edit incoming permissions" }).click();
+  await page.getByRole("checkbox", { name: "Allow this peer to send files here" }).check();
+  await page.getByLabel("Confirm wider incoming access").fill("ALLOW REMOTE ACCESS");
+  await page.getByRole("button", { name: "Apply", exact: true }).click();
+  await page.getByText(/Incoming permissions saved and reloaded/).waitFor();
+  const saved = a.state.peer(b.transport.id)!;
+  if (saved.scope !== "named-agents" || saved.modes.join(",") !== "queue,auto" || !saved.files)
+    throw Error("File-only change replaced another incoming permission");
+  await page.getByRole("button", { name: "Refresh remote permissions" }).click();
+  await page.getByText(/outgoing files disabled/).waitFor();
+  const advertised = await b.directory();
+  if (!advertised.entries.find((entry) => entry.address.endsWith("!inbox"))?.attachments?.enabled)
+    throw Error("Sender directory did not observe receiver's saved file permission");
+  await page.reload();
+  await page.getByText(/Saved: named-agents · queue, auto · incoming files enabled/).waitFor();
   if (errors.length) throw Error(errors.join("\n"));
   console.log(
-    "PASS two-client Settings pasted ID/ticket pairing, recipient approval and restricted policy edit",
+    "PASS two-client Settings pairing, restricted policy, file-only Apply/readback/reload and directional remote advertisement",
   );
 } finally {
   const cleanupErrors: unknown[] = [];
