@@ -327,7 +327,7 @@
     {
       "slug": "goal",
       "name": "@rcarmo/piclaw-addon-goal",
-      "version": "0.1.47",
+      "version": "0.1.48",
       "type": "extension",
       "description": "Codex-style persisted thread goals with a hardened autonomous continuation loop and visible completion/stop summaries",
       "path": "addons/goal",
@@ -343,9 +343,9 @@
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-goal-0.1.47.tgz"
+        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-goal-0.1.48.tgz"
       },
-      "updatedAt": "2026-09-10"
+      "updatedAt": "2026-09-19"
     },
     {
       "slug": "image-processing",

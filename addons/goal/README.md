@@ -192,3 +192,11 @@ Runtime checkpoint state is bounded to 1,024 live leases and exact-turn suppress
 - Plan storage is not bundled in this add-on; it is supplied by the Plan Sidebar add-on. The goal prompt is written to use `plan action=update` when available.
 - When Plan Sidebar is installed, Goal reads its runtime API at `agent_end`. If every structured plan item is `completed`, Goal queues a finalization prompt instead of ordinary continuation. If the same completed plan remains unresolved after two probes, Goal marks the loop `stopped` with reason `plan_complete_unverified`.
 - If Plan Sidebar is installed and an incomplete plan remains unchanged across three autonomous continuations, Goal marks the loop `stopped` with reason `no_progress` instead of continuing forever.
+
+## Settings field appearance (0.1.48)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.

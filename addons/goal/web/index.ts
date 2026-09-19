@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { settingsFieldStyles } from "./settings-fields.ts";
 const ADDON_ID = "goal";
 const API = `/agent/addons/api/${ADDON_ID}/goal`;
 const DEFAULT_CHAT_JID = "web:default";
@@ -183,12 +184,12 @@ function GoalSettingsPane() {
 
   const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.45rem 0" };
   const L = { minWidth: "130px", color: "var(--text-secondary)", fontSize: "0.85rem", alignSelf: "flex-start", paddingTop: "0.35rem" };
-  const I = { flex: 1, padding: "6px 10px", background: "var(--bg-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)", borderRadius: "6px", fontSize: "0.84rem" };
   const H = { margin: "1.15rem 0 0.45rem", fontSize: "0.9rem", color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.3rem" };
-  const hint = (text) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "-0.1rem 0 0.5rem 138px" }}>${text}</div>`;
+  const hint = (text) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>${text}</div>`;
 
   return html`
-    <div style="padding:0.5rem 0;">
+    <div data-settings-addon="goal" style="padding:0.5rem 0;min-width:0">
+      <style>${settingsFieldStyles}</style>
       <h4 style=${H}>Codex-style thread goal</h4>
       <div style=${{ fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: "0.75rem" }}>
         Chat: <code style="font-family:var(--font-mono, monospace)">${chatJid}</code>
@@ -200,18 +201,18 @@ function GoalSettingsPane() {
         <div><strong>Time:</strong> ${goal?.timeUsedSeconds || 0}s</div>
       </div>
 
-      <label style=${S}>
-        <span style=${L}>Objective</span>
-        <textarea style=${{ ...I, minHeight: "96px" }} value=${draftObjective}
+      <label class="settings-addon-field">
+        <span class="settings-addon-label">Objective</span>
+        <textarea class="settings-addon-control" style="min-height:96px" value=${draftObjective}
           placeholder="Describe the full goal objective. This replaces the current thread goal."
           onInput=${(e) => setDraftObjective(e.target.value)}
           disabled=${saving}></textarea>
       </label>
       ${hint("Use /goal <objective> to start from chat, or save here to replace the thread goal and queue a server-side continuation.")}
 
-      <label style=${S}>
-        <span style=${L}>Token budget</span>
-        <input type="number" min="1" step="1000" style=${I} value=${draftBudget}
+      <label class="settings-addon-field">
+        <span class="settings-addon-label">Token budget</span>
+        <input class="settings-addon-control" type="number" min="1" step="1000" value=${draftBudget}
           placeholder="unbounded"
           onInput=${(e) => setDraftBudget(e.target.value)}
           disabled=${saving} />
