@@ -38,3 +38,11 @@ Piclaw stores Telegram chats as `chat_jid` values like:
 ## Disable
 
 Disable the channel in **Settings → Telegram**, then reload Piclaw. Unsetting `PICLAW_TELEGRAM_ENABLED` disables environment-based enablement but does not override an enabled value saved through Settings.
+
+## Settings field appearance (0.1.3)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.
