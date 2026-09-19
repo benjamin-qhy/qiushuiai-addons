@@ -1,3 +1,4 @@
+import { settingsFieldStyles } from "./settings-fields.ts";
 /**
  * web/index.ts — Browser-side settings pane for @rcarmo/piclaw-addon-telegram.
  */
@@ -77,7 +78,8 @@ function TelegramSettings() {
   }, [botToken, config.botTokenConfigured, enabled, pollingTimeout]);
 
   return html`
-    <section>
+    <section data-settings-addon="telegram">
+      <style>${settingsFieldStyles}</style>
       <h3 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-primary, #e7e9ea); border-bottom: 1px solid var(--border, #2f3336); padding-bottom: 6px;">
         Telegram Bot Channel
       </h3>
@@ -90,26 +92,24 @@ function TelegramSettings() {
         </span>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">Bot Token</label>
-        <input
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="telegram-token">Bot Token</label>
+        <input class="settings-addon-control" id="telegram-token"
           type="password"
           value=${botToken}
           placeholder=${config.botTokenConfigured ? "••••••• (stored in keychain)" : "123456:ABC-DEF..."}
           onInput=${(e: any) => setBotToken(e.target.value)}
-          style="background: var(--bg-elevated, #1a1a2e); border: 1px solid var(--border, #2f3336); color: var(--text-primary, #e7e9ea); padding: 5px 10px; border-radius: 3px; font-size: 13px; width: 240px;"
         />
       </div>
 
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">Poll Timeout</label>
-        <input
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="telegram-timeout">Poll Timeout</label>
+        <input class="settings-addon-control" id="telegram-timeout"
           type="number"
           value=${pollingTimeout}
           min="5"
           max="120"
           onInput=${(e: any) => setPollingTimeout(Number(e.target.value) || 30)}
-          style="background: var(--bg-elevated, #1a1a2e); border: 1px solid var(--border, #2f3336); color: var(--text-primary, #e7e9ea); padding: 5px 10px; border-radius: 3px; font-size: 13px; width: 80px;"
         />
         <span style="font-size: 12px; color: var(--text-secondary, #71767b);">seconds</span>
       </div>

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { settingsFieldStyles } from "./settings-fields.ts";
 const ADDON_ID = "portainer";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const DEFAULT_KEYCHAIN = "portainer/relay";
@@ -112,10 +113,8 @@ function PortainerSettings() {
 
   const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.4rem 0" };
   const L = { minWidth: "180px", color: "var(--text-secondary)", fontSize: "0.85rem" };
-  const I = { flex: 1, padding: "4px 8px", background: "var(--bg-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)", borderRadius: "4px", fontSize: "0.85rem" };
-  const IM = { ...I, fontFamily: "var(--font-mono, monospace)", fontSize: "0.82rem" };
   const H = { margin: "1.2rem 0 0.4rem", fontSize: "0.9rem", color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.3rem" };
-  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "-0.15rem 0 0.4rem 188px" }}>${t}</div>`;
+  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>${t}</div>`;
 
   const checkbox = (label, key) => html`
     <label style=${S}><span style=${L}>${label}</span>
@@ -123,15 +122,16 @@ function PortainerSettings() {
     </label>`;
 
   const textField = (label, key, placeholder, extra = {}) => html`
-    <label style=${S}><span style=${L}>${label}</span>
-      <input type="text" value=${cfg[key] ?? ""} style=${{ ...I, ...extra }} placeholder=${placeholder || ""}
+    <label class="settings-addon-field"><span class="settings-addon-label">${label}</span>
+      <input class="settings-addon-control" type="text" value=${cfg[key] ?? ""} style=${extra} placeholder=${placeholder || ""}
         onBlur=${(e) => { if (e.target.value !== (cfg[key] ?? "")) save({ [key]: e.target.value }); }}
         onKeyDown=${(e) => { if (e.key === "Enter") e.target.blur(); }}
         disabled=${saving} />
     </label>`;
 
   return html`
-    <div style="padding:0.5rem 0;">
+    <div data-settings-addon="portainer" style="padding:0.5rem 0;min-width:0">
+      <style>${settingsFieldStyles}</style>
       <h4 style=${H}>Connection</h4>
       ${textField("Host / IP", "host", "relay.local or 192.168.1.20")}
       ${hint("You can enter a hostname, IP, or full URL. The addon normalizes bare hosts to https://host:9443.")}
@@ -140,9 +140,10 @@ function PortainerSettings() {
 
       <h4 style=${H}>Token secret</h4>
       ${textField("Keychain entry", "api_token_keychain", DEFAULT_KEYCHAIN, { fontFamily: "var(--font-mono, monospace)" })}
-      <div style=${S}>
-        <span style=${L}>API token</span>
-        <input type="password" value=${keyInput} style=${IM}
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="portainer-secret">API token</label>
+        <div class="settings-addon-control-group">
+        <input id="portainer-secret" class="settings-addon-control" type="password" value=${keyInput} style="font-family:var(--font-mono, monospace)"
           placeholder=${hasKey ? "••••••• (stored in keychain)" : "paste Portainer API token"}
           onInput=${(e) => setKeyInput(e.target.value)}
           onKeyDown=${(e) => { if (e.key === "Enter") saveToken(); }}
@@ -152,6 +153,7 @@ function PortainerSettings() {
         ${hasKey
           ? html`<span style="font-size:0.72rem;color:var(--accent-color,#2563eb);font-weight:600" title="Key in keychain">✓</span>`
           : html`<span style="font-size:0.72rem;color:var(--danger-color,#dc2626);font-weight:600" title="No key">✗</span>`}
+        </div>
       </div>
       ${hint(`Saved to keychain as ${currentKeychain}.`) }
 

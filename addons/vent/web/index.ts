@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { settingsFieldStyles } from "./settings-fields.ts";
 const ADDON_ID = "vent";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const DEFAULT_OUTPUT_PATH = "VENT.md";
@@ -66,19 +67,18 @@ function VentSettings() {
 
   const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.4rem 0" };
   const L = { minWidth: "160px", color: "var(--text-secondary)", fontSize: "0.85rem" };
-  const I = { flex: 1, padding: "4px 8px", background: "var(--bg-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)", borderRadius: "4px", fontSize: "0.85rem", fontFamily: "var(--font-mono, monospace)" };
   const H = { margin: "1.2rem 0 0.4rem", fontSize: "0.9rem", color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.3rem" };
-  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "-0.15rem 0 0.4rem 168px" }}>${t}</div>`;
+  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>${t}</div>`;
 
   return html`
-    <div style="padding:0.5rem 0;">
+    <div data-settings-addon="vent" style="padding:0.5rem 0;min-width:0">
+      <style>${settingsFieldStyles}</style>
       <h4 style=${H}>Output</h4>
-      <label style=${S}>
-        <span style=${L}>Output file</span>
-        <input
+      <label class="settings-addon-field">
+        <span class="settings-addon-label">Output file</span>
+        <input class="settings-addon-control"
           type="text"
           value=${cfg.output_path ?? DEFAULT_OUTPUT_PATH}
-          style=${I}
           placeholder=${DEFAULT_OUTPUT_PATH}
           onBlur=${(e) => {
             if (e.target.value !== (cfg.output_path ?? DEFAULT_OUTPUT_PATH)) {

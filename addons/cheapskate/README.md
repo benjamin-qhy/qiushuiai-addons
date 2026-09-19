@@ -114,3 +114,11 @@ The add-on no longer claims provider quota limits it cannot verify.
 ## Failure states
 
 Cheapskate classifies credential, missing-model, rate-limit, context, transient and permanent failures separately. Credential and missing-model faults remain quarantined until configuration/catalogue state changes. Rate-limit and transient faults use bounded cooldowns. A failed request returns the final mapped assistant error when no eligible route remains.
+
+## Settings field appearance (0.5.2)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.

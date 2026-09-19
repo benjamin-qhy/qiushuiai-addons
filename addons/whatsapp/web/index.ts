@@ -1,3 +1,4 @@
+import { settingsFieldStyles } from "./settings-fields.ts";
 /**
  * web/index.ts — Browser-side settings pane for @rcarmo/piclaw-addon-whatsapp.
  */
@@ -56,7 +57,8 @@ function WhatsAppSettings() {
   }, [phone, enabled]);
 
   return html`
-    <section>
+    <section data-settings-addon="whatsapp">
+      <style>${settingsFieldStyles}</style>
       <h3 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-primary, #e7e9ea); border-bottom: 1px solid var(--border, #2f3336); padding-bottom: 6px;">
         WhatsApp Channel
       </h3>
@@ -69,14 +71,13 @@ function WhatsAppSettings() {
         </span>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">Phone</label>
-        <input
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="whatsapp-phone">Phone</label>
+        <input class="settings-addon-control" id="whatsapp-phone"
           type="text"
           value=${phone}
           placeholder="+1234567890"
           onInput=${(e: any) => setPhone(e.target.value)}
-          style="background: var(--bg-elevated, #1a1a2e); border: 1px solid var(--border, #2f3336); color: var(--text-primary, #e7e9ea); padding: 5px 10px; border-radius: 3px; font-size: 13px; width: 180px;"
         />
       </div>
 

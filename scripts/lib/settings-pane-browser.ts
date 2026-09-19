@@ -29,6 +29,7 @@ export async function settingsPaneFixture(entry: string, options: { realHost?: b
         const {SettingsDialogContent}=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings-dialog.ts"))});
         globalThis.__piclawPreactHtm=vendor;
         globalThis.__piclawSettingsPaneRegistry=registry;
+        globalThis.__piclaw_web=registry;
         await import('/addon/index.ts');
         requestOpenSettingsDialog({section:registry.getRegisteredSettingsPanes()[0].id});
         vendor.render(vendor.h(SettingsDialogContent,{onClose:()=>{}}),root);
@@ -37,12 +38,14 @@ export async function settingsPaneFixture(entry: string, options: { realHost?: b
         const {SettingsPanel}=await import(${JSON.stringify(join(core, "runtime/web/static/visual/frontend/src/panels/SettingsPanel.tsx"))});
         globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
         globalThis.__piclawSettingsPaneRegistry={...registry,registerSettingsPane:registry.registerAddonSettingsPane};
+        globalThis.__piclaw_web=globalThis.__piclawSettingsPaneRegistry;
         await import('/addon/index.ts');
         localStorage.setItem('piclaw-settings-category',registry.getRegisteredPanes().find(p=>p.source==='addon').id);
         render(h(SettingsPanel),root);
       } else {
         globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
         globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component})=>render(h(component),root),notifySettingsPanesChanged:()=>{}};
+        globalThis.__piclaw_web=globalThis.__piclawSettingsPaneRegistry;
         await import('/addon/index.ts');
       }
     `);
@@ -78,13 +81,13 @@ export async function settingsPaneFixture(entry: string, options: { realHost?: b
       const cls = modern && !options.realHost ? `${skin === "classic" ? "settings-content" : "settings-panel__content"} settings-addon-pane` : "";
       return new Response(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">
         ${modern ? `<link rel="stylesheet" href="/static/${skin}/css/styles.css">` : ""}
-        <style>:root{--bg-primary:#fff;--bg-secondary:#f7f9fa;--text-primary:#18212a;--text-secondary:#54606c;--border-color:#b7bfc7;--accent-color:#2783b8;--danger-color:#b3261e}body{margin:0;overflow:auto;font:15px system-ui}#app{box-sizing:border-box;width:100%;${options.realHost && modern ? "height:100vh" : "max-width:850px;height:auto;min-height:0;padding:12px;overflow:visible"}}</style>
+        <style>:root{--bg-primary:#fff;--bg-secondary:#f7f9fa;--text-primary:#18212a;--text-secondary:#54606c;--border-color:#b7bfc7;--accent-color:#2783b8;--danger-color:#b3261e}@media(prefers-color-scheme:dark){:root{--bg-primary:#17212a;--bg-secondary:#202b36;--text-primary:#edf3f7;--text-secondary:#b3c1ce;--border-color:#526273}}body{margin:0;overflow:auto;font:15px system-ui}#app{box-sizing:border-box;width:100%;${options.realHost && modern ? "height:100vh" : "max-width:850px;height:auto;min-height:0;padding:12px;overflow:visible"}}</style>
         </head><body><main id="app" class="${cls}"></main><script type="module" src="/ui.js"></script></body></html>`, { headers: { "content-type": "text/html" } });
     } });
     browser = await chromium.launch({ headless: true });
     return {
-      async page(skin: string, width = 390) {
-        const page = await browser.newPage({ viewport: { width, height: 900 } });
+      async page(skin: string, width = 390, colorScheme: "light" | "dark" = "light") {
+        const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme });
         page.setDefaultTimeout(5000);
         const errors: string[] = [];
         page.on("pageerror", (e: Error) => errors.push(e.message));

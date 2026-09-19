@@ -44,7 +44,7 @@ const server = Bun.serve({
     }
     if (p.includes("snapshot")) snapshotRequests++;
     return new Response(
-      `<html><head><style>body{font:16px system-ui;background:#171b22;color:#e9eef7;padding:24px;max-width:850px}input{padding:8px;background:#242b35;color:white;border:1px solid #65738b}button{padding:10px;margin:8px}fieldset{border:1px solid #65738b}</style></head><body><div id="root"></div><script src="/preact.js"></script><script src="/hooks.js"></script><script src="/htm.js"></script><script type="module">window.__piclawPreactHtm={...preact,...preactHooks,html:htm.bind(preact.h)};const {default:register}=await import('/addon.js');register({registerSettingsPane(p){preact.render(p.render(),document.getElementById('root'))}});</script></body></html>`,
+      `<html><head><style>body{font:16px system-ui;background:#171b22;color:#e9eef7;padding:24px;max-width:850px}input{padding:8px;background:#242b35;color:white;border:1px solid #65738b}button{padding:10px;margin:8px}fieldset{border:1px solid #65738b}</style></head><body><div id="root"></div><script src="/preact.js"></script><script src="/hooks.js"></script><script src="/htm.js"></script><script type="module">window.__piclawPreactHtm={...preact,...preactHooks,html:htm.bind(preact.h)};window.__piclaw_web={registerSettingsPane(p){preact.render(preact.h(p.component),document.getElementById('root'))}};await import('/addon.js');</script></body></html>`,
       { headers: { "Content-Type": "text/html" } },
     );
   },

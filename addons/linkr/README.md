@@ -183,3 +183,14 @@ For contributors with a local host-development environment: to reproduce the moc
 - [Firmware releases](https://github.com/radxa-linkr/linkr/releases) — linked by the portal; individual releases were not audited.
 
 MIT-licensed; see [LICENSE](LICENSE). Attribution for Radxa Linkr material is retained. This is an independent Piclaw integration.
+
+## Settings field appearance (0.1.1)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.
+
+The web entry registers on import through the host component contract, including
+a named navigation icon for Classic phone layouts.

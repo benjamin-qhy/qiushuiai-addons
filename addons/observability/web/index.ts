@@ -1,3 +1,4 @@
+import { settingsFieldStyles } from "./settings-fields.ts";
 /**
  * observability/web/index.ts — Settings pane only.
  *
@@ -110,10 +111,8 @@ function ObservabilitySettings() {
 
   const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.4rem 0" };
   const L = { minWidth: "180px", color: "var(--text-secondary)", fontSize: "0.85rem" };
-  const I = { flex: 1, padding: "4px 8px", background: "var(--bg-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)", borderRadius: "4px", fontSize: "0.85rem" };
-  const IM = { ...I, fontFamily: "var(--font-mono, monospace)", fontSize: "0.82rem" };
   const H = { margin: "1.2rem 0 0.4rem", fontSize: "0.9rem", color: "var(--text-primary)", borderBottom: "1px solid var(--border-color)", paddingBottom: "0.3rem" };
-  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "-0.15rem 0 0.4rem 188px" }}>${t}</div>`;
+  const hint = (t) => html`<div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>${t}</div>`;
 
   const check = (label, key) => html`
     <label style=${S}><span style=${L}>${label}</span>
@@ -121,21 +120,22 @@ function ObservabilitySettings() {
     </label>`;
 
   const text = (label, key, placeholder) => html`
-    <label style=${S}><span style=${L}>${label}</span>
-      <input type="text" value=${cfg[key] ?? ""} style=${I} placeholder=${placeholder || ""}
+    <label class="settings-addon-field"><span class="settings-addon-label">${label}</span>
+      <input class="settings-addon-control" type="text" value=${cfg[key] ?? ""} placeholder=${placeholder || ""}
         onBlur=${(e) => { if (e.target.value !== (cfg[key] ?? "")) save({ [key]: e.target.value }); }}
         onKeyDown=${(e) => { if (e.key === "Enter") e.target.blur(); }} disabled=${saving} />
     </label>`;
 
   const num = (label, key, placeholder) => html`
-    <label style=${S}><span style=${L}>${label}</span>
-      <input type="text" inputmode="numeric" value=${cfg[key] ?? ""} style=${{ ...I, maxWidth: "100px" }} placeholder=${placeholder || ""}
+    <label class="settings-addon-field"><span class="settings-addon-label">${label}</span>
+      <input class="settings-addon-control" type="text" inputmode="numeric" value=${cfg[key] ?? ""} placeholder=${placeholder || ""}
         onBlur=${(e) => { const v = Number(e.target.value); if (!isNaN(v) && v !== cfg[key]) save({ [key]: v }); }}
         onKeyDown=${(e) => { if (e.key === "Enter") e.target.blur(); }} disabled=${saving} />
     </label>`;
 
   return html`
-    <div style="padding:0.5rem 0;">
+    <div data-settings-addon="observability" style="padding:0.5rem 0;min-width:0">
+      <style>${settingsFieldStyles}</style>
       <h4 style=${H}>General</h4>
       ${check("Enabled", "enabled")}
       ${text("Instance name", "instance_name", hostname())}
@@ -143,9 +143,10 @@ function ObservabilitySettings() {
 
       <h4 style=${H}>Azure Application Insights</h4>
       ${check("App Insights enabled", "appinsights_enabled")}
-      <div style=${S}>
-        <span style=${L}>Connection string</span>
-        <input type="password" value=${keyInput} style=${IM}
+      <div class="settings-addon-field">
+        <label class="settings-addon-label" for="observability-secret">Connection string</label>
+        <div class="settings-addon-control-group">
+        <input id="observability-secret" class="settings-addon-control" type="password" value=${keyInput} style="font-family:var(--font-mono, monospace)"
           placeholder=${hasKey ? "••••••• (stored in keychain)" : "InstrumentationKey=...;IngestionEndpoint=..."}
           onInput=${(e) => setKeyInput(e.target.value)}
           onKeyDown=${(e) => { if (e.key === "Enter") saveConnectionString(); }}
@@ -156,6 +157,7 @@ function ObservabilitySettings() {
           ? html`<span style="font-size:0.72rem;color:var(--accent-color,#2563eb);font-weight:600" title="Key in keychain">✓</span>`
           : html`<span style="font-size:0.72rem;color:var(--danger-color,#dc2626);font-weight:600" title="No key">✗</span>`
         }
+        </div>
       </div>
       ${hint("Saved to keychain as " + KEYCHAIN_ENTRY + ". Restart required after changing.")}
       ${check("Live Metrics Stream", "appinsights_live_metrics")}
@@ -168,7 +170,7 @@ function ObservabilitySettings() {
       ${check("Graphite enabled", "graphite_enabled")}
       ${text("Host", "graphite_host", "192.168.1.250")}
       ${num("Port", "graphite_port", "2003")}
-      <div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "-0.15rem 0 0.4rem 188px" }}>Metrics use the fixed <code>piclaw</code> prefix.</div>
+      <div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>Metrics use the fixed <code>piclaw</code> prefix.</div>
 
       <h4 style=${H}>Usage and compaction telemetry</h4>
       ${check("Export usage and compaction telemetry", "usage_telemetry_enabled")}
