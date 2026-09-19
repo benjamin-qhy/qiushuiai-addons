@@ -73,7 +73,7 @@
     {
       "slug": "cheapskate",
       "name": "@rcarmo/piclaw-addon-cheapskate",
-      "version": "0.5.1",
+      "version": "0.5.2",
       "type": "extension",
       "description": "Catalogue-backed zero-cost model routing through one virtual cheapskate/auto model, with request-local failover and a free-only Settings pane",
       "path": "addons/cheapskate",
@@ -88,9 +88,9 @@
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-cheapskate-0.5.1.tgz"
+        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-cheapskate-0.5.2.tgz"
       },
-      "updatedAt": "2026-09-10"
+      "updatedAt": "2026-09-19"
     },
     {
       "slug": "code-validator",

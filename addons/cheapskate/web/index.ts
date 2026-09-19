@@ -1,3 +1,4 @@
+import { settingsFieldStyles } from "./settings-fields.ts";
 import type {
   CanonicalModelRef,
   CheapskateCandidateDto,
@@ -136,7 +137,8 @@ function CheapskateSettings(): unknown {
   const controlStyle = { padding: "5px 8px", border: "1px solid var(--border-color)", borderRadius: "5px", color: "var(--text-primary)", background: "var(--bg-primary)" };
   const groups = ["eligible", "needs_credentials", "disabled", "excluded_by_scope", "unhealthy"] as const;
 
-  return html`<div style="padding:0.5rem 0" data-testid="cheapskate-settings">
+  return html`<div style="padding:0.5rem 0;min-width:0" data-testid="cheapskate-settings" data-settings-addon="cheapskate">
+    <style>${settingsFieldStyles}</style>
     <div style="display:flex;gap:0.65rem;align-items:center;flex-wrap:wrap;margin-bottom:0.8rem">
       <label style="display:flex;gap:0.4rem;align-items:center">
         <input type="checkbox" checked=${status.config.enabled} disabled=${saving} onChange=${(event: Event) => void save({ enabled: (event.target as HTMLInputElement).checked })} />
@@ -165,11 +167,11 @@ function CheapskateSettings(): unknown {
     </div>` : null}
 
     <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
-      <input aria-label="Filter free models" type="search" value=${query} placeholder="Filter free models" style=${{ ...controlStyle, flex: "1 1 220px" }} onInput=${(event: Event) => setQuery((event.target as HTMLInputElement).value)} />
-      <select aria-label="Filter provider" value=${providerFilter} style=${controlStyle} onChange=${(event: Event) => setProviderFilter((event.target as HTMLSelectElement).value)}>
+      <label class="settings-addon-field"><span class="settings-addon-label">Filter free models</span><input class="settings-addon-control" aria-label="Filter free models" type="search" value=${query} placeholder="Filter free models" onInput=${(event: Event) => setQuery((event.target as HTMLInputElement).value)} /></label>
+      <label class="settings-addon-field"><span class="settings-addon-label">Filter provider</span><select class="settings-addon-control" aria-label="Filter provider" value=${providerFilter} onChange=${(event: Event) => setProviderFilter((event.target as HTMLSelectElement).value)}>
         <option value="">All zero-cost providers</option>
         ${providers.map(([id, name]) => html`<option value=${id}>${name}</option>`)}
-      </select>
+      </select></label>
     </div>
 
     ${groups.map((group) => {
