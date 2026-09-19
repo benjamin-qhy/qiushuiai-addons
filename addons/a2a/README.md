@@ -90,3 +90,11 @@ These start only disposable loopback listeners/temp state; no production server/
 ![Mobile settings](assets/settings-classic-390.png)
 
 The original captures above are local fixtures. The [packaged deployment canary](docs/deployment-canary.md) also passed on VM900/radxax4 with actual Classic/Visual desktop/mobile captures, actual AgentPool execution and independent Python client. The VM was restored to its original stopped snapshot; production remains unchanged.
+
+## Settings field appearance (0.4.1)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.

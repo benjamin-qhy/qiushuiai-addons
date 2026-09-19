@@ -1,3 +1,4 @@
+import { settingsFieldStyles } from "./settings-fields.ts";
 // Uses each skin's add-on settings controls and the direct authenticated backend API.
 export default function register(api: any) {
   const preact =
@@ -120,9 +121,9 @@ export default function register(api: any) {
         <div class="settings-row-help">${help}</div>
       </div>`;
     const json = (label: string, value: string, update: any, help: string) =>
-      html`<label class="a2a-json"
-        ><span>${label}</span
-        ><textarea
+      html`<label class="a2a-json settings-addon-field"
+        ><span class="settings-addon-label">${label}</span
+        ><textarea class="settings-addon-control"
           aria-label=${label}
           value=${value}
           disabled=${busy}
@@ -131,7 +132,8 @@ export default function register(api: any) {
         ></textarea
         ><small>${help}</small></label
       >`;
-    return html`<section class="settings-section a2a-settings">
+    return html`<section class="settings-section a2a-settings" data-settings-addon="a2a">
+      <style>${settingsFieldStyles}</style>
       <style>
         .a2a-settings {
           min-width: 0;
@@ -157,22 +159,12 @@ export default function register(api: any) {
           margin: 6px 0;
         }
         .a2a-json textarea {
-          box-sizing: border-box;
-          width: 100%;
           min-height: 140px;
           resize: vertical;
-          font:
-            12px/1.5 ui-monospace,
-            monospace;
-          border: 1px solid var(--border-color);
-          border-radius: 6px;
-          padding: 8px;
-          background: var(--bg-primary);
-          color: var(--text-primary);
+          font-family: ui-monospace, monospace;
         }
         .a2a-settings .a2a-base {
           display: block;
-          width: 100%;
           box-sizing: border-box;
           margin: 7px 0;
         }
@@ -199,9 +191,6 @@ export default function register(api: any) {
           margin-top: 3px;
         }
         @media (max-width: 520px) {
-          .a2a-json textarea {
-            font-size: 16px;
-          }
           .a2a-settings .a2a-actions button {
             flex: 1;
           }
@@ -218,9 +207,9 @@ export default function register(api: any) {
       ${field("Enable A2A", "enabled", "Requires reviewed credentials, targets and execution policy.")}
       ${field("Accept inbound requests", "inbound", "Only explicitly published agents can receive requests.")}
       ${field("Allow outbound calls", "outbound", "Calls use approved endpoint aliases; redirects are rejected.")}
-      <label
-        >Public HTTPS base URL<input
-          class="a2a-base"
+      <label class="settings-addon-field"
+        ><span class="settings-addon-label">Public HTTPS base URL</span><input
+          class="a2a-base settings-addon-control" type="text"
           aria-label="Public HTTPS base URL"
           value=${config.publicBaseUrl}
           disabled=${busy}
