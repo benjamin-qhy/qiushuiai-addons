@@ -92,3 +92,11 @@ addons/vent/
 ├── vendor/pi-vent/README.md
 └── README.md
 ```
+
+## Settings field appearance (0.1.4)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.
