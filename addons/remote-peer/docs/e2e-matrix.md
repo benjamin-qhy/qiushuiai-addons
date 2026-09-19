@@ -1,5 +1,44 @@
 # Iroh implementation evidence
 
+## 0.3.4 permission editor — 19 September 2026
+
+- Remote Peer unit/security/loopback suite: 33 passed, 250 assertions; 16
+  opt-in browser cases skipped there and run explicitly below.
+- Explicit browser suite: 16 passed, 440 assertions. Unbundled add-on modules
+  load through actual Classic/Visual Settings hosts at 1366, 820, 520 and 390px,
+  plus older-host fallback fixtures. APIs are mocked; no live credentials/peers.
+- File-only enable/disable preserves scope, modes and named agents. Tests cover
+  Cancel/Revert without writes, invalid modes/confirmation, per-peer isolation,
+  busy/double-Apply, readback failure, poll conflicts, and concurrent narrowing
+  or re-pairing. The server compares saved policy and epoch under an immediate
+  SQLite transaction before writing.
+- Input tests check same-skin borders, padding, radius, labels and width bounds;
+  the pane has no horizontal clipping at the tested widths.
+- Real two-peer loopback browser flow passed pairing/approval, policy edits,
+  file-only Apply/readback/reload and sender directory refresh. Receiver incoming
+  files can be enabled while its outgoing advertisement still shows disabled.
+- Remote Peer and compatibility TypeScript, standalone installation/import,
+  catalogue/whitespace checks and package dry-run passed.
+
+Run from the repository root with test isolation intact:
+
+```sh
+bun test addons/remote-peer
+bun x tsc --noEmit -p addons/remote-peer/tsconfig.json
+PICLAW_E2E_DISPOSABLE=1 PICLAW_SETTINGS_CORE_SOURCE=/absolute/path/to/piclaw \
+PLAYWRIGHT_BROWSERS_PATH=/absolute/path/to/ms-playwright \
+  bun test --timeout 25000 addons/remote-peer/permissions-browser.test.ts
+PICLAW_E2E_DISPOSABLE=1 PICLAW_E2E_BROWSER=/absolute/path/to/chromium \
+  bun --preload ./scripts/test-preload.ts addons/remote-peer/settings-pairing.browser.e2e.ts
+```
+
+Set an absolute `PICLAW_REMOTE_PEER_SCREENSHOT_DIR` to capture the editor from
+the disposable browser fixtures. No production installation or network settings
+were changed. This does not establish a fix for the separate missing-incoming-
+pairing report. The historical network evidence below is unchanged.
+
+## Initial transport validation
+
 Local validation uses Bun 1.4.1, owned temporary state and explicit loopback sockets. No installed Piclaw state is read or modified. mDNS tests use injected fake services, not LAN advertisements.
 
 Passing development checks:

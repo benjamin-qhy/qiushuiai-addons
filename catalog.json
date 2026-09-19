@@ -704,7 +704,7 @@
     {
       "slug": "remote-peer",
       "name": "@rcarmo/piclaw-addon-remote-peer",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "type": "extension",
       "description": "Iroh-only client-ID peer chat with explicit pairing, default-off mDNS, durable delivery and files",
       "path": "addons/remote-peer",
@@ -720,9 +720,9 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-remote-peer-0.3.3.tgz"
+        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-remote-peer-0.3.4.tgz"
       },
-      "updatedAt": "2026-09-10",
+      "updatedAt": "2026-09-19",
       "owner": {
         "login": "rcarmo",
         "url": "https://github.com/rcarmo"

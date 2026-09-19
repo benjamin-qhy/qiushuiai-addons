@@ -5,6 +5,16 @@ import { runInNewContext } from "node:vm";
 const source = readFileSync(new URL("./web/index.ts", import.meta.url), "utf8");
 
 describe("Remote Peer Settings registration", () => {
+  test("permission editor replaces policy prompts and fields use the host shell", () => {
+    expect(source).not.toContain('prompt("Allow bounded file transfers?"');
+    expect(source).not.toContain('"Named aliases (comma-separated)"');
+    expect(source).not.toContain('"Scope: none, inbox-only, named-agents, all-advertised"');
+    expect(source).toContain('onClick=${apply}>Apply');
+    expect(source).toContain('role="alert"');
+    expect(source).toContain('for="remote-peer-relay-mode"');
+    expect(source).not.toContain('minWidth: "180px"');
+    expect(source).toContain('action: "remote_permissions"');
+  });
   for (const uiKey of ["__piclawPreactHtm", "__piclawPreact"]) {
     for (const registryKey of ["__piclawSettingsPaneRegistry", "__piclaw_web"]) {
       test(`registers an SVG icon via ${uiKey} and ${registryKey}`, () => {

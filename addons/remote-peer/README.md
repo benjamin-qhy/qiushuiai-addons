@@ -51,6 +51,48 @@ If the receiver crashes between calling Piclaw delivery and recording the receip
 
 Work requests remain operator-mediated. Neither a pairing nor an `execute` request grants tool execution. Reviewed results may be returned from Settings or the management tool.
 
+### Per-peer permission editor
+
+Each paired peer shows two separate directions:
+
+- **Incoming — what this peer may send to this instance:** saved local scope,
+  delivery modes, named agents and file permission. Select **Edit incoming
+  permissions** to change a draft, then **Apply** to save. **Revert** reloads the
+  currently displayed saved policy; **Cancel** discards the draft and closes the
+  editor. Neither writes permissions. File-only edits preserve other fields,
+  including selected aliases that are no longer advertised.
+- **Outgoing — what this instance may send to this peer:** a read-only remote
+  advertisement. **Refresh remote permissions** fetches it explicitly over the
+  authenticated peer connection. Opening Settings does not fetch remote rosters.
+  Not-fetched, last-fetched, stale and unavailable states are labelled. These are
+  snapshots; actual sends recheck the peer's advertised permissions.
+
+Broader incoming policies still require typing `ALLOW REMOTE ACCESS`. Apply is
+disabled while saving, with no delivery modes selected, or when polling detects
+that the saved policy changed during editing. Success appears only after a
+separate dashboard read verifies the saved policy. Failures retain the draft and
+show an error. A failed readback can follow a successful write; Revert or retry
+to reconcile rather than assuming the write failed.
+
+Apply includes the original saved policy and pairing epoch. The backend compares
+them and writes under one SQLite transaction; a concurrent restriction or
+re-pairing rejects the stale draft without changing permissions. Readback also
+checks that pairing epoch. The optional `expected_policy`/`expected_epoch` fields
+are supported by the management API; older explicit operator policy calls remain
+compatible, while Settings always supplies both.
+
+Sending files **to** a peer requires that peer to allow incoming files from this
+instance. Enabling incoming files locally affects the opposite direction. The
+sender must refresh its directory after the receiver applies changes. The four
+file / 16 MiB each / 32 MiB total limits are enforced protocol bounds, not editable
+permissions. Revocation/removal and their confirmations stay separate.
+
+All text, select and multiline fields use the host's shared same-skin Settings
+controls, associated labels and bounded widths. Classic retains its existing
+field shape; Visual uses its own shape. A scoped fallback keeps older supported
+hosts readable. Native checkbox/radio controls are not stretched or restyled as
+text fields.
+
 ## Storage and dependencies
 
 Fresh state lives under `<addon-data>/iroh-v1/`: `secret-key.bin` (32 bytes, mode 0600), `peers.db` and SQLite WAL files. The Iroh Ed25519 public key is the client identity, displayed with a checksum for copying. The secret is never returned by Settings or tools. Old `state.db` and `identity.json` are not read or changed.
@@ -61,9 +103,14 @@ Custom relays require HTTPS URLs. Authentication is an optional keychain entry n
 
 ## Management API
 
-`remote_peer` actions: `status`, `identity`, `ticket`, `pair`, `accept`, `deny`, `revoke`, `forget`, `alias`, `policy`, `advertise`, `unadvertise`, `ping`, `retry`, `work_send`, `work_review`.
+`remote_peer` actions: `status`, `identity`, `ticket`, `pair`, `accept`, `deny`, `revoke`, `forget`, `alias`, `policy`, `remote_permissions`, `advertise`, `unadvertise`, `ping`, `retry`, `work_send`, `work_review`.
 
 Settings uses `/agent/addons/api/remote-peer/config` and `/dashboard`. The old `/pair` command and HTTP pairing protocol are removed. Removing a revoked record requires full-ID confirmation and only permits a new explicit pairing attempt.
+
+`POST /agent/addons/api/remote-peer/dashboard` with
+`{"action":"remote_permissions","peer":"<id-or-alias>"}` returns a validated
+remote roster in `result`. It never writes local policy and fails if the peer is
+revoked, replaced or disabled while the request is in flight.
 
 ## Documentation
 

@@ -98,6 +98,29 @@ Modes are `queue`, `auto` and `steer`. New pairings allow only `queue`. Files ar
 
 Advertise only local agents that remote peers should see. Advertising an alias does not grant access by itself; each receiver-owned peer policy remains authoritative.
 
+**Edit incoming permissions** opens one peer's saved policy as a draft. Scope,
+delivery modes, named agents and incoming files are independent controls.
+File-only edits retain all other fields. **Apply** writes and reads back the
+complete policy; success appears only when the readback matches. **Revert**
+reloads the saved policy displayed in the pane and **Cancel** discards edits;
+neither writes. Failed requests retain the draft. A failed readback may follow a
+successful write, so retry or Revert to reconcile rather than assuming no write.
+
+**Outgoing permissions** are read-only and controlled by the remote peer.
+**Refresh remote permissions** explicitly fetches its advertisement and shows
+the fetch time. Not-yet-fetched, stale and unavailable views are labelled. Local
+incoming edits cannot enable files at a remote destination. After the receiver
+applies changes, refresh the sender's directory. Opening Settings alone does not
+contact remote peers.
+
+Polling preserves unsaved drafts. If another client changes the saved policy,
+Apply is blocked until Revert reloads that policy. Revocation/removal and their
+full-ID confirmations remain separate from the editor.
+
+The editor sends its original policy and pairing epoch with Apply. The server
+compares them atomically with the write, rejecting changes that race the next
+dashboard poll. A stale draft cannot restore permissions restricted elsewhere.
+
 ## Sending and retrying
 
 Agents use Piclaw's normal chat transport:
@@ -142,6 +165,6 @@ Back up the entire `iroh-v1` directory with Piclaw stopped or through a consiste
 
 ## Diagnostics
 
-Use Settings health, delivery and work sections first. The `remote_peer` management tool also provides `status`, `identity`, `ticket`, `pair`, `accept`, `deny`, `revoke`, `forget`, `alias`, `policy`, `advertise`, `unadvertise`, `ping`, `retry`, `work_send` and `work_review`.
+Use Settings health, delivery and work sections first. The `remote_peer` management tool also provides `status`, `identity`, `ticket`, `pair`, `accept`, `deny`, `revoke`, `forget`, `alias`, `policy`, `remote_permissions`, `advertise`, `unadvertise`, `ping`, `retry`, `work_send` and `work_review`.
 
 See [troubleshooting](troubleshooting.md), [protocol](protocol.md), [security boundaries](security.md), [mediated work](mediated-work.md) and [implementation evidence](e2e-matrix.md).

@@ -412,30 +412,36 @@ export class PeerService {
     });
   }
   setPolicy(reference: string, input: any) {
-    const peer = this.paired(reference);
-    if (
-      !["none", "inbox-only", "named-agents", "all-advertised"].includes(
-        input.scope,
-      )
-    )
-      throw new Error("Invalid peer scope.");
-    const selectedModes = modes(input.modes);
-    const agents = (input.agents ?? []).map((v: string) => alias(v));
-    if (agents.length > 64) throw new Error("Too many agent aliases.");
-    if (
-      ((input.scope !== "none" && input.scope !== "inbox-only") ||
-        selectedModes.some((m) => m !== "queue") ||
-        input.files === true) &&
-      input.confirmation !== "ALLOW REMOTE ACCESS"
-    )
-      throw new Error("Type ALLOW REMOTE ACCESS to grant wider permissions.");
-    this.state.put({
-      ...peer,
-      scope: input.scope,
-      modes: selectedModes,
-      agents,
-      files: input.files === true,
-    });
+    // Compare and write under the same SQLite lock. Polling/read-before-write
+    // cannot protect drafts from another Settings client or a re-pairing.
+    this.state.db.transaction(() => {
+      const peer = this.paired(reference);
+      // Optional for legacy operator callers; the Settings editor always sends both.
+      if (input.expected_policy !== undefined || input.expected_epoch !== undefined) {
+        const expected = input.expected_policy;
+        const fields = (p: any) => JSON.stringify([p.scope, p.modes, p.agents, p.files]);
+        if (!expected || typeof expected !== "object" || input.expected_epoch !== peer.epoch || fields(expected) !== fields(peer))
+          throw new Error("Saved permissions or pairing changed. Revert to reload before applying.");
+      }
+      if (
+        !["none", "inbox-only", "named-agents", "all-advertised"].includes(input.scope)
+      ) throw new Error("Invalid peer scope.");
+      const selectedModes = modes(input.modes);
+      const agents = (input.agents ?? []).map((v: string) => alias(v));
+      if (agents.length > 64) throw new Error("Too many agent aliases.");
+      if (
+        ((input.scope !== "none" && input.scope !== "inbox-only") ||
+          selectedModes.some((m) => m !== "queue") || input.files === true) &&
+        input.confirmation !== "ALLOW REMOTE ACCESS"
+      ) throw new Error("Type ALLOW REMOTE ACCESS to grant wider permissions.");
+      this.state.put({
+        ...peer,
+        scope: input.scope,
+        modes: selectedModes,
+        agents,
+        files: input.files === true,
+      });
+    }).immediate();
   }
   setAlias(reference: string, value: string) {
     const p = this.peer(reference);
@@ -473,6 +479,33 @@ export class PeerService {
       inbox: peer.scope !== "none",
       modes: peer.modes,
       files: peer.files,
+    };
+  }
+  /** Explicit operator refresh, never part of dashboard polling or local policy. */
+  async remotePermissions(reference: string) {
+    const peer = this.paired(reference);
+    const { body } = await this.call(peer, "roster");
+    this.enabled();
+    const current = this.paired(peer.id);
+    if (current.epoch !== peer.epoch)
+      throw new Error("Peer changed while refreshing permissions.");
+    if (
+      !body || typeof body.inbox !== "boolean" || typeof body.files !== "boolean" ||
+      !Array.isArray(body.agents) || body.agents.length > 64
+    ) throw new Error("Invalid remote permission advertisement.");
+    return {
+      peerId: peer.id,
+      fetchedAt: new Date().toISOString(),
+      inbox: body.inbox,
+      modes: modes(body.modes),
+      agents: body.agents.map((agent: any) => {
+        if (!agent || typeof agent.name !== "string")
+          throw new Error("Invalid remote agent advertisement.");
+        return { name: alias(agent.name), modes: Array.isArray(agent.modes) && agent.modes.length === 0 ? [] : modes(agent.modes) };
+      }),
+      files: body.files,
+      // These are this protocol's enforced limits, not remote-configurable grants.
+      limits: { maxFiles: 4, maxFileBytes: 16 * 1024 * 1024, maxTotalBytes: MAX_BYTES },
     };
   }
   async directory() {
