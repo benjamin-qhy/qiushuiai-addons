@@ -458,7 +458,7 @@
     {
       "slug": "linkr",
       "name": "@rcarmo/piclaw-addon-linkr",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "type": "extension",
       "description": "Radxa Linkr KVM screenshots, bounded HID and firmware-entry jobs, with BIOS, boot and OS installation skills.",
       "path": "addons/linkr",
@@ -479,9 +479,9 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-linkr-0.1.0.tgz"
+        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-linkr-0.1.1.tgz"
       },
-      "updatedAt": "2026-09-12"
+      "updatedAt": "2026-09-19"
     },
     {
       "slug": "lite-term",
