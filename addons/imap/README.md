@@ -240,3 +240,11 @@ Once the certificate is renewed, `allowInsecureTls` should be set back to `false
 - Drafts and filed messages are created with IMAP `APPEND`.
 - Mutating actions support `dryRun` where appropriate.
 - `delete_folder` requires `confirm=true`.
+
+## Settings field appearance (0.1.11)
+
+Text-like fields use the host's shared `settings-addon-*` controls and associated
+labels, matching core Settings in Classic and Visual without changing save
+payloads, defaults or secret handling. A package-local layered stylesheet keeps
+older supported hosts readable; host rules take precedence when available.
+Native checkboxes and action buttons retain their own control roles.

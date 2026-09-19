@@ -1,3 +1,4 @@
+import { settingsFieldStyles } from "./settings-fields.ts";
 /**
  * IMAP settings pane — SQLite KV + keychain account manager.
  */
@@ -239,7 +240,8 @@ function ImapPane() {
   if (loading) return html`<div class="settings-loading">Loading IMAP accounts…</div>`;
 
   return html`
-    <div class="imap-settings" style="display:flex;flex-direction:column;gap:16px;">
+    <div class="imap-settings" data-settings-addon="imap" style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <style>${settingsFieldStyles}</style>
       <div class="settings-section">
         <h3>Accounts</h3>
         <div class="settings-hint" style="margin:0 0 12px;">
@@ -284,34 +286,34 @@ function ImapPane() {
         ${error ? html`<div style="color:var(--danger-color,#ff8080);margin-bottom:12px;">${error}</div>` : null}
         ${message ? html`<div style="color:var(--success-color,#4ade80);margin-bottom:12px;">${message}</div>` : null}
 
-        <div class="settings-row">
-          <label>Name</label>
-          <input value=${draft.name} onInput=${(e) => patch('name', e.currentTarget.value)} placeholder="personal" />
+        <div class="settings-addon-field">
+          <label class="settings-addon-label" for="imap-name">Name</label>
+          <input type="text" class="settings-addon-control" id="imap-name" value=${draft.name} onInput=${(e) => patch('name', e.currentTarget.value)} placeholder="personal" />
         </div>
-        <div class="settings-row">
-          <label>Host</label>
-          <input value=${draft.host} onInput=${(e) => patch('host', e.currentTarget.value)} placeholder="imap.example.com" />
+        <div class="settings-addon-field">
+          <label class="settings-addon-label" for="imap-host">Host</label>
+          <input type="text" class="settings-addon-control" id="imap-host" value=${draft.host} onInput=${(e) => patch('host', e.currentTarget.value)} placeholder="imap.example.com" />
         </div>
-        <div class="settings-row">
-          <label>Port</label>
-          <input type="number" value=${draft.port} onInput=${(e) => patch('port', Number(e.currentTarget.value))} style="width:100px;" />
+        <div class="settings-addon-field">
+          <label class="settings-addon-label" for="imap-port">Port</label>
+          <input class="settings-addon-control" id="imap-port" type="number" value=${draft.port} onInput=${(e) => patch('port', Number(e.currentTarget.value))} />
         </div>
-        <div class="settings-row">
-          <label>Username</label>
-          <input value=${draft.user} onInput=${(e) => patch('user', e.currentTarget.value)} placeholder="user@example.com" />
+        <div class="settings-addon-field">
+          <label class="settings-addon-label" for="imap-user">Username</label>
+          <input type="text" class="settings-addon-control" id="imap-user" value=${draft.user} onInput=${(e) => patch('user', e.currentTarget.value)} placeholder="user@example.com" />
         </div>
-        <div class="settings-row">
-          <label>Password</label>
-          <div style="display:flex;align-items:center;gap:8px;flex:1;">
-            <input type="password" value=${draft.password} onInput=${(e) => patch('password', e.currentTarget.value)} placeholder=${selectedMeta?.hasPassword ? 'Leave blank to keep existing password' : 'Required for new accounts'} />
+        <div class="settings-addon-field">
+          <label class="settings-addon-label" for="imap-password">Password</label>
+          <div class="settings-addon-control-group">
+            <input class="settings-addon-control" id="imap-password" type="password" value=${draft.password} onInput=${(e) => patch('password', e.currentTarget.value)} placeholder=${selectedMeta?.hasPassword ? 'Leave blank to keep existing password' : 'Required for new accounts'} />
             ${selectedMeta?.hasPassword
               ? html`<span style="font-size:0.72rem;color:var(--accent-color,#2563eb);font-weight:600;white-space:nowrap;" title=${`Stored as ${passwordKeychainName(selectedMeta.name)}`}>✓ keychain</span>`
               : html`<span style="font-size:0.72rem;color:var(--danger-color,#dc2626);font-weight:600;white-space:nowrap;" title="No password in keychain">✗ missing</span>`}
           </div>
         </div>
-        <div class="settings-row">
-          <label>From</label>
-          <input value=${draft.from} onInput=${(e) => patch('from', e.currentTarget.value)} placeholder="Me <me@example.com>" />
+        <div class="settings-addon-field">
+          <label class="settings-addon-label" for="imap-from">From</label>
+          <input type="text" class="settings-addon-control" id="imap-from" value=${draft.from} onInput=${(e) => patch('from', e.currentTarget.value)} placeholder="Me <me@example.com>" />
         </div>
         <div class="settings-row">
           <label>Implicit TLS</label>
