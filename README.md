@@ -1,6 +1,6 @@
 # piclaw-addons
 
-面向 [piclaw](https://github.com/rcarmo/piclaw) 的社区扩展与附加组件。完整目录请访问 **[rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons/)**。
+面向 [piclaw](https://github.com/rcarmo/piclaw) 的社区扩展与附加组件。完整目录请访问 **[benjamin-qhy.github.io/qiushuiai-addons](https://benjamin-qhy.github.io/qiushuiai-addons/)**。
 
 仓库开发和软件包生成需要 Bun 1.4.0 或更高版本。Bun 1.3 无法读取第 2 版锁文件；如果将仓库工具链回退到 Bun 1.4 以下，还必须一并撤销锁文件迁移。
 
