@@ -4,10 +4,10 @@
  * Registers an HTTP route at /drawio/* that serves the vendored draw.io
  * webapp in embed mode. The editor communicates via postMessage with a
  * thin wrapper page that handles loading/saving diagrams from the
- * workspace via the piclaw raw file API.
+ * workspace via the qiushuiai raw file API.
  *
  * Architecture:
- *   - Uses piclaw's registerRoute() (via globalThis.__piclaw_registerRoute)
+ *   - Uses qiushuiai's registerRoute() (via globalThis.__qiushuiai_registerRoute)
  *     to serve the draw.io webapp from the vendor/ directory.
  *   - A wrapper page (/drawio/edit.html) embeds the editor in an iframe
  *     and handles the postMessage protocol for load/save.
@@ -23,7 +23,7 @@ interface ToolStatusHintProvider {
 }
 
 function registerToolStatusHintProvider(provider: ToolStatusHintProvider): void {
-    const register = (globalThis as Record<string, unknown>).__piclaw_registerToolStatusHintProvider;
+    const register = (globalThis as Record<string, unknown>).__qiushuiai_registerToolStatusHintProvider;
     if (typeof register === "function") {
         (register as (provider: ToolStatusHintProvider) => void)(provider);
     }
@@ -44,9 +44,9 @@ export function getDrawioVendorDirCandidates(baseDir = EXT_DIR, cwd = process.cw
   return [
     resolve(baseDir, "vendor"),
     resolve(cwd, "runtime/extensions/viewers/drawio-editor/vendor"),
-    resolve(cwd, "piclaw/runtime/extensions/viewers/drawio-editor/vendor"),
+    resolve(cwd, "qiushuiai/runtime/extensions/viewers/drawio-editor/vendor"),
     resolve(cwd, "generated/cache/vendor/drawio", DRAWIO_VERSION),
-    resolve(cwd, "piclaw/generated/cache/vendor/drawio", DRAWIO_VERSION),
+    resolve(cwd, "qiushuiai/generated/cache/vendor/drawio", DRAWIO_VERSION),
   ];
 }
 
@@ -59,8 +59,8 @@ export function resolveDrawioVendorDir(baseDir = EXT_DIR, cwd = process.cwd()): 
   return resolve(baseDir, "vendor");
 }
 
-export function getDrawioVendorCacheDir(workspace = process.env.PICLAW_DATA?.trim()
-  || resolve(process.env.PICLAW_WORKSPACE?.trim() || DEFAULT_WORKSPACE_ROOT, ".piclaw", "data")): string {
+export function getDrawioVendorCacheDir(workspace = process.env.QIUSHUIAI_DATA?.trim()
+  || resolve(process.env.QIUSHUIAI_WORKSPACE?.trim() || DEFAULT_WORKSPACE_ROOT, ".qiushuiai", "data")): string {
   return resolve(workspace, "cache", "drawio", DRAWIO_VERSION);
 }
 
@@ -372,7 +372,7 @@ function patchDrawioExportTarget(win) {
     }
 
     var editorUiCtor = win && win.EditorUi;
-    var savePatched = !!(editorUiCtor && editorUiCtor.prototype && editorUiCtor.prototype.__piclawWorkspaceSavePatched);
+    var savePatched = !!(editorUiCtor && editorUiCtor.prototype && editorUiCtor.prototype.__qiushuiaiWorkspaceSavePatched);
     if (editorUiCtor && editorUiCtor.prototype && !savePatched) {
       // Save As still routes through EditorUi.saveData, so intercept that once
       // and bounce the payload back to the wrapper for workspace persistence.
@@ -387,13 +387,13 @@ function patchDrawioExportTarget(win) {
         }
         return originalSaveData.apply(this, arguments);
       };
-      editorUiCtor.prototype.__piclawWorkspaceSavePatched = true;
+      editorUiCtor.prototype.__qiushuiaiWorkspaceSavePatched = true;
       savePatched = true;
     }
 
     function patchExportPrototype(ctor) {
       if (!ctor || !ctor.prototype) return false;
-      if (ctor.prototype.__piclawExportPatched) return true;
+      if (ctor.prototype.__qiushuiaiExportPatched) return true;
       var original = ctor.prototype.exportFile;
       ctor.prototype.exportFile = function(data, filename, mimeType, base64Encoded, mode, folderId) {
         try {
@@ -405,7 +405,7 @@ function patchDrawioExportTarget(win) {
         }
         return typeof original === 'function' ? original.apply(this, arguments) : undefined;
       };
-      ctor.prototype.__piclawExportPatched = true;
+      ctor.prototype.__qiushuiaiExportPatched = true;
       return true;
     }
 
@@ -417,7 +417,7 @@ function patchDrawioExportTarget(win) {
     var exportPatched = editorExportPatched || appExportPatched;
 
     var actionsCtor = win && win.Actions;
-    var actionsPatched = !!(actionsCtor && actionsCtor.prototype && actionsCtor.prototype.__piclawMinimalExportActionsPatched);
+    var actionsPatched = !!(actionsCtor && actionsCtor.prototype && actionsCtor.prototype.__qiushuiaiMinimalExportActionsPatched);
     if (actionsCtor && actionsCtor.prototype && !actionsPatched) {
       // Hide the unsupported built-in save/export chrome in embedded mode. Keep
       // the normal Save action enabled so File -> Save still posts the standard
@@ -427,19 +427,19 @@ function patchDrawioExportTarget(win) {
         var action = originalActionGet.apply(this, arguments);
         if (!action) return action;
         var actionName = String(name || '');
-        if (!action.__piclawMinimalExportActionPatched && ['saveAs', 'saveAs...', 'exit', 'export', 'exportWebp', 'exportAnimatedGif', 'exportPdf', 'exportVsdx', 'exportHtml', 'exportXml', 'exportUrl', 'publishLink'].indexOf(actionName) >= 0) {
+        if (!action.__qiushuiaiMinimalExportActionPatched && ['saveAs', 'saveAs...', 'exit', 'export', 'exportWebp', 'exportAnimatedGif', 'exportPdf', 'exportVsdx', 'exportHtml', 'exportXml', 'exportUrl', 'publishLink'].indexOf(actionName) >= 0) {
           action.setEnabled && action.setEnabled(false);
           action.isEnabled = function() { return false; };
         }
-        action.__piclawMinimalExportActionPatched = true;
+        action.__qiushuiaiMinimalExportActionPatched = true;
         return action;
       };
-      actionsCtor.prototype.__piclawMinimalExportActionsPatched = true;
+      actionsCtor.prototype.__qiushuiaiMinimalExportActionsPatched = true;
       actionsPatched = true;
     }
 
     var menusCtor = win && win.Menus;
-    var menusPatched = !!(menusCtor && menusCtor.prototype && menusCtor.prototype.__piclawMinimalExportMenusPatched);
+    var menusPatched = !!(menusCtor && menusCtor.prototype && menusCtor.prototype.__qiushuiaiMinimalExportMenusPatched);
     if (menusCtor && menusCtor.prototype && !menusPatched) {
       // Patch Menus#get instead of mutating one live menu instance. This survives
       // Draw.io rebuilding menus and avoids depending on undocumented globals.
@@ -456,7 +456,7 @@ function patchDrawioExportTarget(win) {
           menu.isEnabled = function() { return false; };
           return menu;
         }
-        if (menu.__piclawMinimalExportMenuPatched) return menu;
+        if (menu.__qiushuiaiMinimalExportMenuPatched) return menu;
         if (menuName === 'exportAs') {
           // Keep the reduced export menu limited to the formats we can round-trip
           // safely through the wrapper.
@@ -472,10 +472,10 @@ function patchDrawioExportTarget(win) {
             menus.addSubmenu('exportAs', menuElt, parent);
           };
         }
-        menu.__piclawMinimalExportMenuPatched = true;
+        menu.__qiushuiaiMinimalExportMenuPatched = true;
         return menu;
       };
-      menusCtor.prototype.__piclawMinimalExportMenusPatched = true;
+      menusCtor.prototype.__qiushuiaiMinimalExportMenusPatched = true;
       menusPatched = true;
     }
 
@@ -677,7 +677,7 @@ function getMimeType(path: string): string {
 }
 
 function getWorkspaceRoot(): string {
-  return process.env.PICLAW_WORKSPACE || DEFAULT_WORKSPACE_ROOT;
+  return process.env.QIUSHUIAI_WORKSPACE || DEFAULT_WORKSPACE_ROOT;
 }
 
 function normalizeWorkspaceRelativePath(input: string): string {
@@ -870,7 +870,7 @@ async function serveVendorFile(relative: string): Promise<Response> {
 
 export default function drawioEditor(pi: any) {
   // Register the HTTP route
-  const registerRoute = (globalThis as any).__piclaw_registerRoute as
+  const registerRoute = (globalThis as any).__qiushuiai_registerRoute as
     | ((prefix: string, handler: typeof handleRoute, extensionPath?: string) => "created" | "updated")
     | undefined;
   if (typeof registerRoute === "function") {
@@ -879,7 +879,7 @@ export default function drawioEditor(pi: any) {
       console.log(`[drawio-editor] Route registered: /drawio/* → ${VENDOR_DIR}`);
     }
   } else {
-    console.warn("[drawio-editor] WARNING: __piclaw_registerRoute not available.");
+    console.warn("[drawio-editor] WARNING: __qiushuiai_registerRoute not available.");
   }
 
   // Register tool for the LLM to open the diagram editor

@@ -1,24 +1,54 @@
 {
-  "name": "@rcarmo/piclaw-addon-lite-term",
-  "version": "0.1.2",
-  "description": "xterm.js terminal pane identical to Piclaw's bundled default terminal and a good starting point for terminal customizations",
+  "name": "@qiushuiai/qiushuiai-addon-lite-term",
+  "version": "0.1.3",
+  "description": "提供基于 xterm.js 的轻量终端面板，适合作为终端定制起点",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": ["terminal", "xterm", "lite", "low-spec", "nerd-font"]
-  },
   "license": "MIT",
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
-  "keywords": ["pi-package", "piclaw", "piclaw-addon", "terminal", "xterm"],
+  "keywords": [
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
+    "terminal",
+    "xterm"
+  ],
   "pi": {
-    "extensions": ["index.ts"],
+    "extensions": [
+      "index.ts"
+    ],
     "web": {
-      "entries": ["web/index.ts"]
+      "entries": [
+        "web/index.ts"
+      ]
     }
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/lite-term/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/lite-term",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/lite-term"
+  },
+  "qiushuiai": {
+    "displayName": "轻量终端",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "terminal",
+      "xterm",
+      "lite",
+      "low-spec",
+      "nerd-font"
+    ],
+    "displayTags": [
+      "终端",
+      "Web 终端",
+      "轻量",
+      "低配置",
+      "图标字体"
+    ],
+    "featured": false
+  }
 }

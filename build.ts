@@ -1,10 +1,10 @@
 /**
- * build.ts — generates index.html + per-addon pages for piclaw-addons
+ * build.ts — generates index.html + per-addon pages for qiushuiai-addons
  * Data source: catalog.json only (no external API calls)
  * Run: bun run build.ts
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, copyFileSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, copyFileSync, cpSync } from "fs";
 import { join, dirname, normalize } from "path";
 import { marked } from "marked";
 
@@ -12,18 +12,19 @@ const ROOT    = dirname(Bun.main);
 const CATALOG = join(ROOT, "catalog.json");
 const OUT     = join(ROOT, "docs");  // GitHub Pages serves from /docs
 
-const REPOSITORY = process.env.GITHUB_REPOSITORY?.trim() || "rcarmo/piclaw-addons";
-const [REPOSITORY_OWNER = "rcarmo", REPOSITORY_NAME = "piclaw-addons"] = REPOSITORY.split("/");
+const REPOSITORY = process.env.GITHUB_REPOSITORY?.trim() || "benjamin-qhy/qiushuiai-addons";
+const [REPOSITORY_OWNER = "benjamin-qhy", REPOSITORY_NAME = "qiushuiai-addons"] = REPOSITORY.split("/");
 const REPOSITORY_URL = `https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}`;
-const SITE_URL = (process.env.PICLAW_ADDONS_SITE_URL?.trim()
+const SITE_URL = (process.env.QIUSHUIAI_ADDONS_SITE_URL?.trim()
   || `https://${REPOSITORY_OWNER}.github.io/${REPOSITORY_NAME}`).replace(/\/$/, "");
 const SITE_BASE_PATH = new URL(SITE_URL).pathname.replace(/\/$/, "");
-const SITE_NAME = "piclaw-addons";
+const SITE_NAME = "QiushuiAI 插件中心";
 const ASSET_VER = Date.now().toString(36);
-const PI_DEV_FOOTER_NOTE = `PiClaw is not affiliated with <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> — we’re just <em>huge fans</em>.`;
+const PI_DEV_FOOTER_NOTE = `QiushuiAI 与 <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> 无隶属关系；插件保留对 Pi 技术协议的兼容。`;
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(join(OUT, "addons"), { recursive: true });
+cpSync(join(ROOT, "assets"), join(OUT, "assets"), { recursive: true });
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 // First-party add-ons install from public GitHub Pages tarball URLs only.
@@ -33,17 +34,22 @@ interface Person { login: string; url: string; }
 interface Addon {
   slug:         string;
   name:         string;
+  displayName:  string;
   version:      string;
   type:         string;
   description:  string;
   path:         string;
-  tags:         string[];
+  categories:   string[];
+  displayTags:  string[];
+  featured:     boolean;
+  compatibleVersions: string;
   skills:       string[];
   install:      Install;
   updatedAt?:   string;
   owner?:        Person;
   contributors?: Person[];
   icon?:         string;
+  openIssues?:   number;
 }
 interface Catalog { version: number; source: string; addons: Addon[]; }
 
@@ -55,6 +61,10 @@ function esc(s: string) {
   return String(s ?? "")
     .replace(/&/g, "&amp;").replace(/</g, "&lt;")
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function cleanGeneratedText(value: string): string {
+  return `${value.replace(/[ \t]+$/gmu, "")}\n`;
 }
 
 function sitePath(path: string): string {
@@ -70,6 +80,10 @@ const OG_OUT = join(OUT, 'assets', 'og');
 mkdirSync(OG_OUT, { recursive: true });
 
 function wrapOgText(text: string, maxChars: number, maxLines: number): string[] {
+  if (!/\s/u.test(text)) {
+    return Array.from({ length: maxLines }, (_, index) => text.slice(index * maxChars, (index + 1) * maxChars))
+      .filter(Boolean);
+  }
   const words = text.trim().split(/\s+/).filter(Boolean);
   const lines: string[] = []; let current = "";
   for (const word of words) {
@@ -101,7 +115,7 @@ function assetDataUri(relPath: string): string | null {
 function buildOgCardSvg(opts: { title: string; description: string; kicker: string; imageDataUri?: string | null; meta?: string }): string {
   const title = esc(opts.title);
   const kicker = esc(opts.kicker);
-  const meta = esc(opts.meta || 'piclaw-addons');
+  const meta = esc(opts.meta || 'qiushuiai-addons');
   const imageDataUri = opts.imageDataUri || '';
   // Less violet blue + orange-ish warm tones
   const accent = '#2563eb';
@@ -169,8 +183,8 @@ function writeOgCard(name: string, svg: string): void {
 function freshnessIndex(addon: Addon): number {
   // 05 — has open issues: needs attention
   if ((addon.openIssues ?? 0) > 0) return 5;
-  // 05 — no tags: unclassified / missing metadata
-  if (!addon.tags?.length) return 5;
+  // 05 — no categories: unclassified / missing metadata
+  if (!addon.categories?.length) return 5;
   const updated = addon.updatedAt ? new Date(addon.updatedAt) : null;
   if (!updated || isNaN(updated.getTime())) return 4;
   const days = (Date.now() - updated.getTime()) / 86_400_000;
@@ -225,7 +239,7 @@ markdownRenderer.image = function ({ href, title, text }) {
 markdownRenderer.code = function ({ text, lang }) {
   const normalizedLang = normalizeCodeLanguageLabel(lang);
   const langClass = normalizedLang && normalizedLang !== "text" ? ` class="language-${esc(normalizedLang)}"` : "";
-  return `<div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">${esc(normalizedLang)}</span><button type="button" class="addon-code-copy-btn" aria-label="Copy code" title="Copy code" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true">${CODE_COPY_ICON_SVG}</span><span class="addon-code-copy-label">Copy</span></button></div><pre><code${langClass}>${esc(text)}</code></pre></div>`;
+  return `<div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">${esc(normalizedLang)}</span><button type="button" class="addon-code-copy-btn" aria-label="复制代码" title="复制代码" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true">${CODE_COPY_ICON_SVG}</span><span class="addon-code-copy-label">复制</span></button></div><pre><code${langClass}>${esc(text)}</code></pre></div>`;
 };
 
 function mdToHtml(md: string): string {
@@ -244,14 +258,18 @@ function tagBadge(tag: string) {
   return `<span class="badge">${esc(tag)}</span>`;
 }
 
+function addonTypeLabel(type: string): string {
+  return type === 'skill' ? '技能' : '扩展';
+}
+
 function coreBookmark(addon: Addon): string {
-  if (!addon.tags.includes("core")) return "";
-  return `<span class="core-bookmark" role="img" aria-label="Core add-on" title="Core add-on — recommended for most Piclaw installations">
+  if (!addon.featured) return "";
+  return `<span class="core-bookmark" role="img" aria-label="核心推荐插件" title="核心推荐插件，适合大多数 QiushuiAI 用户">
     <svg viewBox="0 0 48 66" width="48" height="66" aria-hidden="true" focusable="false">
       <path d="M0 0H48V66L24 51 0 66Z" fill="currentColor"/>
       <path d="M0 0H48V5H0Z" class="core-bookmark-highlight"/>
       <path d="m24 11.7 2.84 5.75 6.36.93-4.6 4.48 1.09 6.32L24 26.19l-5.69 2.99 1.09-6.32-4.6-4.48 6.36-.93Z" fill="#fff"/>
-      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800" letter-spacing="1">CORE</text>
+      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800">推荐</text>
     </svg>
   </span>`;
 }
@@ -259,14 +277,14 @@ function coreBookmark(addon: Addon): string {
 function personLink(p: Person, dim = false): string {
   return `<a href="${esc(p.url)}" target="_blank" rel="noopener" class="person-link${dim?' dim':''}">
     <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    @${esc(p.login)}</a>`;
+    ${esc(p.login)}</a>`;
 }
 
 // Plain-text version for use inside <a> cards (no nested links)
 function personChip(p: Person, dim = false): string {
   return `<span class="person-chip${dim?' dim':''}">
     <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    @${esc(p.login)}</span>`;
+    ${esc(p.login)}</span>`;
 }
 
 function ownerRow(addon: Addon): string {
@@ -289,13 +307,13 @@ function tarballUrl(addon: Addon): string {
 }
 
 function downloadPill(addon: Addon): string {
-  return `<a class="download-pill" href="${esc(tarballUrl(addon))}" download aria-label="Download ${esc(addon.slug)} ${esc(addon.version)} tarball">↓ Download .tgz</a>`;
+  return `<a class="download-pill" href="${esc(tarballUrl(addon))}" download aria-label="下载 ${esc(addon.displayName)} ${esc(addon.version)} 安装包">↓ 下载 .tgz</a>`;
 }
 
 function installSnippet(addon: Addon): string {
   return `<div class="install-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
-    <span class="install-text">Open <strong>Settings → Add-Ons</strong> and pick <strong>${esc(addon.slug)}</strong></span>
+    <span class="install-text">打开<strong>设置 → 插件</strong>，选择<strong>${esc(addon.displayName)}</strong></span>
   </div>`;
 }
 
@@ -306,7 +324,7 @@ function sourceUrl(addon: Addon): string {
 function sourceSnippet(addon: Addon): string {
   return `<div class="install-block source-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    <span class="install-text"><strong>Source:</strong> <a href="${esc(sourceUrl(addon))}" target="_blank" rel="noopener">${esc(addon.path)}</a></span>
+    <span class="install-text"><strong>源代码：</strong><a href="${esc(sourceUrl(addon))}" target="_blank" rel="noopener">${esc(addon.path)}</a></span>
   </div>`;
 }
 
@@ -372,7 +390,7 @@ function uxReportSnippet(addon: Addon): string {
   if (!addonUxReportPaths(addon)) return '';
   return `<div class="install-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 1.5A1.75 1.75 0 0 0 2 3.25v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0 0 14 12.75v-7L9.75 1.5h-6Zm5.5 1.25L12.75 6H9.25V2.75ZM5 8.25h6v1H5v-1Zm0 2.5h6v1H5v-1Z"/></svg>
-    <span class="install-text"><strong>UX test report:</strong> <a href="${sitePath(`addons/${addon.slug}/tests/${addon.slug}-ux-report.pdf`)}">PDF</a> · <a href="${sitePath(`addons/${addon.slug}/tests/${addon.slug}-ux-report.html`)}">HTML</a></span>
+    <span class="install-text"><strong>体验测试报告：</strong><a href="${sitePath(`addons/${addon.slug}/tests/${addon.slug}-ux-report.pdf`)}">PDF</a> · <a href="${sitePath(`addons/${addon.slug}/tests/${addon.slug}-ux-report.html`)}">HTML</a></span>
   </div>`;
 }
 
@@ -450,6 +468,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:var(
 @media(prefers-color-scheme:dark){.core-bookmark{color:#d52645}}
 .card-icon{width:48px;height:48px;object-fit:contain;flex-shrink:0}
 .card-name{font-family:var(--font-head);font-weight:700;font-size:1.05rem;letter-spacing:-.025em}
+.card-slug,.detail-slug{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);margin-top:.12rem}
+.detail-slug{color:rgba(255,255,255,.72);margin:0}
 .card-sub-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:.18rem}
 .card-version{font-size:.72rem;color:var(--ink-dim);font-family:var(--font-mono)}
 .card-sub-row .owner-row{margin:0}
@@ -575,30 +595,30 @@ footer a{color:var(--accent);text-decoration:none}
 // ── Index page ────────────────────────────────────────────────────────────────
 // Index OG card
 writeOgCard('index', buildOgCardSvg({
-  title: 'piclaw-addons',
-  description: 'Community extensions, tools and add-ons for piclaw.',
-  kicker: `${addons.length} ADD-ONS`,
-  imageDataUri: assetDataUri(sitePath('assets/icons/piclaw.png')),
+  title: 'QiushuiAI 插件中心',
+  description: 'QiushuiAI 官方插件、技能和组件目录',
+  kicker: `${addons.length} 个插件`,
+  imageDataUri: assetDataUri(sitePath('assets/icons/qiushuiai.png')),
   meta: REPOSITORY,
 }));
 
 const indexHtml = `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>piclaw-addons</title>
-<meta name="description" content="Community extensions, tools and add-ons for piclaw.">
-<meta property="og:title" content="piclaw-addons">
-<meta property="og:description" content="Community extensions, tools and add-ons for piclaw.">
+<title>QiushuiAI 插件中心</title>
+<meta name="description" content="QiushuiAI 官方插件、技能和组件目录。">
+<meta property="og:title" content="QiushuiAI 插件中心">
+<meta property="og:description" content="QiushuiAI 官方插件、技能和组件目录。">
 <meta property="og:url" content="${SITE_URL}/">
 <meta property="og:image" content="${SITE_URL}/assets/og/index.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="piclaw-addons">
-<meta name="twitter:description" content="Community extensions, tools and add-ons for piclaw.">
+<meta name="twitter:title" content="QiushuiAI 插件中心">
+<meta name="twitter:description" content="QiushuiAI 官方插件、技能和组件目录。">
 <meta name="twitter:image" content="${SITE_URL}/assets/og/index.png">
 <link rel="canonical" href="${SITE_URL}/">
 ${CLARITY_SCRIPT}
@@ -608,33 +628,34 @@ ${CLARITY_SCRIPT}
 
 <header class="hero">
   <div class="hero-inner">
-    <img class="hero-logo" src="${sitePath("assets/icons/piclaw.png")}" alt="piclaw">
+    <img class="hero-logo" src="${sitePath("assets/icons/qiushuiai.png")}" alt="QiushuiAI">
     <div class="hero-text">
-      <div class="hero-title">piclaw-addons</div>
-      <div class="hero-sub">Community extensions, tools and add-ons for <a href="https://github.com/rcarmo/piclaw" style="color:rgba(255,255,255,.85)">piclaw</a>.</div>
-      <div class="hero-meta">${addons.length} add-ons &nbsp;·&nbsp; catalog v${catalog.version}</div>
+      <div class="hero-title">QiushuiAI 插件中心</div>
+      <div class="hero-sub">适用于 <a href="https://github.com/benjamin-qhy/qiushuiai" style="color:rgba(255,255,255,.85)">QiushuiAI</a> 的官方插件、技能和组件。</div>
+      <div class="hero-meta">${addons.length} 个插件 &nbsp;·&nbsp; 目录 v${catalog.version}</div>
       <div class="hero-actions">
         <a class="hero-source" href="${REPOSITORY_URL}" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-          View on GitHub
+          在 GitHub 查看
         </a>
-        <a class="hero-source" href="${sitePath("packages/")}">↓ Packages</a>
+        <a class="hero-source" href="${sitePath("packages/")}">↓ 安装包</a>
       </div>
     </div>
   </div>
 </header>
 
 <div class="search-bar">
-  <input id="search" type="search" placeholder="Search add-ons…" autocomplete="off">
+  <input id="search" type="search" placeholder="搜索插件名称、功能或标签…" aria-label="搜索插件" autocomplete="off">
 </div>
 
 <main class="grid" id="grid">
-${addons.map(a => `  <a href="${sitePath(`addons/${a.slug}/`)}" class="card${a.tags.includes("core") ? " card-core" : ""}" data-name="${esc(a.slug)} ${esc(a.description)} ${a.tags.join(" ")}">
+${addons.map(a => `  <a href="${sitePath(`addons/${a.slug}/`)}" class="card${a.featured ? " card-core" : ""}" data-name="${esc(a.displayName)} ${esc(a.slug)} ${esc(a.name)} ${esc(a.description)} ${a.categories.join(" ")} ${a.displayTags.join(" ")}">
     ${coreBookmark(a)}
     <div class="card-header">
       <img class="card-icon" src="${iconSrc(a)}" alt="" loading="lazy">
       <div>
-        <div class="card-name">${esc(a.slug)}</div>
+        <div class="card-name">${esc(a.displayName)}</div>
+        <div class="card-slug">${esc(a.slug)}</div>
         <div class="card-sub-row">
           <span class="card-version">v${esc(a.version)}</span>
           ${ownerChips(a)}
@@ -642,12 +663,12 @@ ${addons.map(a => `  <a href="${sitePath(`addons/${a.slug}/`)}" class="card${a.t
       </div>
     </div>
     <div class="card-desc">${esc(a.description)}</div>
-    <div class="card-tags">${a.tags.map(tagBadge).join("")}</div>
+    <div class="card-tags">${a.displayTags.map(tagBadge).join("")}</div>
   </a>`).join("\n")}
 </main>
 
-${renderFooter(`<a href="${REPOSITORY_URL}">piclaw-addons</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo/piclaw">piclaw</a>`)}
+${renderFooter(`<a href="${REPOSITORY_URL}">QiushuiAI 插件源码</a> &nbsp;·&nbsp;
+  <a href="https://github.com/benjamin-qhy/qiushuiai">QiushuiAI 主项目</a>`)}
 
 <script>
 const search = document.getElementById('search');
@@ -664,7 +685,7 @@ search.addEventListener('input', () => {
 </body>
 </html>`;
 
-writeFileSync(join(OUT, "index.html"), indexHtml);
+writeFileSync(join(OUT, "index.html"), cleanGeneratedText(indexHtml));
 console.log(`✓ index.html (${addons.length} add-ons)`);
 
 // ── Per-addon pages ────────────────────────────────────────────────────────────
@@ -681,26 +702,26 @@ for (const addon of addons) {
   // Generate OG card
   const addonIcon = iconSrc(addon);
   writeOgCard(addon.slug, buildOgCardSvg({
-    title: addon.slug,
+    title: addon.displayName,
     description: addon.description,
-    kicker: (addon.tags?.[0] || 'addon').toUpperCase(),
+    kicker: addon.displayTags?.[0] || 'QiushuiAI 插件',
     imageDataUri: assetDataUri(addonIcon),
-    meta: `@rcarmo/${addon.name?.split('/').pop() || addon.slug}`,
+    meta: `@qiushuiai/${addon.name?.split('/').pop() || addon.slug}`,
   }));
   const ogImageUrl = `${SITE_URL}/assets/og/${addon.slug}.png`;
 
   const skillList = addon.skills.length
-    ? `<div class="detail-body"><h2>Skills</h2><ul>${addon.skills.map(s => `<li><code>${esc(s)}</code></li>`).join("")}</ul></div>`
+    ? `<div class="detail-body"><h2>技能</h2><ul>${addon.skills.map(s => `<li><code>${esc(s)}</code></li>`).join("")}</ul></div>`
     : "";
 
   const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(addon.slug)} — piclaw-addons</title>
+<title>${esc(addon.displayName)} — QiushuiAI 插件中心</title>
 <meta name="description" content="${esc(addon.description)}">
-<meta property="og:title" content="${esc(addon.slug)} — piclaw-addons">
+<meta property="og:title" content="${esc(addon.displayName)} — QiushuiAI 插件中心">
 <meta property="og:description" content="${esc(addon.description)}">
 <meta property="og:url" content="${SITE_URL}/addons/${esc(addon.slug)}/">
 <meta property="og:image" content="${ogImageUrl}">
@@ -708,7 +729,7 @@ for (const addon of addons) {
 <meta property="og:image:height" content="640">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="${esc(addon.slug)} — piclaw-addons">
+<meta name="twitter:title" content="${esc(addon.displayName)} — QiushuiAI 插件中心">
 <meta name="twitter:description" content="${esc(addon.description)}">
 <meta name="twitter:image" content="${ogImageUrl}">
 <link rel="canonical" href="${SITE_URL}/addons/${esc(addon.slug)}/">
@@ -718,7 +739,7 @@ ${CLARITY_SCRIPT}
 <body>
 
 <nav class="detail-nav">
-  <a href="${sitePath("")}" class="back">← all add-ons</a>
+  <a href="${sitePath("")}" class="back">← 返回全部插件</a>
 </nav>
 
 <div class="detail-hero">
@@ -726,16 +747,17 @@ ${CLARITY_SCRIPT}
     <img class="detail-icon" src="${iconSrc(addon)}" alt="">
     <div>
       <div class="detail-title-row">
-        <div class="detail-title">${esc(addon.slug)}</div>
-        <span class="type-badge">${esc(addon.type)}</span>
-        ${addon.skills.length ? `<span class="type-badge skills">${addon.skills.length} skill${addon.skills.length!==1?'s':''}</span>` : ''}
+        <div class="detail-title">${esc(addon.displayName)}</div>
+        <span class="detail-slug">${esc(addon.slug)}</span>
+        <span class="type-badge">${addonTypeLabel(addon.type)}</span>
+        ${addon.skills.length ? `<span class="type-badge skills">${addon.skills.length} 项技能</span>` : ''}
       </div>
       <div class="detail-sub">${esc(addon.description)}</div>
-      <div class="detail-tags">${addon.tags.map(tagBadge).join("")}</div>
+      <div class="detail-tags">${addon.displayTags.map(tagBadge).join("")}</div>
       <div class="detail-meta">
         <span class="detail-version">v${esc(addon.version)}</span>
         ${downloadPill(addon)}
-        ${addon.openIssues ? `<span class="detail-issues">${addon.openIssues} open issue${addon.openIssues!==1?'s':''}</span>` : ''}
+        ${addon.openIssues ? `<span class="detail-issues">${addon.openIssues} 个待处理问题</span>` : ''}
         ${ownerRow(addon)}
       </div>
     </div>
@@ -750,8 +772,8 @@ ${CLARITY_SCRIPT}
 </div>
 ${skillList}
 
-${renderFooter(`<a href="${sitePath("")}">piclaw-addons</a> &nbsp;·&nbsp;
-  <a href="${esc(sourceUrl(addon))}">View source</a>`)}
+${renderFooter(`<a href="${sitePath("")}">QiushuiAI 插件中心</a> &nbsp;·&nbsp;
+  <a href="${esc(sourceUrl(addon))}">查看源代码</a>`)}
 <script type="module">
   import { mountDetail } from '${sitePath("assets/js/addon-island.mjs")}';
   mountDetail('${esc(addon.slug)}');
@@ -759,7 +781,7 @@ ${renderFooter(`<a href="${sitePath("")}">piclaw-addons</a> &nbsp;·&nbsp;
 </body>
 </html>`;
 
-  writeFileSync(join(dir, "index.html"), html);
+  writeFileSync(join(dir, "index.html"), cleanGeneratedText(html));
   built++;
 }
 console.log(`✓ ${built} addon pages`);
@@ -779,32 +801,32 @@ for (const addon of addons) {
 
 // ── Packages index page ───────────────────────────────────────────────────────
 const pkgsHtml = `<!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Packages — piclaw-addons</title>
-<meta name="description" content="Downloadable add-on packages for piclaw.">
+<title>安装包 — QiushuiAI 插件中心</title>
+<meta name="description" content="QiushuiAI 插件公开安装包下载。">
 <link rel="canonical" href="${SITE_URL}/packages/">
 ${CLARITY_SCRIPT}
 <style>${CSS}</style>
 </head>
 <body>
-<nav class="detail-nav"><a href="${sitePath("")}" class="back">← all add-ons</a></nav>
+<nav class="detail-nav"><a href="${sitePath("")}" class="back">← 返回全部插件</a></nav>
 <div class="detail-hero" style="padding:2rem 1.5rem 1.8rem">
   <div style="max-width:760px;margin:0 auto">
-    <div class="detail-title" style="font-size:2rem">Packages</div>
-    <div class="detail-sub">Direct-download tarballs — one per add-on. These public GitHub Pages URLs are the supported first-party install path for Settings → Add-Ons and terminal installs.</div>
+    <div class="detail-title" style="font-size:2rem">公开安装包</div>
+    <div class="detail-sub">每个插件都提供一个可直接下载的 tarball。设置 → 插件和终端安装均使用这些无需登录的 GitHub Pages 地址。</div>
   </div>
 </div>
 <div class="detail-body">
   <table style="width:100%;border-collapse:collapse;font-size:.9rem">
     <thead>
       <tr style="border-bottom:2px solid var(--border)">
-        <th style="text-align:left;padding:.6rem .5rem;font-family:var(--font-head)">Add-on</th>
-        <th style="text-align:left;padding:.6rem .5rem;font-family:var(--font-head)">Version</th>
-        <th style="text-align:left;padding:.6rem .5rem;font-family:var(--font-head)">Install</th>
-        <th style="text-align:right;padding:.6rem .5rem;font-family:var(--font-head)">.tgz</th>
+        <th style="text-align:left;padding:.6rem .5rem;font-family:var(--font-head)">插件</th>
+        <th style="text-align:left;padding:.6rem .5rem;font-family:var(--font-head)">版本</th>
+        <th style="text-align:left;padding:.6rem .5rem;font-family:var(--font-head)">安装位置</th>
+        <th style="text-align:right;padding:.6rem .5rem;font-family:var(--font-head)">下载</th>
       </tr>
     </thead>
     <tbody>
@@ -812,24 +834,23 @@ ${CLARITY_SCRIPT}
         const baseName = a.name.replace(/^@[^/]+\//, '');
         const url = `${SITE_URL}/packages/${esc(baseName)}-${esc(a.version)}.tgz`;
         return `<tr style="border-bottom:1px solid var(--border)">
-          <td style="padding:.55rem .5rem"><a href="${sitePath(`addons/${a.slug}/`)}" style="color:var(--accent);font-weight:600">${esc(a.slug)}</a></td>
+          <td style="padding:.55rem .5rem"><a href="${sitePath(`addons/${a.slug}/`)}" style="color:var(--accent);font-weight:600">${esc(a.displayName)}</a><br><code>${esc(a.slug)}</code></td>
           <td style="padding:.55rem .5rem;font-family:var(--font-mono);color:var(--ink-dim)">v${esc(a.version)}</td>
-          <td style="padding:.55rem .5rem"><span style="font-size:.82rem;color:var(--ink-dim)">Settings → Add-Ons → <strong>${esc(a.slug)}</strong></span></td>
+          <td style="padding:.55rem .5rem"><span style="font-size:.82rem;color:var(--ink-dim)">设置 → 插件 → <strong>${esc(a.displayName)}</strong></span></td>
           <td style="padding:.55rem .5rem;text-align:right"><a href="${url}" style="color:var(--accent);font-weight:700;font-size:.82rem">⬇ .tgz</a></td>
         </tr>`;
       }).join("\n")}
     </tbody>
   </table>
 </div>
-${renderFooter(`<a href="${sitePath("")}">piclaw-addons</a>`)}
+${renderFooter(`<a href="${sitePath("")}">QiushuiAI 插件中心</a>`)}
 </body>
 </html>`;
 
-writeFileSync(join(OUT, "packages", "index.html"), pkgsHtml);
+writeFileSync(join(OUT, "packages", "index.html"), cleanGeneratedText(pkgsHtml));
 console.log(`✓ packages/index.html`);
 
 // ── Copy static assets ──────────────────────────────────────────────────────
-import { copyFileSync } from "fs";
 copyFileSync(join(ROOT, "assets", "event-sequence.svg"), join(OUT, "event-sequence.svg"));
 
-console.log(`\nDone. Output → docs/`);
+console.log(`\n完成。输出目录：docs/`);

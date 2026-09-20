@@ -1,34 +1,35 @@
-# Git Query Tools
+# Git 查询工具
 
-Git history and JSON query tools for Piclaw. Requires Piclaw `>=1.8.0`.
+为 QiushuiAI 智能体提供 Git 历史和 JSON 查询工具
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **git-query-tools** from the catalog. The host must provide `git` and `jq` on `PATH`.
+这是 QiushuiAI 的扩展插件，技术标识为 `git-query-tools`。
 
-## Tools
+- 软件包：`@qiushuiai/qiushuiai-addon-git-query-tools`
+- 当前版本：`0.1.6`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`Git 工具`、`JSON 查询`、`查询`
 
-### `git_history`
+## 安装
 
-Queries the repository under `/workspace/.pi/extensions` with four modes:
+在 QiushuiAI 中打开**设置 → 插件**，搜索“Git 查询工具”并安装。也可以直接使用无需登录的公开安装包：
 
-- `log` — recent commits
-- `content_search` — commits whose diffs add or remove a string
-- `message_search` — commit-message search
-- `blame` — line attribution for a file
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-git-query-tools-0.1.6.tgz
+```
 
-Optional filters include `file`, `max_count`, `author`, `since`, `diff`, `lines`, `all`, and `ref`. File paths must remain inside the extensions checkout. Process output is bounded and returned in a structured JSON envelope.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-### `json_query`
+## 提供的能力
 
-Runs a `jq` expression against either an inline JSON value or one JSON file. Supply exactly one of `input` or `file`. The add-on validates file paths and rejects a small set of risky jq built-ins before execution.
+- 入口：`index.ts`
+- 技能：`skills`
 
-## Skill
+## 配置与安全
 
-The bundled `git-query-tools` skill explains when structured history or JSON queries are clearer than raw shell commands.
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-## Limits
+## 技术资料
 
-- Git queries time out after 30 seconds.
-- JSON queries time out after 10 seconds.
-- Returned output is capped at 200 lines and 50 KiB; subprocess capture is capped at 10 MiB.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/git-query-tools/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

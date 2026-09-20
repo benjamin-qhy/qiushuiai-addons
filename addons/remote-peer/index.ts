@@ -90,7 +90,7 @@ export async function runAction(
   }
   return { ok: true };
 }
-const register = (globalThis as any).__piclaw_registerAddonConfigApi;
+const register = (globalThis as any).__qiushuiai_registerAddonConfigApi;
 if (register) {
   register(
     "remote-peer",

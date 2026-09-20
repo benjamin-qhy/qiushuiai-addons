@@ -20,7 +20,7 @@
  * editor bundle, which builds `.editor-pane` + the status bar.
  */
 
-const PKG = "@rcarmo/piclaw-addon-writer-fonts";
+const PKG = "@qiushuiai/qiushuiai-addon-writer-fonts";
 const ASSET = (file: string): string =>
   `/agent/addons/assets/${encodeURIComponent(PKG)}/fonts/${encodeURIComponent(file)}`;
 
@@ -40,7 +40,7 @@ interface FontOption {
 }
 
 const FONTS: FontOption[] = [
-  { id: "system", label: "System", stack: SYSTEM_STACK, bundled: null },
+  { id: "system", label: "系统默认", stack: SYSTEM_STACK, bundled: null },
   {
     id: "literata",
     label: "Literata",
@@ -85,8 +85,8 @@ const FONTS: FontOption[] = [
   },
 ];
 
-const STORAGE_KEY = "piclaw_writer_font";
-const NATIVE_KEY = "piclaw_editor_font_family";
+const STORAGE_KEY = "qiushuiai_writer_font";
+const NATIVE_KEY = "qiushuiai_editor_font_family";
 const DEFAULT_ID = "system";
 const observedButtons = new WeakSet<Element>();
 
@@ -314,7 +314,7 @@ if (document.readyState === "loading") {
 } else {
   init();
 }
-window.addEventListener("piclaw:addons-loaded", () => {
+window.addEventListener("qiushuiai:addons-loaded", () => {
   try {
     reapply();
   } catch {

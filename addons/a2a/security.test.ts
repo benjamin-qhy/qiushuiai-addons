@@ -72,7 +72,7 @@ test("bearer authentication, target grants and revocation never trust request id
     new Request("https://fixture/rpc", {
       headers: auth
         ? { authorization: auth }
-        : { cookie: "piclaw_session=operator" },
+        : { cookie: "qiushuiai_session=operator" },
     });
   expect(await authenticateA2a(req(), cfg, resolve)).toBeNull();
   expect(await authenticateA2a(req("Bearer wrong"), cfg, resolve)).toBeNull();

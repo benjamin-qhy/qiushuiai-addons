@@ -84,7 +84,7 @@ export function getProfile(id: string | undefined, chat: string): Profile {
   return p;
 }
 export function registerConfigApi() {
-  const register = (globalThis as any).__piclaw_registerAddonConfigApi;
+  const register = (globalThis as any).__qiushuiai_registerAddonConfigApi;
   register?.(
     "linkr",
     "config",

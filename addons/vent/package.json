@@ -1,23 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-vent",
-  "version": "0.1.4",
-  "description": "Workspace vent log add-on, adapted from pi-vent by Igor Warzocha, with a configurable output file",
+  "name": "@qiushuiai/qiushuiai-addon-vent",
+  "version": "0.1.5",
+  "description": "将可配置的工作区反馈日志能力集成到 QiushuiAI",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.1.0",
-    "tags": [
-      "feedback",
-      "vent",
-      "workspace",
-      "quality",
-      "postmortem"
-    ],
-    "skills": [
-      "skills/vent"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -36,12 +22,40 @@
     "typebox": "*"
   },
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
     "feedback",
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
     "vent"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/vent/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/vent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/vent"
+  },
+  "qiushuiai": {
+    "displayName": "工作区反馈日志",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "feedback",
+      "vent",
+      "workspace",
+      "quality",
+      "postmortem"
+    ],
+    "displayTags": [
+      "反馈",
+      "反馈日志",
+      "工作区",
+      "质量",
+      "复盘"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/vent"
+    ]
+  }
 }

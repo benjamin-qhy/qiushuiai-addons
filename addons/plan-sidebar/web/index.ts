@@ -1,8 +1,8 @@
 // @ts-nocheck
 const ADDON_ID = "plan-sidebar";
 const API = `/agent/addons/api/${ADDON_ID}/plan`;
-const STORAGE_OPEN = "piclaw:plan-sidebar:open";
-const STORAGE_WIDTH = "piclaw:plan-sidebar:width";
+const STORAGE_OPEN = "qiushuiai:plan-sidebar:open";
+const STORAGE_WIDTH = "qiushuiai:plan-sidebar:width";
 const DEFAULT_CHAT_JID = "web:default";
 
 export function beginPlanRequest(state) {
@@ -23,8 +23,8 @@ export function canApplyPlanResponse(state, request, preserveDirty = false) {
     && (!preserveDirty || !state.dirty);
 }
 
-if (!globalThis.__piclawPlanSidebarInstalled) {
-  globalThis.__piclawPlanSidebarInstalled = true;
+if (!globalThis.__qiushuiaiPlanSidebarInstalled) {
+  globalThis.__qiushuiaiPlanSidebarInstalled = true;
   installPlanSidebar();
 }
 
@@ -597,9 +597,9 @@ function installPlanSidebar() {
     event.stopPropagation();
     closeSidebar({ autosave: true }).catch(() => undefined);
   }, true);
-  window.addEventListener("piclaw:current-chat-changed", updateChatJid);
+  window.addEventListener("qiushuiai:current-chat-changed", updateChatJid);
   window.addEventListener("popstate", updateChatJid);
-  window.addEventListener("piclaw-extension-ui:status", handleRemotePlanUpdate);
+  window.addEventListener("qiushuiai-extension-ui:status", handleRemotePlanUpdate);
 
   renderChrome();
   if (state.open) setOpen(true);
@@ -633,9 +633,9 @@ function formatProgressText(progress) {
 }
 
 function getCurrentChatJid() {
-  const fromApi = normalizeChatJid(globalThis.__piclaw_web?.getCurrentChatJid?.());
+  const fromApi = normalizeChatJid(globalThis.__qiushuiai_web?.getCurrentChatJid?.());
   if (fromApi !== DEFAULT_CHAT_JID) return fromApi;
-  const fromGlobal = normalizeChatJid(globalThis.__piclawCurrentChatJid);
+  const fromGlobal = normalizeChatJid(globalThis.__qiushuiaiCurrentChatJid);
   if (fromGlobal !== DEFAULT_CHAT_JID) return fromGlobal;
   try {
     const url = new URL(globalThis.location?.href || "https://example.test/");

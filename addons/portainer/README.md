@@ -1,39 +1,36 @@
-# Portainer
+# Portainer 管理
 
-Portainer API management through one session-scoped `portainer` tool. Requires Piclaw `>=1.8.0`.
+提供会话级 API 配置和端点、堆栈、容器、镜像、网络及存储卷编排工作流
 
-## Install and configure
+## 功能定位
 
-Open **Settings → Add-Ons**, install **portainer**, then configure **Settings → Portainer**.
+这是 QiushuiAI 的扩展插件，技术标识为 `portainer`。
 
-![Portainer settings pane on the microVM test instance](./assets/settings-pane-microvm.png)
+- 软件包：`@qiushuiai/qiushuiai-addon-portainer`
+- 当前版本：`0.1.10`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`Portainer 管理`、`容器管理`、`容器`、`基础设施`
 
-Non-secret defaults use `/agent/addons/api/portainer/config` and extension KV. Store the API token in the keychain; the default entry is `portainer/relay`. Hostnames and bare IP addresses are normalised to `https://<host>:9443`.
+## 安装
 
-## Tool actions
+在 QiushuiAI 中打开**设置 → 插件**，搜索“Portainer 管理”并安装。也可以直接使用无需登录的公开安装包：
 
-- `get`, `set`, `clear` — session override management
-- `discover` — find settings, environment, and keychain candidates
-- `contract`, `capabilities`, `workflow_help`, `request_help`, `recommend` — inspect the tool contract before calling it
-- `request` — one raw Portainer API request or a bounded sequential batch
-- `workflow` — named endpoint, stack, container, image, network, or volume workflow
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-portainer-0.1.10.tgz
+```
 
-Use `portainer capabilities` for workflow families and `portainer workflow_help` for required fields. Raw requests support retries, throttling, per-request timeouts, and optional workspace JSON/JSONL output.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Security and scope
+## 提供的能力
 
-- Secrets are resolved from keychain-backed environment/runtime access and are never returned in tool details.
-- Self-signed TLS is allowed only when `allow_insecure_tls` is enabled.
-- Mutating and destructive workflows require explicit fields; inspect workflow help before bulk upgrades, deletes, or prunes.
+- 入口：`index.ts`
+- 入口：`web/index.ts`
+- 技能：`skills`
 
-## Skill
+## 配置与安全
 
-The bundled `portainer-container-compare-chart` skill collects bounded container stats through the tool and renders SVG/CSV comparison artifacts.
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-## Settings field appearance (0.1.9)
+## 技术资料
 
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/portainer/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -1,25 +1,34 @@
 {
-  "version": 2,
-  "source": "github:rcarmo/piclaw-addons",
+  "version": 3,
+  "source": "github:benjamin-qhy/qiushuiai-addons",
   "addons": [
     {
       "slug": "a2a",
-      "name": "@rcarmo/piclaw-addon-a2a",
-      "version": "0.4.1",
+      "name": "@qiushuiai/qiushuiai-addon-a2a",
+      "displayName": "A2A 智能体互联",
+      "version": "0.4.2",
       "type": "extension",
-      "description": "Opt-in A2A v1 agents with authenticated JSON-RPC, durable tasks and approved endpoints",
+      "description": "提供需主动启用的 A2A v1 智能体互联、认证 JSON-RPC、持久任务和受控端点",
       "path": "addons/a2a",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/a2a",
+      "categories": [
         "a2a",
         "agents",
         "interoperability"
       ],
+      "displayTags": [
+        "互操作",
+        "智能体",
+        "智能体互联"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "a2a"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-a2a-0.4.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-a2a-0.4.2.tgz"
       },
       "updatedAt": "2026-09-19",
       "owner": {
@@ -30,309 +39,432 @@
     },
     {
       "slug": "ast-grep-tool",
-      "name": "@rcarmo/piclaw-addon-ast-grep",
-      "version": "0.1.7",
+      "name": "@qiushuiai/qiushuiai-addon-ast-grep-tool",
+      "displayName": "AST 代码检索",
+      "version": "0.1.8",
       "type": "extension",
-      "description": "Structural code search and rewrite using ast-grep as a native LLM tool",
+      "description": "将 ast-grep 作为原生智能体工具，用于结构化代码搜索和重写",
       "path": "addons/ast-grep-tool",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/ast-grep-tool/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/ast-grep-tool",
+      "categories": [
         "ast",
         "code-search",
         "refactoring"
       ],
+      "displayTags": [
+        "代码检索",
+        "语法树",
+        "重构"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-ast-grep-0.1.7.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-ast-grep-tool-0.1.8.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "autoresearch",
-      "name": "@rcarmo/piclaw-addon-autoresearch",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-autoresearch",
+      "displayName": "自主研究",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Autonomous experiment loop sub-agent (start/stop/status tools via tmux)",
+      "description": "通过 tmux 运行可启动、停止和查看状态的自主实验循环子智能体",
       "path": "addons/autoresearch",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/autoresearch/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/autoresearch",
+      "categories": [
         "automation",
         "experiments",
         "research"
       ],
+      "displayTags": [
+        "实验",
+        "研究",
+        "自动化"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "autoresearch-create"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-autoresearch-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-autoresearch-0.1.5.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "cheapskate",
-      "name": "@rcarmo/piclaw-addon-cheapskate",
-      "version": "0.5.2",
+      "name": "@qiushuiai/qiushuiai-addon-cheapskate",
+      "displayName": "零成本模型路由",
+      "version": "0.5.3",
       "type": "extension",
-      "description": "Catalogue-backed zero-cost model routing through one virtual cheapskate/auto model, with request-local failover and a free-only Settings pane",
+      "description": "基于目录将请求路由到零成本模型，支持单次请求故障转移和仅免费模型设置面板",
       "path": "addons/cheapskate",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/cheapskate/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/cheapskate",
+      "categories": [
         "cost-optimization",
         "free-tier",
         "models",
         "providers",
         "rotation"
       ],
+      "displayTags": [
+        "免费模型",
+        "成本优化",
+        "模型",
+        "模型供应商",
+        "自动轮换"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-cheapskate-0.5.2.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-cheapskate-0.5.3.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "code-validator",
-      "name": "@rcarmo/piclaw-addon-code-validator",
-      "version": "0.1.3",
+      "name": "@qiushuiai/qiushuiai-addon-code-validator",
+      "displayName": "代码校验",
+      "version": "0.1.4",
       "type": "extension",
-      "description": "Diagnostics tool for code validation (Python, JS/TS, JSON, extensible via validators.json)",
+      "description": "提供 Python、JavaScript、TypeScript 和 JSON 诊断，并支持通过 validators.json 扩展",
       "path": "addons/code-validator",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/code-validator/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/code-validator",
+      "categories": [
         "diagnostics",
         "linting",
         "validation"
       ],
+      "displayTags": [
+        "代码检查",
+        "校验",
+        "诊断"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-code-validator-0.1.3.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-code-validator-0.1.4.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "codex-conversion",
-      "name": "@rcarmo/piclaw-addon-codex-conversion",
-      "version": "0.2.1",
+      "name": "@qiushuiai/qiushuiai-addon-codex-conversion",
+      "displayName": "Codex 转换",
+      "version": "0.2.2",
       "type": "extension",
-      "description": "Provider-aware Codex and Copilot prompt and tool profiles for Piclaw",
+      "description": "为 QiushuiAI 提供感知供应商的 Codex 与 Copilot 提示词和工具配置",
       "path": "addons/codex-conversion",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/codex-conversion/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/codex-conversion",
+      "categories": [
         "adapter",
         "codex",
         "openai",
         "prompting",
         "tools"
       ],
+      "displayTags": [
+        "Codex 适配",
+        "OpenAI 集成",
+        "工具",
+        "提示词",
+        "适配器"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-codex-conversion-0.2.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-codex-conversion-0.2.2.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "delegate",
-      "name": "@rcarmo/piclaw-addon-delegate",
-      "version": "0.2.10",
+      "name": "@qiushuiai/qiushuiai-addon-delegate",
+      "displayName": "任务委派",
+      "version": "0.2.11",
       "type": "extension",
-      "description": "Delegate tasks to operator-approved child-Pi models with fail-closed enforcement",
+      "description": "将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略",
       "path": "addons/delegate",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/delegate/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/delegate",
+      "categories": [
         "core",
         "cost-optimization",
         "delegation",
         "multi-model"
       ],
+      "displayTags": [
+        "任务委派",
+        "多模型",
+        "成本优化",
+        "核心推荐"
+      ],
+      "featured": true,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "delegate"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-delegate-0.2.10.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-delegate-0.2.11.tgz"
       },
       "updatedAt": "2026-09-18"
     },
     {
       "slug": "dev-tools",
-      "name": "@rcarmo/piclaw-addon-dev-tools",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-dev-tools",
+      "displayName": "开发工具",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Developer tools for workspace diagnostics and environment inspection",
+      "description": "提供工作区诊断和运行环境检查工具",
       "path": "addons/dev-tools",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/dev-tools/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/dev-tools",
+      "categories": [
         "developer",
         "diagnostics",
         "environment"
       ],
+      "displayTags": [
+        "开发工具",
+        "诊断",
+        "运行环境"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-dev-tools-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-dev-tools-0.1.5.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "diagram-tools",
-      "name": "@rcarmo/piclaw-addon-diagram-tools",
-      "version": "0.1.0",
+      "name": "@qiushuiai/qiushuiai-addon-diagram-tools",
+      "displayName": "图表工具",
+      "version": "0.1.1",
       "type": "skill",
-      "description": "Architecture diagram workflow — JSON graph definitions, SVG renderer, colour picker widget",
+      "description": "提供 JSON 图定义、SVG 渲染器和颜色选择器组件的架构图工作流",
       "path": "addons/diagram-tools",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/diagram-tools/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/diagram-tools",
+      "categories": [
         "architecture",
         "diagrams",
         "portfolio",
         "svg"
       ],
+      "displayTags": [
+        "作品集",
+        "图表",
+        "架构",
+        "矢量图"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-diagram-tools-0.1.0.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-diagram-tools-0.1.1.tgz"
       },
       "updatedAt": "2026-07-26"
     },
     {
       "slug": "drawio-editor",
-      "name": "@rcarmo/piclaw-addon-drawio-editor",
-      "version": "31.4.3",
+      "name": "@qiushuiai/qiushuiai-addon-drawio-editor",
+      "displayName": "draw.io 编辑器",
+      "version": "31.4.4",
       "type": "extension",
-      "description": "Self-hosted draw.io diagram editor with workspace file integration",
+      "description": "提供自托管的 draw.io 图表编辑器，并与工作区文件集成",
       "path": "addons/drawio-editor",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/drawio-editor/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/drawio-editor",
+      "categories": [
         "diagrams",
         "drawio",
         "editor"
       ],
+      "displayTags": [
+        "draw.io 图表",
+        "图表",
+        "编辑器"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-drawio-editor-31.4.3.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-drawio-editor-31.4.4.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "editable-table",
-      "name": "@rcarmo/piclaw-addon-editable-table",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-editable-table",
+      "displayName": "可编辑表格",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Editable Markdown table widget for the web UI — opens a themed spreadsheet-style grid and inserts the edited Markdown table back into chat",
+      "description": "在 Web 界面中编辑 Markdown 表格，并将修改后的内容插回对话",
       "path": "addons/editable-table",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/editable-table/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/editable-table",
+      "categories": [
         "editor",
         "markdown",
         "table",
         "web-ui",
         "widget"
       ],
+      "displayTags": [
+        "Markdown 编辑",
+        "组件",
+        "编辑器",
+        "网页界面",
+        "表格"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "editable-table"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-editable-table-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-editable-table-0.1.5.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "eml-viewer",
-      "name": "@rcarmo/piclaw-addon-eml-viewer",
-      "version": "0.2.1",
+      "name": "@qiushuiai/qiushuiai-addon-eml-viewer",
+      "displayName": "邮件文件查看器",
+      "version": "0.2.2",
       "type": "extension",
-      "description": "Attachment preview route for email message (.eml) files in the web timeline",
+      "description": "在 Web 时间线中预览电子邮件 .eml 附件",
       "path": "addons/eml-viewer",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/eml-viewer/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/eml-viewer",
+      "categories": [
         "email",
         "eml",
         "viewer"
       ],
+      "displayTags": [
+        "查看器",
+        "电子邮件",
+        "邮件文件"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-eml-viewer-0.2.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-eml-viewer-0.2.2.tgz"
       },
       "updatedAt": "2026-07-26"
     },
     {
       "slug": "export-timeline-pdf",
-      "name": "@rcarmo/piclaw-addon-export-timeline-pdf",
-      "version": "0.1.1",
+      "name": "@qiushuiai/qiushuiai-addon-export-timeline-pdf",
+      "displayName": "导出时间线 PDF",
+      "version": "0.1.2",
       "type": "skill",
-      "description": "Export chat timelines to PDF with inline avatars and referenced message pills",
+      "description": "将聊天时间线导出为 PDF，并保留头像和引用消息标记",
       "path": "addons/export-timeline-pdf",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/export-timeline-pdf/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/export-timeline-pdf",
+      "categories": [
         "export",
         "pdf",
         "timeline"
       ],
+      "displayTags": [
+        "PDF 文档",
+        "导出",
+        "时间线"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-export-timeline-pdf-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-export-timeline-pdf-0.1.2.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "ghostty-terminal",
-      "name": "@rcarmo/piclaw-addon-ghostty-terminal",
-      "version": "0.1.0",
+      "name": "@qiushuiai/qiushuiai-addon-ghostty-terminal",
+      "displayName": "Ghostty 终端",
+      "version": "0.1.1",
       "type": "extension",
-      "description": "Modern, more functional Ghostty-web terminal pane renderer for high-end Piclaw browsers",
+      "description": "为高性能浏览器提供基于 Ghostty Web 的现代终端面板",
       "path": "addons/ghostty-terminal",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/ghostty-terminal/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/ghostty-terminal",
+      "categories": [
         "desktop",
         "experimental",
         "ghostty",
         "terminal",
         "wasm"
       ],
+      "displayTags": [
+        "Ghostty 终端",
+        "WebAssembly 技术",
+        "实验功能",
+        "桌面自动化",
+        "终端"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-ghostty-terminal-0.1.0.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-ghostty-terminal-0.1.1.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "git-query-tools",
-      "name": "@rcarmo/piclaw-addon-git-query-tools",
-      "version": "0.1.5",
+      "name": "@qiushuiai/qiushuiai-addon-git-query-tools",
+      "displayName": "Git 查询工具",
+      "version": "0.1.6",
       "type": "extension",
-      "description": "Git history and JSON query tools for piclaw agents",
+      "description": "为 QiushuiAI 智能体提供 Git 历史和 JSON 查询工具",
       "path": "addons/git-query-tools",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/git-query-tools/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/git-query-tools",
+      "categories": [
         "git",
         "json",
         "query"
       ],
+      "displayTags": [
+        "Git 工具",
+        "JSON 查询",
+        "查询"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-git-query-tools-0.1.5.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-git-query-tools-0.1.6.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "goal",
-      "name": "@rcarmo/piclaw-addon-goal",
-      "version": "0.1.48",
+      "name": "@qiushuiai/qiushuiai-addon-goal",
+      "displayName": "目标管理",
+      "version": "0.1.49",
       "type": "extension",
-      "description": "Codex-style persisted thread goals with a hardened autonomous continuation loop and visible completion/stop summaries",
+      "description": "提供持久化线程目标、加固的自主续行循环和清晰的完成或停止摘要",
       "path": "addons/goal",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/goal/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/goal",
+      "categories": [
         "automation",
         "core",
         "goal-seeking",
@@ -340,107 +472,155 @@
         "productivity",
         "session"
       ],
+      "displayTags": [
+        "会话",
+        "效率",
+        "核心推荐",
+        "目标驱动",
+        "自动化",
+        "自动续行"
+      ],
+      "featured": true,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-goal-0.1.48.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-goal-0.1.49.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "image-processing",
-      "name": "@rcarmo/piclaw-addon-image-processing",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-image-processing",
+      "displayName": "图像处理",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Image manipulation tool (image_process) for Piclaw — resize, crop, convert, composite and more via sharp",
+      "description": "通过 sharp 提供缩放、裁剪、转换、合成等图像处理能力",
       "path": "addons/image-processing",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/image-processing/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/image-processing",
+      "categories": [
         "image",
         "processing",
         "sharp",
         "tools"
       ],
+      "displayTags": [
+        "图像",
+        "图像引擎",
+        "工具",
+        "数据处理"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-image-processing-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-image-processing-0.1.5.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "imap",
-      "name": "@rcarmo/piclaw-addon-imap",
-      "version": "0.1.11",
+      "name": "@qiushuiai/qiushuiai-addon-imap",
+      "displayName": "IMAP 邮件管理",
+      "version": "0.1.12",
       "type": "extension",
-      "description": "IMAP email management tool — search/fetch, move/copy, flag, create drafts, file messages, and STARTTLS support",
+      "description": "提供邮件搜索、读取、移动、复制、标记、草稿和 STARTTLS 支持",
       "path": "addons/imap",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/imap/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/imap",
+      "categories": [
         "email",
         "imap",
         "mail",
         "productivity"
       ],
+      "displayTags": [
+        "效率",
+        "电子邮件",
+        "邮件",
+        "邮件协议"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-imap-0.1.11.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-imap-0.1.12.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "kanban-board-widget",
-      "name": "@rcarmo/piclaw-addon-kanban-board-widget",
-      "version": "0.1.1",
+      "name": "@qiushuiai/qiushuiai-addon-kanban-board-widget",
+      "displayName": "看板组件",
+      "version": "0.1.2",
       "type": "extension",
-      "description": "Interactive kanban board dashboard widget for the web timeline",
+      "description": "在 Web 时间线中显示可交互的看板仪表盘",
       "path": "addons/kanban-board-widget",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/kanban-board-widget/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/kanban-board-widget",
+      "categories": [
         "dashboard",
         "kanban",
         "ui",
         "widget"
       ],
+      "displayTags": [
+        "仪表盘",
+        "界面",
+        "看板",
+        "组件"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-kanban-board-widget-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-kanban-board-widget-0.1.2.tgz"
       },
       "updatedAt": "2026-07-26"
     },
     {
       "slug": "kanban-editor",
-      "name": "@rcarmo/piclaw-addon-kanban-editor",
-      "version": "0.1.2",
+      "name": "@qiushuiai/qiushuiai-addon-kanban-editor",
+      "displayName": "看板编辑器",
+      "version": "0.1.3",
       "type": "extension",
-      "description": "Workspace .kanban.md editor add-on with Obsidian-style [[links]] between boards",
+      "description": "编辑工作区 .kanban.md 文件，并支持 Obsidian 风格的看板双向链接",
       "path": "addons/kanban-editor",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/kanban-editor/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/kanban-editor",
+      "categories": [
         "editor",
         "kanban",
         "markdown",
         "wiki-links",
         "workspace"
       ],
+      "displayTags": [
+        "Markdown 编辑",
+        "双向链接",
+        "工作区",
+        "看板",
+        "编辑器"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-kanban-editor-0.1.2.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-kanban-editor-0.1.3.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "late-night-regrets",
-      "name": "@rcarmo/piclaw-addon-late-night-regrets",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-late-night-regrets",
+      "displayName": "夜间反思",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Nightly Bayesian interaction-quality classifier — trains on chat history, flags behavioral patterns, and writes self-improvement reflections",
+      "description": "夜间训练贝叶斯交互质量分类器，识别行为模式并生成自我改进反思",
       "path": "addons/late-night-regrets",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/late-night-regrets/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/late-night-regrets",
+      "categories": [
         "bayesian",
         "classifier",
         "nightly",
@@ -448,26 +628,46 @@
         "reflection",
         "self-improvement"
       ],
+      "displayTags": [
+        "分类器",
+        "反思",
+        "夜间任务",
+        "自我改进",
+        "贝叶斯",
+        "质量"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-late-night-regrets-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-late-night-regrets-0.1.5.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "linkr",
-      "name": "@rcarmo/piclaw-addon-linkr",
-      "version": "0.1.1",
+      "name": "@qiushuiai/qiushuiai-addon-linkr",
+      "displayName": "Linkr 远程控制",
+      "version": "0.1.2",
       "type": "extension",
-      "description": "Radxa Linkr KVM screenshots, bounded HID and firmware-entry jobs, with BIOS, boot and OS installation skills.",
+      "description": "提供 Radxa Linkr KVM 截图、受限 HID 操作、固件入口任务及 BIOS、启动和系统安装技能",
       "path": "addons/linkr",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/linkr",
+      "categories": [
         "automation",
         "bios",
         "hardware",
         "kvm"
       ],
+      "displayTags": [
+        "固件",
+        "硬件",
+        "自动化",
+        "远程控制"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "linkr-boot-selection",
         "linkr-control",
@@ -479,41 +679,52 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-linkr-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-linkr-0.1.2.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "lite-term",
-      "name": "@rcarmo/piclaw-addon-lite-term",
-      "version": "0.1.2",
+      "name": "@qiushuiai/qiushuiai-addon-lite-term",
+      "displayName": "轻量终端",
+      "version": "0.1.3",
       "type": "extension",
-      "description": "xterm.js terminal pane identical to Piclaw's bundled default terminal and a good starting point for terminal customizations",
+      "description": "提供基于 xterm.js 的轻量终端面板，适合作为终端定制起点",
       "path": "addons/lite-term",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/lite-term/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/lite-term",
+      "categories": [
         "lite",
         "low-spec",
         "nerd-font",
         "terminal",
         "xterm"
       ],
+      "displayTags": [
+        "Web 终端",
+        "低配置",
+        "图标字体",
+        "终端",
+        "轻量"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-lite-term-0.1.2.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-lite-term-0.1.3.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "m365",
-      "name": "@rcarmo/piclaw-addon-m365",
-      "version": "0.1.2",
+      "name": "@qiushuiai/qiushuiai-addon-m365",
+      "displayName": "Microsoft 365 工具",
+      "version": "0.1.3",
       "type": "extension",
-      "description": "Experimental Microsoft 365 tools for Teams, Graph, Outlook, OneDrive, SharePoint, Calendar, and To Do",
+      "description": "提供 Teams、Graph、Outlook、OneDrive、SharePoint、日历和待办事项实验工具",
       "path": "addons/m365",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/m365/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/m365",
+      "categories": [
         "graph",
         "m365",
         "microsoft-365",
@@ -523,6 +734,18 @@
         "sharepoint",
         "teams"
       ],
+      "displayTags": [
+        "Microsoft 365 集成",
+        "OneDrive 集成",
+        "Outlook 集成",
+        "SharePoint 集成",
+        "Teams 集成",
+        "图查询",
+        "微软办公",
+        "效率"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "m365-document-link-metadata",
         "m365-graph-query",
@@ -538,40 +761,50 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-m365-0.1.2.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-m365-0.1.3.tgz"
       },
       "updatedAt": "2026-09-11"
     },
     {
       "slug": "mindmap",
-      "name": "@rcarmo/piclaw-addon-mindmap",
-      "version": "0.1.3",
+      "name": "@qiushuiai/qiushuiai-addon-mindmap",
+      "displayName": "思维导图",
+      "version": "0.1.4",
       "type": "extension",
-      "description": "D3-based mindmap editor pane for .mindmap.yaml files in Piclaw",
+      "description": "为 .mindmap.yaml 文件提供基于 D3 的思维导图编辑面板",
       "path": "addons/mindmap",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/mindmap/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/mindmap",
+      "categories": [
         "diagrams",
         "editor",
         "mindmap",
         "yaml"
       ],
+      "displayTags": [
+        "YAML 文件",
+        "图表",
+        "思维导图",
+        "编辑器"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-mindmap-0.1.3.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-mindmap-0.1.4.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "observability",
-      "name": "@rcarmo/piclaw-addon-observability",
-      "version": "0.1.17",
+      "name": "@qiushuiai/qiushuiai-addon-observability",
+      "displayName": "可观测性",
+      "version": "0.1.18",
       "type": "extension",
-      "description": "OpenTelemetry observability — trace errors and agent turns across piclaw instances to Azure Application Insights (with Live Metrics) and local Graphite",
+      "description": "通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite",
       "path": "addons/observability",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/observability/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/observability",
+      "categories": [
         "application-insights",
         "core",
         "graphite",
@@ -582,24 +815,38 @@
         "otel",
         "tracing"
       ],
+      "displayTags": [
+        "Graphite 指标",
+        "可观测性",
+        "实时指标",
+        "应用洞察",
+        "开放遥测",
+        "指标",
+        "核心推荐",
+        "遥测",
+        "链路追踪"
+      ],
+      "featured": true,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "usage-telemetry-chart"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-observability-0.1.17.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-observability-0.1.18.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "office-tools",
-      "name": "@rcarmo/piclaw-addon-office-tools",
-      "version": "0.1.6",
+      "name": "@qiushuiai/qiushuiai-addon-office-tools",
+      "displayName": "Office 文档工具",
+      "version": "0.1.7",
       "type": "extension",
-      "description": "Office document read/write tools for Piclaw (docx, xlsx, pptx, odt, md→pdf)",
+      "description": "为 QiushuiAI 提供 DOCX、XLSX、PPTX、ODT 和 Markdown 转 PDF 的读写能力",
       "path": "addons/office-tools",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/office-tools/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/office-tools",
+      "categories": [
         "documents",
         "docx",
         "office",
@@ -607,22 +854,33 @@
         "pptx",
         "xlsx"
       ],
+      "displayTags": [
+        "PDF 文档",
+        "Word 文档",
+        "办公文档",
+        "文档处理",
+        "演示文稿",
+        "电子表格"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-office-tools-0.1.6.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-office-tools-0.1.7.tgz"
       },
       "updatedAt": "2026-09-11"
     },
     {
       "slug": "office-viewer",
-      "name": "@rcarmo/piclaw-addon-office-viewer",
-      "version": "0.1.3",
+      "name": "@qiushuiai/qiushuiai-addon-office-viewer",
+      "displayName": "Office 文档查看器",
+      "version": "0.1.4",
       "type": "extension",
-      "description": "Office document viewer (.docx, .xlsx, .pptx, .odt, .ods, .odp) for Piclaw",
+      "description": "在 QiushuiAI 中查看 DOCX、XLSX、PPTX、ODT、ODS 和 ODP 文档",
       "path": "addons/office-viewer",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/office-viewer/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/office-viewer",
+      "categories": [
         "documents",
         "docx",
         "office",
@@ -630,97 +888,144 @@
         "viewer",
         "xlsx"
       ],
+      "displayTags": [
+        "Word 文档",
+        "办公文档",
+        "文档处理",
+        "查看器",
+        "演示文稿",
+        "电子表格"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-office-viewer-0.1.3.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-office-viewer-0.1.4.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "plan-sidebar",
-      "name": "@rcarmo/piclaw-addon-plan-sidebar",
-      "version": "0.1.25",
+      "name": "@qiushuiai/qiushuiai-addon-plan-sidebar",
+      "displayName": "计划侧边栏",
+      "version": "0.1.26",
       "type": "extension",
-      "description": "Right-side session plan sidebar with canonical plan action=update and Markdown storage",
+      "description": "提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储",
       "path": "addons/plan-sidebar",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/plan-sidebar/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/plan-sidebar",
+      "categories": [
         "core",
         "markdown",
         "planning",
         "session",
         "ui"
       ],
+      "displayTags": [
+        "Markdown 编辑",
+        "会话",
+        "核心推荐",
+        "界面",
+        "计划"
+      ],
+      "featured": true,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-plan-sidebar-0.1.25.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-plan-sidebar-0.1.26.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "portainer",
-      "name": "@rcarmo/piclaw-addon-portainer",
-      "version": "0.1.9",
+      "name": "@qiushuiai/qiushuiai-addon-portainer",
+      "displayName": "Portainer 管理",
+      "version": "0.1.10",
       "type": "extension",
-      "description": "Portainer management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for endpoints, stacks, containers, images, networks, and volumes",
+      "description": "提供会话级 API 配置和端点、堆栈、容器、镜像、网络及存储卷编排工作流",
       "path": "addons/portainer",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/portainer/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/portainer",
+      "categories": [
         "containers",
         "docker",
         "infrastructure",
         "portainer"
       ],
+      "displayTags": [
+        "Portainer 管理",
+        "基础设施",
+        "容器",
+        "容器管理"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-portainer-0.1.9.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-portainer-0.1.10.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "proxmox",
-      "name": "@rcarmo/piclaw-addon-proxmox",
-      "version": "0.1.10",
+      "name": "@qiushuiai/qiushuiai-addon-proxmox",
+      "displayName": "Proxmox 管理",
+      "version": "0.1.11",
       "type": "extension",
-      "description": "Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics",
+      "description": "提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流",
       "path": "addons/proxmox",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/proxmox/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/proxmox",
+      "categories": [
         "homelab",
         "infrastructure",
         "proxmox",
         "virtualization"
       ],
+      "displayTags": [
+        "Proxmox 管理",
+        "基础设施",
+        "家庭实验室",
+        "虚拟化"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-proxmox-0.1.10.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-proxmox-0.1.11.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "remote-peer",
-      "name": "@rcarmo/piclaw-addon-remote-peer",
-      "version": "0.3.4",
+      "name": "@qiushuiai/qiushuiai-addon-remote-peer",
+      "displayName": "远程节点",
+      "version": "0.3.5",
       "type": "extension",
-      "description": "Iroh-only client-ID peer chat with explicit pairing, default-off mDNS, durable delivery and files",
+      "description": "通过 Iroh 提供基于客户端 ID 的节点聊天、显式配对、可靠投递和文件传输",
       "path": "addons/remote-peer",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/remote-peer/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/remote-peer",
+      "categories": [
         "agents",
         "interop",
         "messaging",
         "remote"
       ],
+      "displayTags": [
+        "互操作",
+        "智能体",
+        "消息通信",
+        "远程协作"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "remote-peer"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-remote-peer-0.3.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-remote-peer-0.3.5.tgz"
       },
       "updatedAt": "2026-09-19",
       "owner": {
@@ -731,343 +1036,489 @@
     },
     {
       "slug": "sample-addon",
-      "name": "@rcarmo/piclaw-addon-sample-addon",
-      "version": "0.1.11",
+      "name": "@qiushuiai/qiushuiai-addon-sample-addon",
+      "displayName": "插件示例",
+      "version": "0.1.12",
       "type": "extension",
-      "description": "Sample add-on — starter template showing a settings pane, keychain secret, SQLite KV config, and a test endpoint",
+      "description": "展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板",
       "path": "addons/sample-addon",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/sample-addon/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/sample-addon",
+      "categories": [
         "developer",
         "sample",
         "template"
       ],
+      "displayTags": [
+        "开发工具",
+        "模板",
+        "示例"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-sample-addon-0.1.11.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-sample-addon-0.1.12.tgz"
       },
       "updatedAt": "2026-09-18"
     },
     {
       "slug": "session-dashboard",
-      "name": "@rcarmo/piclaw-addon-session-dashboard",
-      "version": "0.2.4",
+      "name": "@qiushuiai/qiushuiai-addon-session-dashboard",
+      "displayName": "会话仪表盘",
+      "version": "0.2.5",
       "type": "extension",
-      "description": "Roll-down active session dashboard with recent work summaries and context indicators",
+      "description": "提供可下拉的活动会话仪表盘、近期工作摘要和上下文状态",
       "path": "addons/session-dashboard",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/session-dashboard/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/session-dashboard",
+      "categories": [
         "core",
         "dashboard",
         "navigation",
         "session",
         "ui"
       ],
+      "displayTags": [
+        "仪表盘",
+        "会话",
+        "导航",
+        "核心推荐",
+        "界面"
+      ],
+      "featured": true,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-session-dashboard-0.2.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-session-dashboard-0.2.5.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "session-tree",
-      "name": "@rcarmo/piclaw-addon-session-tree",
-      "version": "0.2.0",
+      "name": "@qiushuiai/qiushuiai-addon-session-tree",
+      "displayName": "会话树",
+      "version": "0.2.1",
       "type": "extension",
-      "description": "Snapshot-driven interactive session tree renderer for Piclaw's /tree command",
+      "description": "为 QiushuiAI 的 /tree 命令提供基于快照的可交互会话树",
       "path": "addons/session-tree",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/session-tree/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/session-tree",
+      "categories": [
         "navigation",
         "session",
         "tree",
         "widget"
       ],
+      "displayTags": [
+        "会话",
+        "导航",
+        "树状视图",
+        "组件"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-session-tree-0.2.0.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-session-tree-0.2.1.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "settings-dialog-screenshot",
-      "name": "@rcarmo/piclaw-addon-settings-dialog-screenshot",
-      "version": "0.1.0",
+      "name": "@qiushuiai/qiushuiai-addon-settings-dialog-screenshot",
+      "displayName": "设置截图",
+      "version": "0.1.1",
       "type": "skill",
-      "description": "Developer skill for capturing tightly cropped screenshots of the Pi web settings dialog only",
+      "description": "用于截取 Pi Web 设置对话框紧凑画面的开发技能",
       "path": "addons/settings-dialog-screenshot",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/settings-dialog-screenshot/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/settings-dialog-screenshot",
+      "categories": [
         "developer",
         "documentation",
         "screenshots",
         "ui"
       ],
+      "displayTags": [
+        "开发工具",
+        "截图",
+        "文档",
+        "界面"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "settings-dialog-screenshot"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-settings-dialog-screenshot-0.1.0.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-settings-dialog-screenshot-0.1.1.tgz"
       },
       "updatedAt": "2026-07-26"
     },
     {
       "slug": "skill-model-effort",
-      "name": "@rcarmo/piclaw-addon-skill-model-effort",
-      "version": "0.1.3",
+      "name": "@qiushuiai/qiushuiai-addon-skill-model-effort",
+      "displayName": "技能模型参数",
+      "version": "0.1.4",
       "type": "extension",
-      "description": "Honor model, effort, and thinking frontmatter on Piclaw skills",
+      "description": "让 QiushuiAI 技能支持模型、推理强度和思考参数前置元数据",
       "path": "addons/skill-model-effort",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/skill-model-effort/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/skill-model-effort",
+      "categories": [
         "models",
         "runtime",
         "skills",
         "thinking"
       ],
+      "displayTags": [
+        "技能",
+        "推理设置",
+        "模型",
+        "运行时"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-skill-model-effort-0.1.3.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-skill-model-effort-0.1.4.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "smart-compaction",
-      "name": "@rcarmo/piclaw-addon-smart-compaction",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-smart-compaction",
+      "displayName": "智能上下文压缩",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Standalone Pi-compatible smart compaction extension for vanilla pi users; Piclaw already includes this behavior natively.",
+      "description": "为原生 Pi 用户提供独立的智能上下文压缩扩展",
       "path": "addons/smart-compaction",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/smart-compaction/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/smart-compaction",
+      "categories": [
         "compaction",
         "context",
         "pi",
         "vanilla-pi"
       ],
+      "displayTags": [
+        "Pi 兼容",
+        "上下文",
+        "上下文压缩",
+        "原生 Pi"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-smart-compaction-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-smart-compaction-0.1.5.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "stealth-browser",
-      "name": "@rcarmo/piclaw-addon-stealth-browser",
-      "version": "0.1.1",
+      "name": "@qiushuiai/qiushuiai-addon-stealth-browser",
+      "displayName": "隐身浏览器",
+      "version": "0.1.2",
       "type": "extension",
-      "description": "Stealth browser automation via mochi.js — human-like interactions, fingerprint consistency, anti-detection bypass",
+      "description": "通过 mochi.js 提供拟人交互、指纹一致性和反检测浏览器自动化",
       "path": "addons/stealth-browser",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/stealth-browser/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/stealth-browser",
+      "categories": [
         "automation",
         "browser",
         "stealth",
         "web"
       ],
+      "displayTags": [
+        "浏览器",
+        "网页",
+        "自动化",
+        "隐身访问"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [
         "stealth-browse"
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-stealth-browser-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-stealth-browser-0.1.2.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "telegram",
-      "name": "@rcarmo/piclaw-addon-telegram",
-      "version": "0.1.3",
+      "name": "@qiushuiai/qiushuiai-addon-telegram",
+      "displayName": "Telegram 频道",
+      "version": "0.1.4",
       "type": "extension",
-      "description": "Telegram Bot channel for PiClaw. Connects via Bot API long polling, receives/sends messages, and routes them through the agent.",
+      "description": "通过 Bot API 长轮询连接 Telegram，收发消息并转交智能体处理",
       "path": "addons/telegram",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/telegram/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/telegram",
+      "categories": [
         "channel",
         "messaging",
         "telegram"
       ],
+      "displayTags": [
+        "Telegram 集成",
+        "消息通信",
+        "频道"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-telegram-0.1.3.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-telegram-0.1.4.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "vent",
-      "name": "@rcarmo/piclaw-addon-vent",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-vent",
+      "displayName": "工作区反馈日志",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "Workspace vent log add-on, adapted from pi-vent by Igor Warzocha, with a configurable output file",
+      "description": "将可配置的工作区反馈日志能力集成到 QiushuiAI",
       "path": "addons/vent",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/vent/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/vent",
+      "categories": [
         "feedback",
         "postmortem",
         "quality",
         "vent",
         "workspace"
       ],
+      "displayTags": [
+        "反馈",
+        "反馈日志",
+        "复盘",
+        "工作区",
+        "质量"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-vent-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-vent-0.1.5.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "voice-pipeline",
-      "name": "@rcarmo/piclaw-addon-voice-pipeline",
-      "version": "0.2.2",
+      "name": "@qiushuiai/qiushuiai-addon-voice-pipeline",
+      "displayName": "语音流水线",
+      "version": "0.2.3",
       "type": "extension",
-      "description": "ESPHome-only voice assistant pipeline for ThinkSmart/ESP32-Audio devices using Azure STT/TTS and the Flint chat runtime",
+      "description": "为 ThinkSmart 和 ESP32-Audio 设备提供基于 Azure STT/TTS 的 ESPHome 语音助手流水线",
       "path": "addons/voice-pipeline",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/voice-pipeline/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/voice-pipeline",
+      "categories": [
         "audio",
         "esp32",
         "home-automation",
         "smart-home",
         "voice"
       ],
+      "displayTags": [
+        "家庭自动化",
+        "嵌入式设备",
+        "智能家居",
+        "语音",
+        "音频"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-voice-pipeline-0.2.2.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-voice-pipeline-0.2.3.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "web-viewer",
-      "name": "@rcarmo/piclaw-addon-web-viewer",
-      "version": "0.1.1",
+      "name": "@qiushuiai/qiushuiai-addon-web-viewer",
+      "displayName": "网页与媒体查看器",
+      "version": "0.1.2",
       "type": "extension",
-      "description": "HTML, image, and video viewer panes and routes for Piclaw",
+      "description": "为 QiushuiAI 提供 HTML、图像和视频查看面板及路由",
       "path": "addons/web-viewer",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/web-viewer/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/web-viewer",
+      "categories": [
         "html",
         "image",
         "media",
         "video",
         "viewer"
       ],
+      "displayTags": [
+        "图像",
+        "媒体",
+        "查看器",
+        "网页",
+        "视频"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-web-viewer-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-web-viewer-0.1.2.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "whatsapp",
-      "name": "@rcarmo/piclaw-addon-whatsapp",
-      "version": "0.1.4",
+      "name": "@qiushuiai/qiushuiai-addon-whatsapp",
+      "displayName": "WhatsApp 频道",
+      "version": "0.1.5",
       "type": "extension",
-      "description": "WhatsApp channel for PiClaw via Baileys. Connects to WhatsApp Web, receives/sends messages, and routes them through the agent.",
+      "description": "通过 Baileys 连接 WhatsApp Web，收发消息并转交智能体处理",
       "path": "addons/whatsapp",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/whatsapp/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/whatsapp",
+      "categories": [
         "channel",
         "messaging",
         "whatsapp"
       ],
+      "displayTags": [
+        "WhatsApp 集成",
+        "消息通信",
+        "频道"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-whatsapp-0.1.4.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-whatsapp-0.1.5.tgz"
       },
       "updatedAt": "2026-09-19"
     },
     {
       "slug": "win-ui",
-      "name": "@rcarmo/piclaw-addon-win-ui",
-      "version": "0.1.1",
+      "name": "@qiushuiai/qiushuiai-addon-win-ui",
+      "displayName": "Windows 界面自动化",
+      "version": "0.1.2",
       "type": "extension",
-      "description": "Windows desktop automation tools via Win32 UI Automation and screenshots",
+      "description": "通过 Win32 UI Automation 和截图提供 Windows 桌面自动化工具",
       "path": "addons/win-ui",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/win-ui/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/win-ui",
+      "categories": [
         "automation",
         "desktop",
         "screenshots",
         "windows"
       ],
+      "displayTags": [
+        "Windows 工具",
+        "截图",
+        "桌面自动化",
+        "自动化"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-win-ui-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-win-ui-0.1.2.tgz"
       },
       "updatedAt": "2026-09-10"
     },
     {
       "slug": "writer-fonts",
-      "name": "@rcarmo/piclaw-addon-writer-fonts",
-      "version": "0.2.0",
+      "name": "@qiushuiai/qiushuiai-addon-writer-fonts",
+      "displayName": "写作字体",
+      "version": "0.2.1",
       "type": "extension",
-      "description": "Switch the document editor font from a dropdown in the editor footer — bundles Literata, Inter, Noto Sans, Noto Sans TC, New Tegomin and IBM Plex Sans, plus Georgia and the shipped System stack",
+      "description": "在编辑器底栏切换文档字体，并内置多种中西文字体",
       "path": "addons/writer-fonts",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/writer-fonts/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/writer-fonts",
+      "categories": [
         "editor",
         "fonts",
         "typography",
         "web-ui",
         "writing"
       ],
+      "displayTags": [
+        "写作",
+        "字体",
+        "排版",
+        "编辑器",
+        "网页界面"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-writer-fonts-0.2.0.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-writer-fonts-0.2.1.tgz"
       },
       "updatedAt": "2026-07-26"
     },
     {
       "slug": "yolo-vibe",
-      "name": "@rcarmo/piclaw-addon-yolo-vibe",
-      "version": "0.1.7",
+      "name": "@qiushuiai/qiushuiai-addon-yolo-vibe",
+      "displayName": "快捷操作按钮",
+      "version": "0.1.8",
       "type": "extension",
-      "description": "Compose-box YOLO buttons (Continue, Audit, Docs) mounted in the bottom action bar, subtle until hover",
+      "description": "在输入框底部操作栏提供继续、审计和文档快捷按钮",
       "path": "addons/yolo-vibe",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/yolo-vibe/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/yolo-vibe",
+      "categories": [
         "compose",
         "quick-actions",
         "web-ui",
         "workflow"
       ],
+      "displayTags": [
+        "工作流",
+        "快捷操作",
+        "网页界面",
+        "输入框"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-yolo-vibe-0.1.7.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-yolo-vibe-0.1.8.tgz"
       },
       "updatedAt": "2026-09-08"
     },
     {
       "slug": "yolochat",
-      "name": "@rcarmo/piclaw-addon-yolochat",
-      "version": "0.1.0",
+      "name": "@qiushuiai/qiushuiai-addon-yolochat",
+      "displayName": "实例互聊",
+      "version": "0.1.1",
       "type": "skill",
-      "description": "Zero-guardrail inter-instance messaging — lets Pi instances post and reply to each other over HTTP",
+      "description": "让多个 Pi 实例通过 HTTP 相互发帖和回复的无防护通信技能",
       "path": "addons/yolochat",
-      "homepage": "https://rcarmo.github.io/piclaw-addons/addons/yolochat/",
-      "tags": [
+      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/yolochat",
+      "categories": [
         "chat",
         "experimental",
         "multi-agent",
         "networking"
       ],
+      "displayTags": [
+        "多智能体",
+        "实验功能",
+        "网络",
+        "聊天"
+      ],
+      "featured": false,
+      "compatibleVersions": ">=3.0.0",
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-yolochat-0.1.0.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-yolochat-0.1.1.tgz"
       },
       "updatedAt": "2026-07-26"
     }

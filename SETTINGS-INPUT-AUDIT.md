@@ -68,7 +68,7 @@ bun install --frozen-lockfile
 bun install --cwd addons/observability --omit peer --ignore-scripts
 bun run typecheck:earendil-compat
 bun test --max-concurrency=1
-PICLAW_E2E_DISPOSABLE=1 PICLAW_SETTINGS_CORE_SOURCE=/absolute/path/to/piclaw \
+QIUSHUIAI_E2E_DISPOSABLE=1 QIUSHUIAI_SETTINGS_CORE_SOURCE=/absolute/path/to/qiushuiai \
 PLAYWRIGHT_BROWSERS_PATH=/absolute/path/to/ms-playwright \
   bun test --timeout 15000 settings-inputs.test.ts
 ```
@@ -76,5 +76,5 @@ PLAYWRIGHT_BROWSERS_PATH=/absolute/path/to/ms-playwright \
 Browser fixtures use actual Settings hosts, exact-path unbundled add-on assets,
 mock APIs and temporary state. No provider/device requests, live credentials,
 production installation, network enablement or restart. Optional screenshots use
-an explicit `PICLAW_SETTINGS_AUDIT_SCREENSHOTS` output directory. Merge and
+an explicit `QIUSHUIAI_SETTINGS_AUDIT_SCREENSHOTS` output directory. Merge and
 deployment remain separate operator actions.

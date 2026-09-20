@@ -1,39 +1,36 @@
-# Proxmox
+# Proxmox 管理
 
-Proxmox VE management through one session-scoped `proxmox` tool. Requires Piclaw `>=1.8.0`.
+提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流
 
-## Install and configure
+## 功能定位
 
-Open **Settings → Add-Ons**, install **proxmox**, then configure **Settings → Proxmox**.
+这是 QiushuiAI 的扩展插件，技术标识为 `proxmox`。
 
-![Proxmox settings pane on the microVM test instance](./assets/settings-pane-microvm.png)
+- 软件包：`@qiushuiai/qiushuiai-addon-proxmox`
+- 当前版本：`0.1.11`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`Proxmox 管理`、`基础设施`、`虚拟化`、`家庭实验室`
 
-Non-secret defaults use `/agent/addons/api/proxmox/config` and extension KV. Store the API token secret in the keychain; the default entry is `proxmox/piclaw-management-token`. Configure the separate token username, such as `root@pam!piclaw`. Hostnames and bare IP addresses are normalised to `https://<host>:8006/api2/json`.
+## 安装
 
-## Tool actions
+在 QiushuiAI 中打开**设置 → 插件**，搜索“Proxmox 管理”并安装。也可以直接使用无需登录的公开安装包：
 
-- `get`, `set`, `clear` — session override management
-- `discover` — find settings, environment, and keychain candidates
-- `contract`, `capabilities`, `workflow_help`, `request_help`, `recommend` — inspect supported operations
-- `request` — one raw Proxmox API request or a bounded sequential batch
-- `workflow` — named cluster, VM, LXC, node, storage, backup, task, snapshot, guest-agent, or metrics workflow
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-proxmox-0.1.11.tgz
+```
 
-Use `proxmox capabilities` and `proxmox workflow_help` before mutating infrastructure. Raw requests support retries, throttling, per-request timeouts, and optional workspace JSON/JSONL output.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Security and scope
+## 提供的能力
 
-- Tokens are resolved from keychain-backed runtime access and are never returned in tool details.
-- Self-signed TLS is allowed only when `allow_insecure_tls` is enabled.
-- Destructive operations require explicit workflow fields and should be preceded by inspection/status calls.
+- 入口：`index.ts`
+- 入口：`web/index.ts`
+- 技能：`skills`
 
-## Skill
+## 配置与安全
 
-The bundled `proxmox-guest-compare-chart` skill collects bounded guest metrics through the tool and renders SVG/CSV comparison artifacts.
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-## Settings field appearance (0.1.10)
+## 技术资料
 
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/proxmox/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

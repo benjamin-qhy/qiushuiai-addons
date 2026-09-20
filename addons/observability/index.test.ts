@@ -12,7 +12,7 @@ import {
 test("observability compat shims avoid runtime source imports", () => {
   for (const file of ["extension-kv.ts", "keychain.ts", "log-sink.ts"]) {
     const source = readFileSync(join(import.meta.dir, "compat", file), "utf8");
-    expect(source).not.toContain("piclaw/runtime/src");
+    expect(source).not.toContain("qiushuiai/runtime/src");
   }
 });
 
@@ -28,7 +28,7 @@ test("buildRuntimeConfigKey changes only for backend runtime settings", () => {
     graphite_enabled: false,
     graphite_host: "",
     graphite_port: 2003,
-    graphite_prefix: "piclaw",
+    graphite_prefix: "qiushuiai",
   };
   expect(buildRuntimeConfigKey({ ...base })).toBe(buildRuntimeConfigKey(base));
   expect(buildRuntimeConfigKey({ ...base, instance_name: "smith-2" })).not.toBe(buildRuntimeConfigKey(base));
@@ -63,46 +63,46 @@ test("model spans start from authoritative model.call.start records and export s
 });
 
 test("buildSyntheticRequestAttributes adds request-style semantics for agent turns", () => {
-  const attrs = buildSyntheticRequestAttributes({ "piclaw.chat_jid": "web:default" }, "/agent/turn", "smith");
+  const attrs = buildSyntheticRequestAttributes({ "qiushuiai.chat_jid": "web:default" }, "/agent/turn", "smith");
   expect(attrs).toMatchObject({
-    "piclaw.chat_jid": "web:default",
+    "qiushuiai.chat_jid": "web:default",
     "http.request.method": "POST",
     "http.route": "/agent/turn",
     "server.address": "smith",
-    "network.protocol.name": "piclaw",
-    "piclaw.telemetry_class": "request",
+    "network.protocol.name": "qiushuiai",
+    "qiushuiai.telemetry_class": "request",
   });
-  expect(String(attrs["url.full"])).toBe("piclaw://request/agent/turn");
+  expect(String(attrs["url.full"])).toBe("qiushuiai://request/agent/turn");
 });
 
 test("buildSyntheticDependencyAttributes adds dependency-style semantics for model and tool calls", () => {
-  const attrs = buildSyntheticDependencyAttributes({ "piclaw.model": "openai/gpt-5" }, "/model/call", "openai", "model");
+  const attrs = buildSyntheticDependencyAttributes({ "qiushuiai.model": "openai/gpt-5" }, "/model/call", "openai", "model");
   expect(attrs).toMatchObject({
-    "piclaw.model": "openai/gpt-5",
+    "qiushuiai.model": "openai/gpt-5",
     "http.request.method": "POST",
     "http.route": "/model/call",
     "server.address": "openai",
     "peer.service": "openai",
-    "network.protocol.name": "piclaw",
-    "piclaw.telemetry_class": "dependency",
-    "piclaw.dependency.kind": "model",
+    "network.protocol.name": "qiushuiai",
+    "qiushuiai.telemetry_class": "dependency",
+    "qiushuiai.dependency.kind": "model",
   });
-  expect(String(attrs["url.full"])).toBe("piclaw://openai/model/call");
+  expect(String(attrs["url.full"])).toBe("qiushuiai://openai/model/call");
 });
 
 test("buildAppInsightsActorAttributes maps chat and session into App Insights user/session fields", () => {
   expect(buildAppInsightsActorAttributes("web:addons", "leaf-123", "smith")).toMatchObject({
-    "piclaw.chat_jid": "web:addons",
-    "piclaw.actor.kind": "chat_jid",
-    "piclaw.actor.id": "web:addons",
+    "qiushuiai.chat_jid": "web:addons",
+    "qiushuiai.actor.kind": "chat_jid",
+    "qiushuiai.actor.id": "web:addons",
     "enduser.id": "web:addons",
     "enduser.pseudo.id": "web:addons",
     "ai.user.authUserId": "web:addons",
     "ai.user.id": "web:addons",
     "session.id": "leaf-123",
     "ai.session.id": "leaf-123",
-    "piclaw.session.id": "leaf-123",
-    "piclaw.session_leaf_id": "leaf-123",
+    "qiushuiai.session.id": "leaf-123",
+    "qiushuiai.session_leaf_id": "leaf-123",
   });
 });
 

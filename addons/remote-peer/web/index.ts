@@ -1,5 +1,5 @@
 // @ts-nocheck
-const ui = globalThis.__piclawPreactHtm || globalThis.__piclawPreact;
+const ui = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact;
 const html = ui?.html,
   useState = ui?.useState,
   useEffect = ui?.useEffect,
@@ -661,13 +661,13 @@ function RemotePeerSettings() {
   </div>`;
 }
 if (html && useState && useEffect) {
-  const registry = globalThis.__piclawSettingsPaneRegistry;
+  const registry = globalThis.__qiushuiaiSettingsPaneRegistry;
   const register =
     registry?.registerSettingsPane ||
-    globalThis.__piclaw_web?.registerSettingsPane;
+    globalThis.__qiushuiai_web?.registerSettingsPane;
   register?.({
     id: "remote-peer",
-    label: "Remote Peer",
+    label: "远程协作",
     icon: html`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M12 8v5M5 16v-3h14v3"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="16" y="16" width="6" height="6" rx="1"/></svg>`,
     component: RemotePeerSettings,
     order: 190,

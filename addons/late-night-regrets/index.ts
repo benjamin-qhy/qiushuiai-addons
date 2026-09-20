@@ -75,17 +75,17 @@ export function getTrainScriptPath(): string {
 }
 
 export function getAttentionFilePath(config: RegretsConfig): string {
-  const workspace = process.env.PICLAW_WORKSPACE || "/workspace";
+  const workspace = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
   return join(workspace, config.exports_dir, "interaction-quality-attention-latest.jsonl");
 }
 
 export function getReportFilePath(config: RegretsConfig): string {
-  const workspace = process.env.PICLAW_WORKSPACE || "/workspace";
+  const workspace = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
   return join(workspace, config.exports_dir, "interaction-quality-report-latest.md");
 }
 
 export function getReflectionsFilePath(config: RegretsConfig): string {
-  const workspace = process.env.PICLAW_WORKSPACE || "/workspace";
+  const workspace = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
   return join(workspace, config.reflections_path);
 }
 
@@ -119,7 +119,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi(EXTENSION_ID, "config", {
     get: async () => handleGetConfig(),

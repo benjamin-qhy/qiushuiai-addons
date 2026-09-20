@@ -83,7 +83,7 @@ interface Prediction {
 
 // ── Constants ────────────────────────────────────────────────────────
 
-const DEFAULT_DB = `${process.env.PICLAW_STORE || "/workspace/.piclaw/store"}/messages.db`;
+const DEFAULT_DB = `${process.env.QIUSHUIAI_STORE || "/workspace/.qiushuiai/store"}/messages.db`;
 const DEFAULT_OUT = "/workspace/exports/interaction-quality";
 
 const CATEGORIES = [

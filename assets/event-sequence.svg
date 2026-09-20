@@ -98,6 +98,6 @@
   <!-- install path annotation -->
   <rect x="755" y="360" width="195" height="52" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
   <text x="852" y="376" class="sub" text-anchor="middle" font-weight="700" fill="#5b21b6">Install from terminal</text>
-  <text x="762" y="391" class="note" fill="#5b21b6">cd /workspace/.piclaw/addons</text>
+  <text x="762" y="391" class="note" fill="#5b21b6">cd /workspace/.qiushuiai/addons</text>
   <text x="762" y="404" class="note" fill="#5b21b6">bun add …/packages/*.tgz</text>
 </svg>

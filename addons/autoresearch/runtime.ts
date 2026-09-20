@@ -13,7 +13,7 @@ type AddonAdaptiveCardIntentContext = {
   sendMessage: (content: string, options?: { threadId?: string | null }) => Promise<void>;
 };
 
-type PiclawRuntimeAddonApi = {
+type QiushuiAIRuntimeAddonApi = {
   registerStatusPanelProvider?: (provider: {
     key: string;
     getPayload: (chatJid: string) => Promise<unknown> | unknown;
@@ -23,8 +23,8 @@ type PiclawRuntimeAddonApi = {
 };
 
 type RuntimeGlobal = typeof globalThis & {
-  __piclaw_runtime?: PiclawRuntimeAddonApi;
-  __piclaw_autoresearch_runtime_registered__?: boolean;
+  __qiushuiai_runtime?: QiushuiAIRuntimeAddonApi;
+  __qiushuiai_autoresearch_runtime_registered__?: boolean;
 };
 
 function getResultText(result: unknown, fallback: string): string {
@@ -37,9 +37,9 @@ function getResultText(result: unknown, fallback: string): string {
 
 function install(): void {
   const runtimeGlobal = globalThis as RuntimeGlobal;
-  if (runtimeGlobal.__piclaw_autoresearch_runtime_registered__) return;
+  if (runtimeGlobal.__qiushuiai_autoresearch_runtime_registered__) return;
 
-  const api = runtimeGlobal.__piclaw_runtime;
+  const api = runtimeGlobal.__qiushuiai_runtime;
   if (!api) return;
 
   api.registerStatusPanelProvider?.({
@@ -107,7 +107,7 @@ function install(): void {
     await context.sendMessage(getResultText(result, "Stopped autoresearch experiment."), { threadId: context.threadId });
   });
 
-  runtimeGlobal.__piclaw_autoresearch_runtime_registered__ = true;
+  runtimeGlobal.__qiushuiai_autoresearch_runtime_registered__ = true;
 }
 
 install();

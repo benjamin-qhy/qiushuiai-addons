@@ -5,7 +5,7 @@ const preload = join(root, 'scripts/test-preload.ts');
 const dirs = new Set<string>([root]);
 function walk(dir: string) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
-    if (['node_modules', '.git', '.tmp', '.generated', '.piclaw-runtime', 'docs', 'reports', 'test-results', 'vendor'].includes(e.name)) continue;
+    if (['node_modules', '.git', '.tmp', '.generated', '.qiushuiai-runtime', 'docs', 'reports', 'test-results', 'vendor'].includes(e.name)) continue;
     const p = join(dir, e.name);
     if (e.isDirectory()) walk(p);
     else if (/\.(test|spec)\.[cm]?[jt]sx?$/.test(e.name)) dirs.add(dirname(p));

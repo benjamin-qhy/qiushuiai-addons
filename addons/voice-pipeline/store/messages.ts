@@ -1,10 +1,10 @@
 /**
  * store/messages.ts
  *
- * Persists voice conversation turns to the piclaw SQLite DB under the
+ * Persists voice conversation turns to the qiushuiai SQLite DB under the
  * `tts:default` JID so they show up in the message store.
  *
- * NOTE: piclaw exposes no public message-insertion API to extensions, so this
+ * NOTE: qiushuiai exposes no public message-insertion API to extensions, so this
  * writes the DB directly. To stay safe (#5):
  *   - the DB is opened lazily on first write (never at import/init time);
  *   - it uses only long-stable columns present in every schema revision;

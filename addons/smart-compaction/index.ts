@@ -69,19 +69,19 @@ function makeResilientCtx<T extends { ui: Record<string, unknown> }>(ctx: T): Re
 // ---------------------------------------------------------------------------
 
 export function smartCompaction(pi: ExtensionAPI): void {
-  const looksLikePiclaw = !!(
-    process.env.PICLAW_WORKSPACE ||
-    process.env.PICLAW_INTERNAL_SECRET ||
-    process.env.PICLAW_WEB_INTERNAL_SECRET
+  const looksLikeQiushuiAI = !!(
+    process.env.QIUSHUIAI_WORKSPACE ||
+    process.env.QIUSHUIAI_INTERNAL_SECRET ||
+    process.env.QIUSHUIAI_WEB_INTERNAL_SECRET
   );
 
-  // This package is for vanilla pi. Piclaw already ships this extension as a
+  // This package is for vanilla pi. QiushuiAI already ships this extension as a
   // built-in, so stay inert there to avoid duplicate session_before_compact
-  // handlers. Set PI_SMART_COMPACTION_ALLOW_PICLAW=1 only for deliberate local
+  // handlers. Set PI_SMART_COMPACTION_ALLOW_QIUSHUIAI=1 only for deliberate local
   // testing.
-  if (looksLikePiclaw && process.env.PI_SMART_COMPACTION_ALLOW_PICLAW !== "1") {
+  if (looksLikeQiushuiAI && process.env.PI_SMART_COMPACTION_ALLOW_QIUSHUIAI !== "1") {
     console.warn(
-      "[smart-compaction] Disabled: this standalone add-on is intended for vanilla pi users; Piclaw already includes smart compaction.",
+      "[smart-compaction] Disabled: this standalone add-on is intended for vanilla pi users; QiushuiAI already includes smart compaction.",
     );
     return;
   }

@@ -1,16 +1,16 @@
 import { PeerService } from "./service.js";
 import { requireOwnedFixtureRoot } from "./fixture-ownership.js";
 if (
-  process.env.PICLAW_E2E_DISPOSABLE !== "1" ||
-  !process.env.PICLAW_IROH_TWO_HOST_ROLE
+  process.env.QIUSHUIAI_E2E_DISPOSABLE !== "1" ||
+  !process.env.QIUSHUIAI_IROH_TWO_HOST_ROLE
 )
   throw new Error("Explicit disposable two-host role required.");
 const root = requireOwnedFixtureRoot(
-  process.env.PICLAW_IROH_TWO_HOST_ROOT,
+  process.env.QIUSHUIAI_IROH_TWO_HOST_ROOT,
   "iroh-remote-peer-validation",
-  process.env.PICLAW_IROH_FIXTURE_TOKEN,
+  process.env.QIUSHUIAI_IROH_FIXTURE_TOKEN,
 );
-const iface = process.env.PICLAW_IROH_MDNS_INTERFACE || "";
+const iface = process.env.QIUSHUIAI_IROH_MDNS_INTERFACE || "";
 const received: any[] = [];
 const service = new PeerService({
   dataDir: root,
@@ -40,13 +40,13 @@ async function close() {
 for (const signal of ["SIGINT", "SIGTERM"] as const)
   process.once(signal, () => void close().finally(() => process.exit(0)));
 try {
-  const customRelay = process.env.PICLAW_IROH_CUSTOM_RELAY;
+  const customRelay = process.env.QIUSHUIAI_IROH_CUSTOM_RELAY;
   await service.configure({
     enabled: true,
-    addressLookup: process.env.PICLAW_IROH_ADDRESS_LOOKUP === "1",
-    mdnsEnabled: process.env.PICLAW_IROH_MDNS === "1",
-    mdnsInterface: process.env.PICLAW_IROH_MDNS === "1" ? iface : "",
-    instanceName: process.env.PICLAW_IROH_TEST_NAME || "Disposable peer",
+    addressLookup: process.env.QIUSHUIAI_IROH_ADDRESS_LOOKUP === "1",
+    mdnsEnabled: process.env.QIUSHUIAI_IROH_MDNS === "1",
+    mdnsInterface: process.env.QIUSHUIAI_IROH_MDNS === "1" ? iface : "",
+    instanceName: process.env.QIUSHUIAI_IROH_TEST_NAME || "Disposable peer",
     relayMode: customRelay ? "custom" : "n0",
     ...(customRelay ? { relays: [{ url: customRelay }] } : {}),
   });

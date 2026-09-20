@@ -1,6 +1,6 @@
 # Iroh peer protocol 1
 
-ALPN: `piclaw-remote-peer/iroh/1`. This protocol is incompatible with the removed HTTP protocol.
+ALPN: `qiushuiai-remote-peer/iroh/1`. This protocol is incompatible with the removed HTTP protocol.
 
 Each connection handles one bidirectional request/response stream. A four-byte big-endian header length precedes a JSON header (maximum 192 KiB), then up to 32 MiB of raw binary. The receiver rejects unauthorized binary bodies before allocation. Reads/writes use 64 KiB chunks. Inbound concurrency is capped at 16; outbound requests/dials at eight; requests time out after 30 seconds.
 

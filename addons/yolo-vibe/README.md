@@ -1,30 +1,35 @@
-# @rcarmo/piclaw-addon-yolo-vibe
+# 快捷操作按钮
 
-Quick compose-box YOLO buttons for the PiClaw web UI.
+在输入框底部操作栏提供继续、审计和文档快捷按钮
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-This add-on mounts three compact buttons **inside the compose box**, on the bottom action row next to the send/search controls. They stay partially transparent until you hover or focus the compose box (or the buttons themselves), then become fully opaque:
+这是 QiushuiAI 的扩展插件，技术标识为 `yolo-vibe`。
 
-| Button | Submitted prompt |
-|---|---|
-| Continue | `continue, according to plan` |
-| Audit | `audit for code smells and logic errors, fixing as you go` |
-| Docs | `review and update all documentation, then commit and push` |
+- 软件包：`@qiushuiai/qiushuiai-addon-yolo-vibe`
+- 当前版本：`0.1.8`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`输入框`、`工作流`、`快捷操作`、`网页界面`
 
-## Install
+## 安装
 
-Open **Settings → Add-Ons** and install **yolo-vibe** from the catalog.
+在 QiushuiAI 中打开**设置 → 插件**，搜索“快捷操作按钮”并安装。也可以直接使用无需登录的公开安装包：
 
-## Behavior
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-yolo-vibe-0.1.8.tgz
+```
 
-- Adds browser-side UI only; no runtime tools are registered.
-- Buttons are inserted into the compose action bar (`.compose-actions`), so they are bottom-aligned with the existing controls and scroll/move with the compose box.
-- Partially transparent by default; full opacity on compose-box hover/focus or button hover.
-- Sends the prompt to the current chat via the normal `/agent/default/message` backend endpoint.
-- Uses `mode: "auto"`, so Piclaw decides whether to send immediately or queue behind an active run.
-- Does not modify the current compose draft.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Notes
+## 提供的能力
 
-This is intentionally a high-friction-reducing workflow add-on. Use the buttons when you explicitly want the agent to continue autonomously, audit/fix code, or update documentation and push.
+- 入口：`index.ts`
+- 入口：`web/index.ts`
+
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/yolo-vibe/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

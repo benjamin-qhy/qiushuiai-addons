@@ -11,7 +11,7 @@ export default defineConfig({
     ['json', { outputFile: './reports/results.json' }],
   ],
   use: {
-    baseURL: requireDisposableTestTarget(process.env.PICLAW_E2E_URL),
+    baseURL: requireDisposableTestTarget(process.env.QIUSHUIAI_E2E_URL),
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',

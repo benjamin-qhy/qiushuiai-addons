@@ -3,7 +3,7 @@
  *
  * Registers an HTTP route at /eml-viewer/* that serves a self-contained
  * browser preview for message/rfc822 attachments. The page fetches the media
- * payload from piclaw's authenticated /media/:id endpoint and renders the
+ * payload from qiushuiai's authenticated /media/:id endpoint and renders the
  * message body in a read-only viewer.
  */
 
@@ -326,7 +326,7 @@ export function handleRoute(req: Request, pathname: string): Response | null {
 }
 
 export default function emlViewer(pi: any) {
-  const registerRoute = (globalThis as any).__piclaw_registerRoute as
+  const registerRoute = (globalThis as any).__qiushuiai_registerRoute as
     | ((prefix: string, handler: (req: Request, pathname: string) => Response | Promise<Response> | null, extensionPath?: string) => "created" | "updated")
     | undefined;
 
@@ -336,7 +336,7 @@ export default function emlViewer(pi: any) {
       console.log(`[eml-viewer] Route registered: ${ROUTE_PREFIX}/*`);
     }
   } else {
-    console.warn("[eml-viewer] WARNING: __piclaw_registerRoute not available.");
+    console.warn("[eml-viewer] WARNING: __qiushuiai_registerRoute not available.");
   }
 
   void pi;

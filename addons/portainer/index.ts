@@ -1,5 +1,5 @@
 /**
- * piclaw-addon-portainer — Portainer management tool.
+ * qiushuiai-addon-portainer — Portainer management tool.
  *
  * Provides the `portainer` tool for session-scoped API config, ad-hoc requests,
  * and structured endpoint/stack/container/image/network/volume workflows.

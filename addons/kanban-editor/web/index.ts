@@ -3,7 +3,7 @@
 import { createFileConflictMonitor } from './file-conflict-monitor.ts';
 
 const KANBAN_EXTENSION = /\.kanban\.md$/i;
-const ADDON_ASSET_BASE = '/agent/addons/assets/%40rcarmo%2Fpiclaw-addon-kanban-editor/web/vendor';
+const ADDON_ASSET_BASE = '/agent/addons/assets/%40qiushuiai%2Fqiushuiai-addon-kanban-editor/web/vendor';
 const KANBAN_SCRIPT_URL = `${ADDON_ASSET_BASE}/kanban-editor.js?v=0.1.1`;
 const KANBAN_STYLES_URL = `${ADDON_ASSET_BASE}/kanban.css?v=0.1.1`;
 
@@ -27,8 +27,8 @@ function isDarkThemeActive() {
 }
 
 function ensurePreactGlobals() {
-  const runtime = globalThis.__piclawPreactHtm || globalThis.__piclawPreact || null;
-  if (!runtime) throw new Error('piclaw preact runtime not available');
+  const runtime = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact || null;
+  if (!runtime) throw new Error('qiushuiai preact runtime not available');
   const windowAny = window;
   if (!windowAny.preact) {
     windowAny.preact = {
@@ -179,7 +179,7 @@ class KanbanEditorInstance {
         this.pendingContent = null;
       }
 
-      window.addEventListener('piclaw-theme-change', this.themeListener);
+      window.addEventListener('qiushuiai-theme-change', this.themeListener);
       this.initConflictMonitor();
     } catch (error) {
       console.error('[kanban-editor addon] Failed to load kanban editor:', error);
@@ -269,18 +269,18 @@ class KanbanEditorInstance {
     if (this.disposed) return;
     this.disposed = true;
     this.conflictMonitor?.dispose();
-    window.removeEventListener('piclaw-theme-change', this.themeListener);
+    window.removeEventListener('qiushuiai-theme-change', this.themeListener);
     window.__kanbanEditor?.destroy?.();
     this.pendingContent = null;
     this.container.innerHTML = '';
   }
 }
 
-const webApi = globalThis.__piclaw_web;
+const webApi = globalThis.__qiushuiai_web;
 if (webApi && typeof webApi.registerPane === 'function') {
   webApi.registerPane({
     id: 'kanban-editor',
-    label: 'Kanban Board',
+    label: '看板编辑器',
     icon: 'kanban',
     capabilities: ['edit', 'preview'],
     placement: 'tabs',

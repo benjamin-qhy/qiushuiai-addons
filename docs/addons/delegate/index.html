@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>delegate — piclaw-addons</title>
-<meta name="description" content="Delegate tasks to cheaper/faster models with auto model selection, tool access, and MCP support">
-<meta property="og:title" content="delegate — piclaw-addons">
-<meta property="og:description" content="Delegate tasks to cheaper/faster models with auto model selection, tool access, and MCP support">
-<meta property="og:url" content="https://rcarmo.github.io/piclaw-addons/addons/delegate/">
-<meta property="og:image" content="https://rcarmo.github.io/piclaw-addons/assets/og/delegate.png">
+<title>任务委派 — QiushuiAI 插件中心</title>
+<meta name="description" content="将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略">
+<meta property="og:title" content="任务委派 — QiushuiAI 插件中心">
+<meta property="og:description" content="将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略">
+<meta property="og:url" content="https://benjamin-qhy.github.io/qiushuiai-addons/addons/delegate/">
+<meta property="og:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/delegate.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="delegate — piclaw-addons">
-<meta name="twitter:description" content="Delegate tasks to cheaper/faster models with auto model selection, tool access, and MCP support">
-<meta name="twitter:image" content="https://rcarmo.github.io/piclaw-addons/assets/og/delegate.png">
-<link rel="canonical" href="https://rcarmo.github.io/piclaw-addons/addons/delegate/">
+<meta name="twitter:title" content="任务委派 — QiushuiAI 插件中心">
+<meta name="twitter:description" content="将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略">
+<meta name="twitter:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/delegate.png">
+<link rel="canonical" href="https://benjamin-qhy.github.io/qiushuiai-addons/addons/delegate/">
 <script type="text/javascript">
 (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "wipi60y9s3");
 </script>
 <style>
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Inter';src:url('/piclaw-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter';src:url('/qiushuiai-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f0f4ff;--ink:#0f1c2e;--ink-dim:rgba(15,28,46,.6);
@@ -77,13 +77,20 @@ html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:var(
 /* ── Grid ─── */
 .grid{max-width:var(--max-w);margin:0 auto 3rem;padding:0 1.25rem;display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem}
-.card{display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
+.card{position:relative;display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s}
+  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s;overflow:hidden}
 .card:hover{box-shadow:var(--shadow);border-color:var(--accent)}
+.card-core .card-header{padding-right:3.65rem}
 .card-header{display:flex;align-items:center;gap:.85rem}
+.core-bookmark{position:absolute;z-index:1;top:-1px;right:16px;width:48px;height:66px;color:#c81e3a;filter:drop-shadow(0 3px 3px rgba(95,11,21,.3));pointer-events:none}
+.core-bookmark svg{display:block;width:48px;height:66px}
+.core-bookmark-highlight{fill:#ef4764;opacity:.9}
+@media(prefers-color-scheme:dark){.core-bookmark{color:#d52645}}
 .card-icon{width:48px;height:48px;object-fit:contain;flex-shrink:0}
 .card-name{font-family:var(--font-head);font-weight:700;font-size:1.05rem;letter-spacing:-.025em}
+.card-slug,.detail-slug{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);margin-top:.12rem}
+.detail-slug{color:rgba(255,255,255,.72);margin:0}
 .card-sub-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:.18rem}
 .card-version{font-size:.72rem;color:var(--ink-dim);font-family:var(--font-mono)}
 .card-sub-row .owner-row{margin:0}
@@ -209,23 +216,24 @@ footer a{color:var(--accent);text-decoration:none}
 <body>
 
 <nav class="detail-nav">
-  <a href="/piclaw-addons/" class="back">← all add-ons</a>
+  <a href="/qiushuiai-addons/" class="back">← 返回全部插件</a>
 </nav>
 
 <div class="detail-hero">
   <div class="detail-hero-inner">
-    <img class="detail-icon" src="/piclaw-addons/assets/icons/default-00.png" alt="">
+    <img class="detail-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="">
     <div>
       <div class="detail-title-row">
-        <div class="detail-title">delegate</div>
-        <span class="type-badge">extension</span>
-        <span class="type-badge skills">1 skill</span>
+        <div class="detail-title">任务委派</div>
+        <span class="detail-slug">delegate</span>
+        <span class="type-badge">扩展</span>
+        <span class="type-badge skills">1 项技能</span>
       </div>
-      <div class="detail-sub">Delegate tasks to cheaper/faster models with auto model selection, tool access, and MCP support</div>
-      <div class="detail-tags"><span class="badge">cost-optimization</span><span class="badge">delegation</span><span class="badge">multi-model</span></div>
+      <div class="detail-sub">将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略</div>
+      <div class="detail-tags"><span class="badge">任务委派</span><span class="badge">多模型</span><span class="badge">成本优化</span><span class="badge">核心推荐</span></div>
       <div class="detail-meta">
-        <span class="detail-version">v0.1.9</span>
-        <a class="download-pill" href="https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-delegate-0.1.9.tgz" download aria-label="Download delegate 0.1.9 tarball">↓ Download .tgz</a>
+        <span class="detail-version">v0.2.11</span>
+        <a class="download-pill" href="https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-delegate-0.2.11.tgz" download aria-label="下载 任务委派 0.2.11 安装包">↓ 下载 .tgz</a>
 
 
       </div>
@@ -236,156 +244,43 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="detail-body">
   <div class="install-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
-    <span class="install-text">Open <strong>Settings → Add-Ons</strong> and pick <strong>delegate</strong></span>
+    <span class="install-text">打开<strong>设置 → 插件</strong>，选择<strong>任务委派</strong></span>
   </div>
   <div class="install-block source-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    <span class="install-text"><strong>Source:</strong> <a href="https://github.com/rcarmo/piclaw-addons/tree/main/addons/delegate" target="_blank" rel="noopener">addons/delegate</a></span>
+    <span class="install-text"><strong>源代码：</strong><a href="https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/delegate" target="_blank" rel="noopener">addons/delegate</a></span>
   </div>
 
-  <p>Send tasks to a cheaper/faster model in a fresh context with auto model selection, tool access, and MCP support.</p>
-<h2>Features</h2><ul>
-<li><strong>Auto model selection</strong> — picks the best close model match for the task category, never exceeding the current model&#39;s tier</li>
-<li><strong>Provider-aware matching</strong> — searches configured providers for equivalents to the Copilot reference model list while excluding <code>azure-</code> providers. Equal-scoring matches prefer the reference&#39;s <code>github-copilot</code> provider, and auto-selection falls back across providers if a chosen model has no usable credentials (e.g. a stale <code>openai-codex</code> OAuth entry), so one unauthenticated provider cannot keep breaking delegation.</li>
-<li><strong>Settings pane</strong> — searchable provider checkboxes, configurable provider/model exclusions, plus a model-list refresh action</li>
-<li><strong>6 task categories</strong> — quick, summarize, code, analyze, reason, judge</li>
-<li><strong>Tool access</strong> — delegate has read, grep, find, ls, bash, MCP tools by default</li>
-<li><strong>MCP support</strong> — any servers in <code>.pi/mcp.json</code> are available</li>
-<li><strong>Multimodal</strong> — images/PDFs passed as native attachments with automatic tier bumping</li>
-<li><strong>Judge mode</strong> — cross-family second opinion for reviewing agent responses</li>
-<li><strong>Skills</strong> — all <code>.pi/skills/</code> auto-discovered (web-search, etc.)</li>
-<li><strong>Fresh context</strong> — no conversation history, saves tokens</li>
+  <p>将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略</p>
+<h2>功能定位</h2><p>这是 QiushuiAI 的扩展插件，技术标识为 <code>delegate</code>。</p>
+<ul>
+<li>软件包：<code>@qiushuiai/qiushuiai-addon-delegate</code></li>
+<li>当前版本：<code>0.2.11</code></li>
+<li>兼容版本：QiushuiAI <code>&gt;=3.0.0</code></li>
+<li>展示标签：<code>任务委派</code>、<code>多模型</code>、<code>成本优化</code>、<code>核心推荐</code></li>
+<li>推荐级别：核心推荐</li>
 </ul>
-<h2>Install</h2><p>Open <strong>Settings → Add-Ons</strong> and install <strong>delegate</strong> from the catalog.</p>
-<p>Then restart PiClaw. The extension auto-activates itself.</p>
-<h3>Optional: config-based activation</h3><p>You can also add delegate to the default active tools in <code>.piclaw/config.json</code>:</p>
-<div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">json</span><button type="button" class="addon-code-copy-btn" aria-label="Copy code" title="Copy code" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg></span><span class="addon-code-copy-label">Copy</span></button></div><pre><code class="language-json">{
-  &quot;tools&quot;: {
-    &quot;additionalDefaultTools&quot;: [&quot;delegate&quot;]
-  }
-}</code></pre></div><h2>Stress test results</h2><p>Tested on 12-core / 7.5GB container (github-copilot provider):</p>
-<table>
-<thead>
-<tr>
-<th>Concurrency</th>
-<th>Success rate</th>
-<th>Avg latency</th>
-<th>Max latency</th>
-<th>Memory delta</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>100%</td>
-<td>3.6s</td>
-<td>3.6s</td>
-<td>—</td>
-</tr>
-<tr>
-<td>5</td>
-<td>100%</td>
-<td>2.4s</td>
-<td>3.1s</td>
-<td>—</td>
-</tr>
-<tr>
-<td>10</td>
-<td>100%</td>
-<td>2.5s</td>
-<td>3.0s</td>
-<td>+7 MB</td>
-</tr>
-<tr>
-<td>20</td>
-<td>100%</td>
-<td>3.3s</td>
-<td>5.6s</td>
-<td>+3 MB</td>
-</tr>
-<tr>
-<td>30</td>
-<td>100%</td>
-<td>3.8s</td>
-<td>4.6s</td>
-<td>+14 MB</td>
-</tr>
-</tbody></table>
-<p>Safe for up to 20 concurrent calls. Bottleneck is API rate limits, not local resources.</p>
-<h3>Running the stress test</h3><div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">bash</span><button type="button" class="addon-code-copy-btn" aria-label="Copy code" title="Copy code" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg></span><span class="addon-code-copy-label">Copy</span></button></div><pre><code class="language-bash"># Phase 1: basic concurrency (1, 2, 3, 5, 8, 10)
-bun tests/delegate-stress-test.ts
-
-# Phase 2: higher load + memory monitoring (10, 15, 20, 25, 30)
-bun tests/delegate-stress-test-2.ts</code></pre></div><p>This is redundant if using the extension (it self-activates), but useful if you want explicit config control.</p>
-<h2>Quick reference</h2><table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Model picked</th>
-<th>Use for</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>quick</code></td>
-<td>gpt-5.4-mini equivalent (tier 2)</td>
-<td>Formatting, factual Q&amp;A, translation</td>
-</tr>
-<tr>
-<td><code>summarize</code></td>
-<td>gpt-5.4-mini equivalent (tier 2)</td>
-<td>File/note/code summaries</td>
-</tr>
-<tr>
-<td><code>code</code></td>
-<td>claude-sonnet-4.6 equivalent (tier 3)</td>
-<td>Code gen, refactoring</td>
-</tr>
-<tr>
-<td><code>analyze</code></td>
-<td>claude-sonnet-4.6 equivalent (tier 3)</td>
-<td>Code review, debugging</td>
-</tr>
-<tr>
-<td><code>reason</code></td>
-<td>claude-sonnet-4.6 equivalent (tier 3)</td>
-<td>Complex logic — if you need frontier, don&#39;t delegate</td>
-</tr>
-<tr>
-<td><code>judge</code></td>
-<td>Different family than current (tier 3)</td>
-<td>Second opinion, verify, double check</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>Tool profile</th>
-<th>Tools included</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>read_only</code></td>
-<td>read, grep, find, ls, mcp</td>
-</tr>
-<tr>
-<td><code>standard</code> (default)</td>
-<td>read, grep, find, ls, bash, mcp</td>
-</tr>
-<tr>
-<td><code>full</code></td>
-<td>read, grep, find, ls, bash, edit, write, mcp</td>
-</tr>
-</tbody></table>
+<h2>安装</h2><p>在 QiushuiAI 中打开<strong>设置 → 插件</strong>，搜索“任务委派”并安装。也可以直接使用无需登录的公开安装包：</p>
+<div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">text</span><button type="button" class="addon-code-copy-btn" aria-label="复制代码" title="复制代码" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg></span><span class="addon-code-copy-label">复制</span></button></div><pre><code>https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-delegate-0.2.11.tgz</code></pre></div><p>安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。</p>
+<h2>提供的能力</h2><ul>
+<li>入口：<code>index.ts</code></li>
+<li>入口：<code>web/index.ts</code></li>
+<li>技能：<code>skills</code></li>
+<li>技能：<code>delegate</code></li>
+</ul>
+<h2>配置与安全</h2><p>请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。</p>
+<h2>技术资料</h2><p>完整的原始技术说明、配置示例和故障排查资料保存在 <a href="https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/delegate/README.en.md" target="_blank" rel="noopener">英文技术资料</a>。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。</p>
 
 </div>
-<div class="detail-body"><h2>Skills</h2><ul><li><code>delegate</code></li></ul></div>
+<div class="detail-body"><h2>技能</h2><ul><li><code>delegate</code></li></ul></div>
 
 <footer>
-  <div class="footer-links"><a href="/piclaw-addons/">piclaw-addons</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo/piclaw-addons/tree/main/addons/delegate">View source</a></div>
-  <div class="footer-note">PiClaw is not affiliated with <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> — we’re just <em>huge fans</em>.</div>
+  <div class="footer-links"><a href="/qiushuiai-addons/">QiushuiAI 插件中心</a> &nbsp;·&nbsp;
+  <a href="https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/delegate">查看源代码</a></div>
+  <div class="footer-note">QiushuiAI 与 <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> 无隶属关系；插件保留对 Pi 技术协议的兼容。</div>
 </footer>
 <script type="module">
-  import { mountDetail } from '/piclaw-addons/assets/js/addon-island.mjs';
+  import { mountDetail } from '/qiushuiai-addons/assets/js/addon-island.mjs';
   mountDetail('delegate');
 </script>
 </body>

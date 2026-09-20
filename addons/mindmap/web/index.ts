@@ -10,7 +10,7 @@ import type { PaneCapability, PaneContext, PaneInstance, WebPaneExtension } from
 
 const MINDMAP_EXTENSION = /\.mindmap\.ya?ml$/i;
 const OPEN_WORKSPACE_FILE_ACTION = 'open_workspace_file';
-const EXTENSION_UI_REQUEST_EVENT = 'piclaw-extension-ui:request';
+const EXTENSION_UI_REQUEST_EVENT = 'qiushuiai-extension-ui:request';
 let duplicateOpenGuardInstalled = false;
 
 export function normalizeMindmapPanePath(path: unknown): string {
@@ -367,7 +367,7 @@ class MindmapEditorInstance implements PaneInstance {
                 this.lastContent = this.pendingContent;
                 this.pendingContent = null;
             }
-            window.addEventListener('piclaw-theme-change', this.themeListener as EventListener);
+            window.addEventListener('qiushuiai-theme-change', this.themeListener as EventListener);
             this.initConflictMonitor();
         } catch (err) {
             console.error('[mindmap] Failed to load mindmap renderer:', err);
@@ -460,7 +460,7 @@ class MindmapEditorInstance implements PaneInstance {
         if (this.disposed) return;
         this.disposed = true;
         this.conflictMonitor?.dispose();
-        window.removeEventListener('piclaw-theme-change', this.themeListener as EventListener);
+        window.removeEventListener('qiushuiai-theme-change', this.themeListener as EventListener);
         if (this.editorMounted) {
             (window as any).__mindmapEditor?.destroy();
             this.editorMounted = false;
@@ -474,7 +474,7 @@ class MindmapEditorInstance implements PaneInstance {
 
 export const mindmapPaneExtension: WebPaneExtension = {
     id: 'mindmap-editor',
-    label: 'Mindmap Editor',
+    label: '思维导图编辑器',
     icon: 'mindmap',
     capabilities: ['edit', 'preview'] as PaneCapability[],
     placement: 'tabs',
@@ -493,8 +493,8 @@ export const mindmapPaneExtension: WebPaneExtension = {
     },
 };
 
-// Register with piclaw's addon web API
-const __webApiMM = (globalThis as any).__piclaw_web;
+// Register with qiushuiai's addon web API
+const __webApiMM = (globalThis as any).__qiushuiai_web;
 if (__webApiMM && typeof __webApiMM.registerPane === 'function') {
   __webApiMM.registerPane(mindmapPaneExtension);
 }

@@ -89,4 +89,4 @@ bun test addons/a2a/card-security.test.ts addons/a2a/card-cache.test.ts \
 bun addons/a2a/protocol/build-card-fields.ts --check
 ```
 
-Independent offline signature check (test environment only): install `a2a-sdk==1.1.2` and `rfc8785==0.1.4` in an isolated Python environment, then set `PICLAW_A2A_PYTHON` to its executable when running `card-security.test.ts`. No production key or peer is required.
+Independent offline signature check (test environment only): install `a2a-sdk==1.1.2` and `rfc8785==0.1.4` in an isolated Python environment, then set `QIUSHUIAI_A2A_PYTHON` to its executable when running `card-security.test.ts`. No production key or peer is required.

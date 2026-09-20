@@ -1,26 +1,18 @@
 {
-  "name": "@rcarmo/piclaw-addon-imap",
-  "version": "0.1.11",
-  "description": "IMAP email management tool — search/fetch, move/copy, flag, create drafts, file messages, and STARTTLS support",
+  "name": "@qiushuiai/qiushuiai-addon-imap",
+  "version": "0.1.12",
+  "description": "提供邮件搜索、读取、移动、复制、标记、草稿和 STARTTLS 支持",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "imap",
-      "email",
-      "mail",
-      "productivity"
-    ]
-  },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "typebox": "*"
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
@@ -32,5 +24,28 @@
       ]
     }
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/imap/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/imap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/imap"
+  },
+  "qiushuiai": {
+    "displayName": "IMAP 邮件管理",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "imap",
+      "email",
+      "mail",
+      "productivity"
+    ],
+    "displayTags": [
+      "邮件协议",
+      "电子邮件",
+      "邮件",
+      "效率"
+    ],
+    "featured": false
+  }
 }

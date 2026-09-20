@@ -7,6 +7,6 @@ This add-on adapts the idea and core behavior of:
 - **Package:** `@howaboua/pi-vent`
 - **License:** MIT
 
-Piclaw's `vent` add-on is not a byte-for-byte mirror of the upstream package.
-It adds a piclaw settings pane and a configurable output path, while preserving
+QiushuiAI's `vent` add-on is not a byte-for-byte mirror of the upstream package.
+It adds a qiushuiai settings pane and a configurable output path, while preserving
 full attribution and bundling the upstream MIT license text.

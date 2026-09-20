@@ -82,7 +82,7 @@ export function loadCheapskateConfig(): CheapskateConfig {
     return normalized;
   }
 
-  const workspaceDir = process.env.PICLAW_WORKSPACE || "/workspace";
+  const workspaceDir = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
   const legacyPath = join(workspaceDir, ".pi", "cheapskate.json");
   if (existsSync(legacyPath)) {
     try {

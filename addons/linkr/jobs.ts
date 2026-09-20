@@ -40,7 +40,7 @@ interface State {
   jobs: Map<string, Job>;
   pending: Set<string>;
 }
-const key = Symbol.for("piclaw.linkr.jobs.v1");
+const key = Symbol.for("qiushuiai.linkr.jobs.v1");
 const global = globalThis as typeof globalThis & { [key]?: State };
 export const state: State = (global[key] ??= {
   leases: new Map(),

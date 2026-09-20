@@ -1,18 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-dev-tools",
-  "version": "0.1.4",
-  "description": "Developer tools for workspace diagnostics and environment inspection",
+  "name": "@qiushuiai/qiushuiai-addon-dev-tools",
+  "version": "0.1.5",
+  "description": "提供工作区诊断和运行环境检查工具",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "developer",
-      "diagnostics",
-      "environment"
-    ]
-  },
   "agents": {},
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
@@ -20,12 +11,35 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
       "index.ts"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/dev-tools/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/dev-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/dev-tools"
+  },
+  "qiushuiai": {
+    "displayName": "开发工具",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "developer",
+      "diagnostics",
+      "environment"
+    ],
+    "displayTags": [
+      "开发工具",
+      "诊断",
+      "运行环境"
+    ],
+    "featured": false
+  }
 }

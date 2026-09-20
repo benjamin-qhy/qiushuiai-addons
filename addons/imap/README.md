@@ -1,250 +1,35 @@
-# piclaw-addon-imap
+# IMAP 邮件管理
 
-## Install
+提供邮件搜索、读取、移动、复制、标记、草稿和 STARTTLS 支持
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-Open **Settings → Add-Ons** and install **imap** from the catalog.
+这是 QiushuiAI 的扩展插件，技术标识为 `imap`。
 
-IMAP email management addon for piclaw.
+- 软件包：`@qiushuiai/qiushuiai-addon-imap`
+- 当前版本：`0.1.12`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`邮件协议`、`电子邮件`、`邮件`、`效率`
 
-Includes a web settings pane for managing accounts.
+## 安装
 
-![IMAP settings pane on the microVM test instance](./assets/settings-pane-microvm.png)
+在 QiushuiAI 中打开**设置 → 插件**，搜索“IMAP 邮件管理”并安装。也可以直接使用无需登录的公开安装包：
 
-## Features
-
-- list folders
-- search messages
-- fetch envelopes or full message source
-- move/copy messages
-- add/remove IMAP flags
-- create drafts via IMAP `APPEND`
-- file composed messages into arbitrary folders
-- create/delete folders
-- implicit TLS (`993`) or STARTTLS (`143`)
-- SQLite KV account settings + keychain-backed passwords
-- web settings pane for add/edit/delete/default account management
-
-## What it is for
-
-Use this addon when you want Pi to:
-
-- inspect mailboxes over IMAP
-- search and fetch messages
-- file information into folders
-- create drafts without SMTP
-- manage multiple IMAP accounts from one settings pane
-
-It is **not** an SMTP sender or a full mail client.
-
-## Storage model
-
-### SQLite KV store
-Non-secret account settings are stored in the extension SQLite KV store:
-
-- account name
-- host
-- port
-- user
-- from
-- `tls`
-- `starttls`
-- `allowInsecureTls`
-- default account
-
-### Keychain
-Passwords are stored in keychain only:
-
-- `imap/<name>/password`
-
-## Settings pane
-
-The settings pane supports:
-
-- list accounts
-- create account
-- edit account
-- delete account
-- set default account
-- toggle implicit TLS
-- toggle STARTTLS
-- toggle acceptance of untrusted/private/self-signed/expired certs
-
-### Per-account fields
-
-- `name`
-- `host`
-- `port`
-- `user`
-- `password`
-- `from`
-- `tls`
-- `starttls`
-- `allowInsecureTls`
-
-## Security modes
-
-### Implicit TLS
-Use:
-
-- `tls: true`
-- usually port `993`
-
-### STARTTLS
-Use:
-
-- `tls: false`
-- `starttls: true`
-- usually port `143`
-
-### Plain IMAP
-Use:
-
-- `tls: false`
-- `starttls: false`
-
-Only sensible on a trusted LAN.
-
-## Accept untrusted certificates
-
-`allowInsecureTls: true` disables certificate verification for that account.
-
-This covers:
-
-- private CA certificates
-- self-signed certificates
-- expired certificates
-- hostname mismatch
-- broken chains
-
-Use it only when necessary.
-
-## Account management through the tool
-
-In addition to the settings pane, the `imap` tool supports:
-
-- `list_accounts`
-- `get_account`
-- `save_account`
-- `delete_account`
-- `set_default_account`
-
-### Example: save account
-
-```json
-{
-  "action": "save_account",
-  "account": "local",
-  "host": "192.168.1.250",
-  "port": 143,
-  "user": "rcarmo",
-  "pass": "...",
-  "tls": "false",
-  "starttls": "true",
-  "allowInsecureTls": "true",
-  "setDefault": "true"
-}
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-imap-0.1.12.tgz
 ```
 
-## Mailbox actions
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-The same tool also supports:
+## 提供的能力
 
-- `list_folders`
-- `search`
-- `fetch`
-- `move`
-- `copy`
-- `flag`
-- `create_draft`
-- `file_message`
-- `create_folder`
-- `delete_folder`
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-## Examples
+## 配置与安全
 
-### List accounts
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-```json
-{
-  "action": "list_accounts"
-}
-```
+## 技术资料
 
-### Search unread mail
-
-```json
-{
-  "action": "search",
-  "account": "local",
-  "folder": "INBOX",
-  "seen": "false",
-  "limit": 20
-}
-```
-
-### Fetch full source
-
-```json
-{
-  "action": "fetch",
-  "account": "local",
-  "folder": "INBOX",
-  "uids": "12345",
-  "withBody": "true"
-}
-```
-
-### Create draft
-
-```json
-{
-  "action": "create_draft",
-  "account": "local",
-  "draftTo": "someone@example.com",
-  "draftSubject": "Test draft",
-  "draftBody": "Hello from Pi"
-}
-```
-
-## Operational note for the local Synology-style server
-
-In your current local setup:
-
-- IMAPS on `993` was closed
-- IMAP on `143` worked
-- STARTTLS worked
-- strict verification failed because the certificate was expired
-
-So the working temporary config was:
-
-```json
-{
-  "host": "192.168.1.250",
-  "port": 143,
-  "user": "rcarmo",
-  "tls": false,
-  "starttls": true,
-  "allowInsecureTls": true,
-  "from": "rcarmo"
-}
-```
-
-Once the certificate is renewed, `allowInsecureTls` should be set back to `false`.
-
-## Notes
-
-- No SMTP support.
-- This addon cannot send mail; it only manipulates mailboxes over IMAP.
-- Drafts and filed messages are created with IMAP `APPEND`.
-- Mutating actions support `dryRun` where appropriate.
-- `delete_folder` requires `confirm=true`.
-
-## Settings field appearance (0.1.11)
-
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/imap/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

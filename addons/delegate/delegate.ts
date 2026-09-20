@@ -25,7 +25,7 @@ export function getDelegateWorkspaceRoot(
   env: Record<string, string | undefined> = process.env,
   cwd = process.cwd(),
 ): string {
-  const candidate = resolve(env.PICLAW_WORKSPACE || cwd);
+  const candidate = resolve(env.QIUSHUIAI_WORKSPACE || cwd);
   try {
     return realpathSync(candidate);
   } catch {
@@ -214,7 +214,7 @@ export function resolveDelegateCliCommand(options: DelegateCliResolveOptions = {
 
   // Prefer invoking the Pi CLI JS entrypoint through the current runtime. This
   // avoids shebangs like `#!/usr/bin/env node`, so delegate works when Node is
-  // not in PATH and also when Piclaw runs under Bun, Node, or a packaged runtime.
+  // not in PATH and also when QiushuiAI runs under Bun, Node, or a packaged runtime.
   if (execPath) {
     for (const cliPath of candidatePiCliPaths(env, options.resolvePackageCli ?? resolvePackagePiCliPath)) {
       if (exists(cliPath)) return { command: execPath, argsPrefix: [cliPath], label: `${execPath} ${cliPath}` };
@@ -531,7 +531,7 @@ export function validateExplicitDelegateModel(
       model: null,
       approved: false,
       error: runtimeOnly
-        ? `Delegate model ${requestedModel} is available in Piclaw but not executable by the child Pi CLI.`
+        ? `Delegate model ${requestedModel} is available in QiushuiAI but not executable by the child Pi CLI.`
         : `Delegate model ${requestedModel} is not available in the child Pi CLI catalog. Use an exact approved provider/model ID from Delegate settings.`,
     };
   }
@@ -740,7 +740,7 @@ export async function captureRuntimeCatalog(
   // Catalog capture is a passive lifecycle read. ModelRegistry.refresh() is
   // process-wide and network-enabled by default, so invoking it from
   // session_start/model_select blocks session readiness and refreshes every
-  // dynamic provider. Piclaw owns background provider refresh and publishes
+  // dynamic provider. QiushuiAI owns background provider refresh and publishes
   // its last-good availability snapshot synchronously through getAvailable().
   let rawModels: unknown;
   try {
@@ -1120,7 +1120,7 @@ type ToolStatusHintRegistrar = (provider: {
 }) => void;
 
 function registerToolStatusHintProvider(provider: Parameters<ToolStatusHintRegistrar>[0]): void {
-  const fn = (globalThis as Record<string, unknown>).__piclaw_registerToolStatusHintProvider;
+  const fn = (globalThis as Record<string, unknown>).__qiushuiai_registerToolStatusHintProvider;
   if (typeof fn === "function") (fn as ToolStatusHintRegistrar)(provider);
 }
 
@@ -1249,7 +1249,7 @@ async function handleGetModels(refresh = false) {
   };
 }
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi(EXTENSION_ID, "config", {
     get: async () => ({ ok: true, config: loadConfig() }),
@@ -1286,7 +1286,7 @@ export default function (pi: any) {
     "Use `delegate` for self-contained work in a fresh ephemeral Pi context; it has no conversation history.",
     "Delegate can launch only models in its Settings-approved candidate list: an operator-approved provider, an ordered classified model ID, an exact child-CLI executable entry, and no matching exclusion. No providers are approved by default.",
     "Automatic selection never selects above the current model's verified tier.",
-    "The child receives the requested tool profile (read-only, standard, full, or an explicit list); do not assume every installed Piclaw add-on tool is available.",
+    "The child receives the requested tool profile (read-only, standard, full, or an explicit list); do not assume every installed QiushuiAI add-on tool is available.",
     "Pass workspace text files or content-sniffed JPEG, PNG, GIF, WebP, and BMP images in `files`; extract or convert PDF, SVG, archives, audio, video, and other binaries first.",
     "An explicit `model` must be an exact entry in the same approved candidate list; it can bypass automatic tier selection but cannot bypass provider approval, model classification, exclusions, executability, or image-capability validation.",
     "Proactively delegate when a task is self-contained and does not need conversation history.",

@@ -1,102 +1,36 @@
-# @rcarmo/piclaw-addon-vent
+# 工作区反馈日志
 
-Workspace vent-log add-on for piclaw.
+将可配置的工作区反馈日志能力集成到 QiushuiAI
 
-Requires Piclaw `>=2.1.0`.
+## 功能定位
 
-This is an **adapted repackaging** of [pi-vent](https://github.com/IgorWarzocha/pi-vent) by **Igor Warzocha**, released under the **MIT** license. The main addition is a **Settings** pane that lets you choose the output file instead of always writing to `VENT.md`.
+这是 QiushuiAI 的扩展插件，技术标识为 `vent`。
 
-## Attribution
+- 软件包：`@qiushuiai/qiushuiai-addon-vent`
+- 当前版本：`0.1.5`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`反馈`、`反馈日志`、`工作区`、`质量`、`复盘`
 
-| Field | Value |
-|---|---|
-| Original project | [`@howaboua/pi-vent`](https://github.com/IgorWarzocha/pi-vent) |
-| Original author | Igor Warzocha |
-| Original license | MIT |
-| Upstream source snapshot | `vendor/pi-vent/` |
-| Adaptation in this add-on | Configurable output file via Settings → Vent |
+## 安装
 
-The upstream MIT license text is included at:
-- `addons/vent/vendor/pi-vent/LICENSE`
+在 QiushuiAI 中打开**设置 → 插件**，搜索“工作区反馈日志”并安装。也可以直接使用无需登录的公开安装包：
 
-## Install
-
-Open **Settings → Add-Ons** and install **vent** from the catalog.
-
-## What it does
-
-Registers a `vent` tool that appends major-issue feedback to a markdown log in the current workspace.
-
-Use it for things worth remembering:
-- repeated tool failures
-- misleading docs
-- confusing instructions
-- flaky commands
-- avoidable friction that materially slowed the task down
-
-Not for minor annoyances.
-
-## Settings
-
-Open **Settings → Vent** to choose the output file.
-
-![Vent settings pane on the microVM test instance](./assets/settings-pane-microvm.png)
-
-Default:
-- `VENT.md`
-
-Rules:
-- path is **relative to the current workspace**
-- nested paths are allowed, e.g. `notes/vent/VENT.md`
-- missing parent directories are created automatically
-- absolute paths and `..` path escapes are rejected
-
-## Tool
-
-```ts
-vent({
-  thought: string,
-  trigger?: string
-})
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-vent-0.1.5.tgz
 ```
 
-- `thought` — candid feedback, frustration, confusion, or a short postmortem note
-- `trigger` — optional short label, e.g. `tool_error`, `bad_docs`, `confusing_task`
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Storage model
+## 提供的能力
 
-| What | Where |
-|---|---|
-| Output file path | **Runtime database** — extension KV store (SQLite, global scope, extension ID `vent`) |
-| Vent log entries | **Workspace file** — configurable relative path, default `VENT.md` |
+- 入口：`index.ts`
+- 入口：`web/index.ts`
+- 技能：`skills`
 
-## Example output
+## 配置与安全
 
-```md
-## 26-04-30 06:20 — bad_docs
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-The docs were stale and pointed at a path that no longer exists.
-```
+## 技术资料
 
-## Files
-
-```
-addons/vent/
-├── package.json
-├── index.ts
-├── index.test.ts
-├── web/index.ts
-├── compat/extension-kv.ts
-├── skills/vent/SKILL.md
-├── vendor/pi-vent/LICENSE
-├── vendor/pi-vent/README.md
-└── README.md
-```
-
-## Settings field appearance (0.1.4)
-
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/vent/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

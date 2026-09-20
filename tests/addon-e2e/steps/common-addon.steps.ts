@@ -51,7 +51,7 @@ export const steps: StepDefinition[] = [
   {
     pattern: /^I am on the main chat$/,
     async handler(ctx) {
-      await ctx.page.goto(requireDisposableTestTarget(process.env.PICLAW_E2E_URL));
+      await ctx.page.goto(requireDisposableTestTarget(process.env.QIUSHUIAI_E2E_URL));
       await ctx.page.waitForLoadState('domcontentloaded');
       await ctx.page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
     },

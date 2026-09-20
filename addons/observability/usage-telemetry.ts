@@ -19,9 +19,9 @@ const MAX_SPOOL_BYTES = 10 * 1024 * 1024;
 const MAX_SPOOL_AGE_MS = 7 * 24 * 60 * 60_000;
 
 export function messagesDbPath(): string {
-  return process.env.PICLAW_USAGE_TELEMETRY_DB?.trim()
-    || process.env.PICLAW_MESSAGES_DB?.trim()
-    || join(process.env.PICLAW_STORE?.trim() || "/workspace/.piclaw/store", "messages.db");
+  return process.env.QIUSHUIAI_USAGE_TELEMETRY_DB?.trim()
+    || process.env.QIUSHUIAI_MESSAGES_DB?.trim()
+    || join(process.env.QIUSHUIAI_STORE?.trim() || "/workspace/.qiushuiai/store", "messages.db");
 }
 
 export function instanceId(config: UsageTelemetryConfig): string {

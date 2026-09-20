@@ -1,5 +1,5 @@
 /**
- * stealth-browser — Stealth browser automation add-on for Piclaw.
+ * stealth-browser — Stealth browser automation add-on for QiushuiAI.
  *
  * Wraps @mochi.js/core to provide a human-like browser tool that bypasses
  * anti-bot detection. Uses consistent fingerprint profiles, realistic mouse
@@ -40,24 +40,24 @@ const SESSION_IDLE_TIMEOUT_MS = 5 * 60 * 1000; // close after 5 min idle
 function getSessionSeed(): string {
   // Stable seed derived from env — ensures fingerprint consistency across calls.
   // Falls back to a workspace-stable default.
-  return process.env.PICLAW_STEALTH_SEED
+  return process.env.QIUSHUIAI_STEALTH_SEED
     || process.env.HOSTNAME
-    || "piclaw-stealth-default-seed";
+    || "qiushuiai-stealth-default-seed";
 }
 
 function getSessionProfile(): string | undefined {
   // If set, override the auto-detected profile.
-  const profile = (process.env.PICLAW_STEALTH_PROFILE || "").trim();
+  const profile = (process.env.QIUSHUIAI_STEALTH_PROFILE || "").trim();
   return profile || undefined;
 }
 
 function getProxyConfig(): string | undefined {
-  const proxy = (process.env.PICLAW_STEALTH_PROXY || "").trim();
+  const proxy = (process.env.QIUSHUIAI_STEALTH_PROXY || "").trim();
   return proxy || undefined;
 }
 
 function isHeadless(): boolean {
-  const value = (process.env.PICLAW_STEALTH_HEADLESS || "true").trim().toLowerCase();
+  const value = (process.env.QIUSHUIAI_STEALTH_HEADLESS || "true").trim().toLowerCase();
   return value !== "false" && value !== "0" && value !== "off";
 }
 

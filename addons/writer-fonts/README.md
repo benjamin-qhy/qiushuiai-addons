@@ -1,51 +1,35 @@
-# writer-fonts
+# 写作字体
 
-Switch the **document editor** font from a dropdown embedded in the editor
-footer. Built for writing: pick a comfortable reading/writing face and the
-CodeMirror editor updates live.
+在编辑器底栏切换文档字体，并内置多种中西文字体
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-## Fonts
+这是 QiushuiAI 的扩展插件，技术标识为 `writer-fonts`。
 
-| Option | Source | Bundled |
-|--------|--------|---------|
-| **System** | the shipped UI stack (`-apple-system, …, sans-serif`) | no |
-| **Literata** | SIL OFL — Google Fonts | ✅ variable woff2 |
-| **Georgia** | OS serif | no |
-| **Inter** | SIL OFL — rsms / Google Fonts | ✅ variable woff2 |
-| **Noto Sans** | SIL OFL — Google | ✅ variable woff2 |
-| **Noto Sans TC** | SIL OFL — Google (CJK TC) | ✅ variable woff2 |
-| **New Tegomin** | SIL OFL — Google (Japanese serif) | ✅ woff2 |
-| **IBM Plex Sans** | SIL OFL — IBM | ✅ variable woff2 |
+- 软件包：`@qiushuiai/qiushuiai-addon-writer-fonts`
+- 当前版本：`0.2.1`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`编辑器`、`字体`、`排版`、`写作`、`网页界面`
 
-Bundled faces are served from the add-on's own asset route and registered with
-`@font-face`; "System" and "Georgia" use OS fonts and download nothing.
+## 安装
 
-## How it works
+在 QiushuiAI 中打开**设置 → 插件**，搜索“写作字体”并安装。也可以直接使用无需登录的公开安装包：
 
-- A `Font` `<select>` is injected into the document editor status bar.
-- The chosen font is applied **only in Markdown live-preview mode** (the reading
-  surface, tables and frontmatter). In plain/raw view the editor keeps its
-  default monospace font and the dropdown is **disabled**.
-- Live-preview state is read from the editor's own "Live Preview" toggle button
-  (`.active`), mirrored onto a `wf-live` class on `.editor-pane` that scopes the
-  override.
-- The choice persists in `localStorage` under `piclaw_writer_font`.
-- Scope is limited to the in-app document editor; other CodeMirror instances
-  (e.g. the plan sidebar) are left untouched.
-- Code blocks and inline code intentionally stay monospace, even in preview.
-- The picker is injected into `.editor-status-actions`, the status-action area shared by the supported editor frontends.
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-writer-fonts-0.2.1.tgz
+```
 
-## Notes / limitations
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-- Affects the in-app editor. A popped-out editor window is a separate document
-  and is not currently themed by this add-on.
-- The CJK/JP faces are large (Noto Sans TC ≈ 5 MB, New Tegomin ≈ 3.7 MB woff2);
-  they are only fetched when selected.
+## 提供的能力
 
-## License
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-Add-on code: MIT. Bundled fonts are licensed under the **SIL Open Font License
-1.1** — see `fonts/OFL-NOTICE.md` for per-family attribution and upstream
-sources.
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/writer-fonts/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -4,7 +4,6 @@ on:
   workflow_run:
     workflows:
       - "Build & deploy docs + tarballs"
-      - "Publish archive packages to GitHub Packages"
       - "sync-catalog"
       - "validate-metadata"
       - "pages-build-deployment"

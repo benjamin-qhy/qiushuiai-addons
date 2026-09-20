@@ -6,8 +6,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 
-const WORKSPACE_DIR = process.env.PICLAW_WORKSPACE || "/workspace";
-const OUTPUT_DIR = join(WORKSPACE_DIR, ".piclaw", "data", "tool-output");
+const WORKSPACE_DIR = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
+const OUTPUT_DIR = join(WORKSPACE_DIR, ".qiushuiai", "data", "tool-output");
 
 let outputCounter = 0;
 

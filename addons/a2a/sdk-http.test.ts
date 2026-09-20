@@ -20,7 +20,7 @@ import {
 import { createSdkHttpHandler } from "./sdk-http.js";
 import { A2A_PROFILE } from "./profile.js";
 
-// These listeners are ephemeral loopback SDK fixtures. No Piclaw production host,
+// These listeners are ephemeral loopback SDK fixtures. No QiushuiAI production host,
 // model/provider call or installed runtime is used. The host-policy work is A2/C1/C2.
 let server: ReturnType<typeof Bun.serve>;
 let card: AgentCard;

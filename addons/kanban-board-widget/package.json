@@ -1,31 +1,46 @@
 {
-  "name": "@rcarmo/piclaw-addon-kanban-board-widget",
-  "version": "0.1.1",
-  "description": "Interactive kanban board dashboard widget for the web timeline",
+  "name": "@qiushuiai/qiushuiai-addon-kanban-board-widget",
+  "version": "0.1.2",
+  "description": "在 Web 时间线中显示可交互的看板仪表盘",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "ui",
-      "kanban",
-      "widget",
-      "dashboard"
-    ]
-  },
   "agents": {},
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
       "index.ts"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/kanban-board-widget/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/kanban-board-widget",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/kanban-board-widget"
+  },
+  "qiushuiai": {
+    "displayName": "看板组件",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "ui",
+      "kanban",
+      "widget",
+      "dashboard"
+    ],
+    "displayTags": [
+      "界面",
+      "看板",
+      "组件",
+      "仪表盘"
+    ],
+    "featured": false
+  }
 }

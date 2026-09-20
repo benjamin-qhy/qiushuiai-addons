@@ -45,8 +45,8 @@ interface ResolvedProxmoxConfigState {
   source: "session" | "settings" | "merged" | "none";
 }
 
-const DEFAULT_PROXMOX_TOKEN_KEYCHAIN = process.env.PICLAW_PROXMOX_TOKEN_KEYCHAIN?.trim() || "proxmox/piclaw-management-token";
-const DEFAULT_PROXMOX_PORT = process.env.PICLAW_PROXMOX_PORT?.trim() || "8006";
+const DEFAULT_PROXMOX_TOKEN_KEYCHAIN = process.env.QIUSHUIAI_PROXMOX_TOKEN_KEYCHAIN?.trim() || "proxmox/qiushuiai-management-token";
+const DEFAULT_PROXMOX_PORT = process.env.QIUSHUIAI_PROXMOX_PORT?.trim() || "8006";
 const DEFAULT_PROXMOX_SETTINGS: ProxmoxSettingsConfig = {
   host: "",
   base_url: "",
@@ -248,7 +248,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("proxmox", "config", {
     get: async () => handleGetProxmoxSettings(),
@@ -423,7 +423,7 @@ const ProxmoxToolSchema = Type.Object({
   }),
   chat_jid: Type.Optional(Type.String({ description: "Target chat JID. Defaults to the current chat context." })),
   base_url: Type.Optional(Type.String({ description: "Proxmox API base URL, typically ending in /api2/json. Bare hosts/IPs should be configured in the addon settings pane." })),
-  username: Type.Optional(Type.String({ description: "Proxmox API token username, e.g. root@pam!piclaw." })),
+  username: Type.Optional(Type.String({ description: "Proxmox API token username, e.g. root@pam!qiushuiai." })),
   api_token_keychain: Type.Optional(Type.String({ description: "Keychain entry containing the Proxmox API token secret." })),
   allow_insecure_tls: Type.Optional(Type.Boolean({ description: "Allow insecure/self-signed TLS when calling the API." })),
   method: Type.Optional(Type.String({ description: "HTTP method for action=request (GET, POST, PUT, DELETE)." })),

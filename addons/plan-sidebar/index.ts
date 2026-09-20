@@ -33,7 +33,7 @@ export interface StructuredSessionPlan extends SessionPlan {
 
 type PlanUpdateSource = "api" | "tool";
 type PlanUpdateAction = "write" | "edit" | "patch" | "update" | "reset";
-type PiclawBroadcastEvent = (type: string, data: unknown) => void;
+type QiushuiAIBroadcastEvent = (type: string, data: unknown) => void;
 
 const DEFAULT_PLAN = [
   "- [ ] Update this plan thoroughly with ongoing work",
@@ -202,7 +202,7 @@ const planSidebarRuntimeApi: PlanSidebarRuntimeApi = {
   getPlan: getStructuredSessionPlan,
 };
 
-(globalThis as Record<string, unknown>).__piclaw_planSidebarApi = planSidebarRuntimeApi;
+(globalThis as Record<string, unknown>).__qiushuiai_planSidebarApi = planSidebarRuntimeApi;
 
 export function loadSessionPlan(chatJidInput?: unknown): SessionPlan {
   const chat_jid = normalizeChatJid(chatJidInput);
@@ -410,9 +410,9 @@ export function resetSessionPlan(chatJidInput: unknown): SessionPlan {
   return saveSessionPlan(chatJidInput, DEFAULT_PLAN);
 }
 
-function getBroadcastEvent(): PiclawBroadcastEvent | null {
-  const candidate = (globalThis as Record<string, unknown>).__PICLAW_BROADCAST_EVENT__;
-  return typeof candidate === "function" ? candidate as PiclawBroadcastEvent : null;
+function getBroadcastEvent(): QiushuiAIBroadcastEvent | null {
+  const candidate = (globalThis as Record<string, unknown>).__QIUSHUIAI_BROADCAST_EVENT__;
+  return typeof candidate === "function" ? candidate as QiushuiAIBroadcastEvent : null;
 }
 
 function broadcastPlanUpdated(plan: SessionPlan, source: PlanUpdateSource, action: PlanUpdateAction): void {
@@ -451,7 +451,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("plan-sidebar", "plan", {
     get: async (payload, req) => {

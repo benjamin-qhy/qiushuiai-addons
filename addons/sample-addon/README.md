@@ -1,141 +1,35 @@
-# Sample Add-on
+# 插件示例
 
-Starter template for piclaw add-on developers. Demonstrates the core patterns every settings-aware add-on needs.
+展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-## Install
+这是 QiushuiAI 的扩展插件，技术标识为 `sample-addon`。
 
-Open **Settings → Add-Ons** and install **sample-addon** from the catalog.
+- 软件包：`@qiushuiai/qiushuiai-addon-sample-addon`
+- 当前版本：`0.1.12`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`示例`、`模板`、`开发工具`
 
-## What it demonstrates
+## 安装
 
-### 1. Settings pane
+在 QiushuiAI 中打开**设置 → 插件**，搜索“插件示例”并安装。也可以直接使用无需登录的公开安装包：
 
-Registers a **Settings → Sample Addon** pane with:
-
-- browser-side UI in `web/index.ts`
-- direct config reads/writes via `GET` / `POST /agent/addons/api/sample-addon/config`
-- no dependency on internal slash commands
-
-The browser pane is just a local authenticated client of piclaw itself:
-
-```javascript
-await fetch("/agent/addons/api/sample-addon/config");
-await fetch("/agent/addons/api/sample-addon/config", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ enabled: true, greeting: "Hello" }),
-});
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-sample-addon-0.1.12.tgz
 ```
 
-- **Checkbox** — enable/disable toggle
-- **Text field** — a non-secret config value (greeting), auto-saved on blur
-- **Password field** — a secret (API key), saved directly to the keychain with a Save button
-- **Key presence indicator** — ✓/✗ showing whether the keychain entry exists
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-The pane uses the host's `settings-addon-*` field, label, help, control-group
-and status classes. Hosts with the Settings authoring contract from Piclaw #1318
-supply same-skin styling; `web/styles.ts` keeps older supported hosts readable
-using a pane-scoped CSS layer with lower priority than host styles. Configuration
-and keychain behaviour are unchanged. Password and Save remain in the same
-control group; secrets never enter the config API.
+## 提供的能力
 
-![Sample Addon settings pane on a test instance](./assets/settings-pane-microvm.png)
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-### 2. Direct backend config API
+## 配置与安全
 
-The runtime entry registers config handlers directly with piclaw:
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-```typescript
-const registerAddonConfigApi = globalThis.__piclaw_registerAddonConfigApi;
+## 技术资料
 
-registerAddonConfigApi?.("sample-addon", "config", {
-  get: async () => loadConfig(),
-  set: async (payload) => handleSetConfig(payload),
-}, import.meta.dir);
-```
-
-Piclaw lazily loads installed add-on runtime entries on first config request, so the settings pane works without a slash-command bridge.
-
-### 3. Config in the runtime database
-
-All non-secret config is stored in the **extension KV store** (SQLite, global scope):
-
-```typescript
-import { createExtensionStorage } from "./compat/extension-kv.js";
-
-const kv = createExtensionStorage("sample-addon");
-kv.set("config", { enabled: true, greeting: "Hello" }, "global");
-const cfg = kv.get("config", "global");
-```
-
-The compat shim (`compat/extension-kv.ts`) resolves the runtime's KV store automatically. Copy it from this addon when creating a new one.
-
-### 4. Secrets in the keychain
-
-The settings pane saves secrets via `POST /agent/keychain`:
-
-```javascript
-await fetch("/agent/keychain", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ name: "sample-addon/api-key", secret: "sk-...", type: "token" }),
-});
-```
-
-The runtime auto-injects keychain entries as environment variables — `sample-addon/api-key` becomes `$SAMPLE_ADDON_API_KEY` in `process.env` after restart.
-
-### 5. Test tool
-
-The `sample_test` tool returns the configured greeting and whether the secret is present, so you can verify the addon is wired correctly:
-
-```
-> use sample_test
-Greeting: Hello from sample addon!
-Secret configured: yes
-```
-
-### 6. UX test fixture
-
-This add-on includes `tests/features/settings.feature` plus Playwright step definitions under `tests/steps/`.
-The add-on catalog's E2E harness turns those Gherkin scenarios into runnable Playwright tests and, in CI, publishes a PDF/HTML report with the package and add-on page.
-
-The scenarios require the UI to save successfully; their API reads only verify
-persistence, and cannot substitute for a failed UI save. `settings-browser.test.ts`
-also tests mocked config/keychain requests and errors with no live server. From
-the repository root, opt in with `PICLAW_E2E_DISPOSABLE=1`,
-`PICLAW_SETTINGS_CORE_SOURCE=/absolute/path/to/piclaw` and an installed
-`PLAYWRIGHT_BROWSERS_PATH`, then run `bun test addons/sample-addon/settings-browser.test.ts`.
-
-## Storage model
-
-| What | Where |
-|---|---|
-| API key / secret | **Keychain** — entry `sample-addon/api-key` (entered in settings pane) |
-| Enabled, greeting, other config | **Runtime database** — extension KV store (SQLite, global scope, extension ID `sample-addon`) |
-
-No config files are written to disk.
-
-## File structure
-
-```
-addons/sample-addon/
-├── package.json          # Addon manifest
-├── index.ts              # Extension entry: direct config API, KV config, keychain secret, test tool
-├── web/index.ts          # Settings pane: checkbox, text, password, keychain save
-├── web/styles.ts         # Pane-scoped older-host fallback styles
-├── compat/extension-kv.ts # KV store compat shim (copy to your addon)
-├── tests/                # Gherkin UX tests and Playwright step definitions
-└── README.md             # This file
-```
-
-## Using as a template
-
-1. Copy this directory to `addons/your-addon/`
-2. Rename `sample-addon` → `your-addon` in `package.json`, `index.ts`, and `web/index.ts`
-3. Replace the greeting field with your config
-4. Replace the secret keychain entry name
-5. Replace the test tool with your tool
-6. If your add-on exposes a settings pane or other meaningful web UI, capture a screenshot on a test instance and store it under `addons/your-addon/assets/`, then reference it from the README. For Linux environments, prefer an `overlayfs`-based clean fixture, show only the target pane during the screenshot, and restore the state afterward.
-7. Run `bun run scripts/sync-catalog.ts --write` to update the catalog
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/sample-addon/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

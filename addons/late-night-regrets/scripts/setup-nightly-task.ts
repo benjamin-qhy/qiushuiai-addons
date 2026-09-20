@@ -26,7 +26,7 @@ const baseDir = dirname(fileURLToPath(import.meta.url));
 const addonDir = dirname(baseDir);
 const trainScript = join(baseDir, "train-interaction-quality-bayes.ts");
 
-const DEFAULT_DB = `${process.env.PICLAW_STORE || "/workspace/.piclaw/store"}/messages.db`;
+const DEFAULT_DB = `${process.env.QIUSHUIAI_STORE || "/workspace/.qiushuiai/store"}/messages.db`;
 const DEFAULT_CRON = "30 2 * * *";
 const DEFAULT_CHAT = "web:default";
 const TASK_TAG = "late-night-regrets"; // used to find existing task

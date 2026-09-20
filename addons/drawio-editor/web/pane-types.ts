@@ -47,7 +47,7 @@ export interface AddonAttachmentPreviewDefinition {
   note?: string | null;
 }
 
-export interface PiclawWebApi {
+export interface QiushuiAIWebApi {
   registerPane(extension: WebPaneExtension): boolean;
   registerStandaloneTabUrlResolver(
     resolver: (path: string, context?: AddonStandaloneTabUrlContext) => string | null | undefined,

@@ -105,5 +105,5 @@ Network or transport failure can leave input state uncertain.
 
 - A software lease does not prove exclusive physical control.
 - Leases use in-process global state keyed by origin. Different hostname aliases for one device can evade that exclusion.
-- Another Piclaw process, another host, a local keyboard/mouse user, a watchdog reboot, or an out-of-band admin can still interfere.
+- Another QiushuiAI process, another host, a local keyboard/mouse user, a watchdog reboot, or an out-of-band admin can still interfere.
 - Report uncertainty explicitly rather than pretending control is exclusive.

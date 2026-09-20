@@ -2,20 +2,20 @@ import { afterEach, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const previousRegistrar = (globalThis as any).__piclaw_registerAddonConfigApi;
+const previousRegistrar = (globalThis as any).__qiushuiai_registerAddonConfigApi;
 const registrations: any[] = [];
-(globalThis as any).__piclaw_registerAddonConfigApi = (...args: any[]) => { registrations.push(args); return "created"; };
+(globalThis as any).__qiushuiai_registerAddonConfigApi = (...args: any[]) => { registrations.push(args); return "created"; };
 const mod = await import(`./index.ts?test=${Date.now()}`);
 
 afterEach(() => {
-  delete (globalThis as any).__piclawRuntimeInterop;
-  delete process.env.PICLAW_WHATSAPP_PHONE;
-  delete process.env.PICLAW_WHATSAPP_ENABLED;
+  delete (globalThis as any).__qiushuiaiRuntimeInterop;
+  delete process.env.QIUSHUIAI_WHATSAPP_PHONE;
+  delete process.env.QIUSHUIAI_WHATSAPP_ENABLED;
 });
 
-test("manifest declares the supported Piclaw version range", () => {
+test("manifest declares the supported QiushuiAI version range", () => {
   const manifest = JSON.parse(readFileSync(join(import.meta.dir, "package.json"), "utf8"));
-  expect(manifest.piclaw.compatibleVersions).toBe(">=2.0.0");
+  expect(manifest.qiushuiai.compatibleVersions).toBe(">=3.0.0");
   expect(manifest.dependencies?.["@whiskeysockets/baileys"]).toBe("7.0.0-rc14");
   expect(manifest.dependencies?.["qrcode-terminal"]).toBe("0.12.0");
 });
@@ -41,7 +41,7 @@ test("registers the current module-scope config API contract", () => {
 
 test("persists non-secret WhatsApp settings through runtime KV", () => {
   const values = new Map<string, unknown>();
-  (globalThis as any).__piclawRuntimeInterop = {
+  (globalThis as any).__qiushuiaiRuntimeInterop = {
     getExtensionKvStore: () => ({
       get: (_addon: string, key: string) => values.get(key) ?? null,
       set: (_addon: string, key: string, value: unknown) => values.set(key, value),
@@ -53,5 +53,5 @@ test("persists non-secret WhatsApp settings through runtime KV", () => {
   expect(result).toMatchObject({ ok: true, phone: "+351 123", enabled: true, connected: false, pairingCode: null });
 });
 
-if (previousRegistrar === undefined) delete (globalThis as any).__piclaw_registerAddonConfigApi;
-else (globalThis as any).__piclaw_registerAddonConfigApi = previousRegistrar;
+if (previousRegistrar === undefined) delete (globalThis as any).__qiushuiai_registerAddonConfigApi;
+else (globalThis as any).__qiushuiai_registerAddonConfigApi = previousRegistrar;

@@ -1,21 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-office-tools",
-  "version": "0.1.6",
-  "description": "Office document read/write tools for Piclaw (docx, xlsx, pptx, odt, md→pdf)",
+  "name": "@qiushuiai/qiushuiai-addon-office-tools",
+  "version": "0.1.7",
+  "description": "为 QiushuiAI 提供 DOCX、XLSX、PPTX、ODT 和 Markdown 转 PDF 的读写能力",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "office",
-      "documents",
-      "docx",
-      "xlsx",
-      "pptx",
-      "pdf"
-    ]
-  },
   "dependencies": {
     "fflate": "0.8.3",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
@@ -26,12 +14,41 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
       "index.ts"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/office-tools/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/office-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/office-tools"
+  },
+  "qiushuiai": {
+    "displayName": "Office 文档工具",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "office",
+      "documents",
+      "docx",
+      "xlsx",
+      "pptx",
+      "pdf"
+    ],
+    "displayTags": [
+      "办公文档",
+      "文档处理",
+      "Word 文档",
+      "电子表格",
+      "演示文稿",
+      "PDF 文档"
+    ],
+    "featured": false
+  }
 }

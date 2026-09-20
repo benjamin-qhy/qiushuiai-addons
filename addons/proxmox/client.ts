@@ -230,7 +230,7 @@ interface CurlExecutionResult {
 
 type CurlExecutor = (command: string[], timeoutMs?: number) => Promise<CurlExecutionResult>;
 
-const DEFAULT_STATUS_MARKER = "__PICLAW_PROXMOX_STATUS__:";
+const DEFAULT_STATUS_MARKER = "__QIUSHUIAI_PROXMOX_STATUS__:";
 export const DEFAULT_PROXMOX_POLL_MS = 2_000;
 export const DEFAULT_PROXMOX_TIMEOUT_MS = 120_000;
 export const DEFAULT_PROXMOX_REQUEST_TIMEOUT_MS = 15_000;
@@ -259,8 +259,8 @@ async function defaultCurlExecutor(command: string[], timeoutMs = DEFAULT_PROXMO
 }
 
 let curlExecutor: CurlExecutor = defaultCurlExecutor;
-const DEFAULT_PROXMOX_KEYCHAIN = process.env.PICLAW_PROXMOX_TOKEN_KEYCHAIN || "proxmox/piclaw-management-token";
-const DEFAULT_PROXMOX_BASE_URL = process.env.PVE_BASE || process.env.PICLAW_PROXMOX_BASE || "https://192.168.1.10:8006/api2/json";
+const DEFAULT_PROXMOX_KEYCHAIN = process.env.QIUSHUIAI_PROXMOX_TOKEN_KEYCHAIN || "proxmox/qiushuiai-management-token";
+const DEFAULT_PROXMOX_BASE_URL = process.env.PVE_BASE || process.env.QIUSHUIAI_PROXMOX_BASE || "https://192.168.1.10:8006/api2/json";
 
 /** Override/reset the curl executor for tests. */
 export function setProxmoxCurlExecutorForTests(executor: CurlExecutor | null): void {
@@ -536,7 +536,7 @@ export async function resolveProxmoxToken(username: string | undefined, apiToken
 }
 
 export async function discoverProxmoxInstances(defaultConfig?: Partial<Pick<ProxmoxApiConfig, "base_url" | "username" | "api_token_keychain" | "allow_insecure_tls">>): Promise<ProxmoxDiscoveryResult> {
-  const envBase = (process.env.PVE_BASE || process.env.PICLAW_PROXMOX_BASE || "").trim() || null;
+  const envBase = (process.env.PVE_BASE || process.env.QIUSHUIAI_PROXMOX_BASE || "").trim() || null;
   const defaultBaseUrl = defaultConfig?.base_url?.trim() || envBase || null;
   const defaultUsername = defaultConfig?.username?.trim() || "";
   const defaultKeychain = defaultConfig?.api_token_keychain?.trim() || DEFAULT_PROXMOX_KEYCHAIN;

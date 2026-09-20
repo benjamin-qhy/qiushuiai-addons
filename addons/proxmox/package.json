@@ -1,22 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-proxmox",
-  "version": "0.1.10",
-  "description": "Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics",
+  "name": "@qiushuiai/qiushuiai-addon-proxmox",
+  "version": "0.1.11",
+  "description": "提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "proxmox",
-      "infrastructure",
-      "virtualization",
-      "homelab"
-    ],
-    "skills": [
-      "skills/proxmox-guest-compare-chart"
-    ]
-  },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
     "@earendil-works/pi-coding-agent": "*",
@@ -24,7 +11,9 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
@@ -39,5 +28,31 @@
       "skills"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/proxmox/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/proxmox",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/proxmox"
+  },
+  "qiushuiai": {
+    "displayName": "Proxmox 管理",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "proxmox",
+      "infrastructure",
+      "virtualization",
+      "homelab"
+    ],
+    "displayTags": [
+      "Proxmox 管理",
+      "基础设施",
+      "虚拟化",
+      "家庭实验室"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/proxmox-guest-compare-chart"
+    ]
+  }
 }

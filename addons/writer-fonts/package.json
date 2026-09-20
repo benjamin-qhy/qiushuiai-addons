@@ -1,20 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-writer-fonts",
-  "version": "0.2.0",
-  "description": "Switch the document editor font from a dropdown in the editor footer \u2014 bundles Literata, Inter, Noto Sans, Noto Sans TC, New Tegomin and IBM Plex Sans, plus Georgia and the shipped System stack",
+  "name": "@qiushuiai/qiushuiai-addon-writer-fonts",
+  "version": "0.2.1",
+  "description": "在编辑器底栏切换文档字体，并内置多种中西文字体",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "editor",
-      "fonts",
-      "typography",
-      "writing",
-      "web-ui"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -29,13 +18,38 @@
     "@earendil-works/pi-coding-agent": "*"
   },
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
-    "fonts",
     "editor",
+    "fonts",
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
     "typography"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/writer-fonts/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/writer-fonts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/writer-fonts"
+  },
+  "qiushuiai": {
+    "displayName": "写作字体",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "editor",
+      "fonts",
+      "typography",
+      "writing",
+      "web-ui"
+    ],
+    "displayTags": [
+      "编辑器",
+      "字体",
+      "排版",
+      "写作",
+      "网页界面"
+    ],
+    "featured": false
+  }
 }

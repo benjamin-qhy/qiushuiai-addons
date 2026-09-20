@@ -1,6 +1,6 @@
 /**
  * compat/tool-status-hints.ts — Tool status hint registry shim for standalone addons.
- * Matches piclaw's tool-status-hints.ts interface.
+ * Matches qiushuiai's tool-status-hints.ts interface.
  */
 
 export interface ToolStatusHint {

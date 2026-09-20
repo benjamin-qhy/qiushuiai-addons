@@ -1,18 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-code-validator",
-  "version": "0.1.3",
-  "description": "Diagnostics tool for code validation (Python, JS/TS, JSON, extensible via validators.json)",
+  "name": "@qiushuiai/qiushuiai-addon-code-validator",
+  "version": "0.1.4",
+  "description": "提供 Python、JavaScript、TypeScript 和 JSON 诊断，并支持通过 validators.json 扩展",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "diagnostics",
-      "validation",
-      "linting"
-    ]
-  },
   "agents": {},
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
@@ -20,12 +11,35 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
       "index.ts"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/code-validator/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/code-validator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/code-validator"
+  },
+  "qiushuiai": {
+    "displayName": "代码校验",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "diagnostics",
+      "validation",
+      "linting"
+    ],
+    "displayTags": [
+      "诊断",
+      "校验",
+      "代码检查"
+    ],
+    "featured": false
+  }
 }

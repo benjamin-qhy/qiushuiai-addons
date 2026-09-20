@@ -21,7 +21,7 @@ interface MimeMessageOptions {
 function generateMessageId(): string {
 	const rand = Math.random().toString(36).substring(2, 14);
 	const ts = Date.now().toString(36);
-	return `<${ts}.${rand}@piclaw.local>`;
+	return `<${ts}.${rand}@qiushuiai.local>`;
 }
 
 function sanitizeHeaderValue(value: string, field = "header"): string {

@@ -1,5 +1,5 @@
 /**
- * @rcarmo/piclaw-addon-whatsapp — WhatsApp channel addon for PiClaw.
+ * @qiushuiai/qiushuiai-addon-whatsapp — WhatsApp channel addon for QiushuiAI.
  *
  * Connects to WhatsApp Web via Baileys, receives inbound messages,
  * and sends agent responses back through the WhatsApp channel.
@@ -12,10 +12,10 @@ import type { NewMessage } from "./channel-types.js";
 const ADDON_ID = "whatsapp";
 
 function getConfig(): { phone: string; enabled: boolean } {
-  const interop = (globalThis as any).__piclawRuntimeInterop;
+  const interop = (globalThis as any).__qiushuiaiRuntimeInterop;
   const kv = interop?.getExtensionKvStore?.();
-  const phone = process.env.PICLAW_WHATSAPP_PHONE?.trim() || (kv?.get(ADDON_ID, "phone") as string) || "";
-  const enabled = process.env.PICLAW_WHATSAPP_ENABLED === "1" || kv?.get(ADDON_ID, "enabled") === true;
+  const phone = process.env.QIUSHUIAI_WHATSAPP_PHONE?.trim() || (kv?.get(ADDON_ID, "phone") as string) || "";
+  const enabled = process.env.QIUSHUIAI_WHATSAPP_ENABLED === "1" || kv?.get(ADDON_ID, "enabled") === true;
   return { phone, enabled };
 }
 
@@ -31,7 +31,7 @@ export function handleGetConfig() {
 
 export function handleSetConfig(payload: unknown) {
   const body = payload && typeof payload === "object" ? payload as Record<string, unknown> : {};
-  const kv = (globalThis as any).__piclawRuntimeInterop?.getExtensionKvStore?.();
+  const kv = (globalThis as any).__qiushuiaiRuntimeInterop?.getExtensionKvStore?.();
   if (typeof body.phone === "string") kv?.set(ADDON_ID, "phone", body.phone.trim());
   if (typeof body.enabled === "boolean") kv?.set(ADDON_ID, "enabled", body.enabled);
   return { ok: true, ...handleGetConfig() };
@@ -44,7 +44,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi(ADDON_ID, "config", {
     get: async () => handleGetConfig(),
@@ -53,7 +53,7 @@ if (typeof registerAddonConfigApi === "function") {
 }
 
 const register: ExtensionFactory = (pi: ExtensionAPI) => {
-  const interop = (globalThis as any).__piclawRuntimeInterop;
+  const interop = (globalThis as any).__qiushuiaiRuntimeInterop;
 
   // Register channel detector for WhatsApp JIDs
   if (interop?.registerChannelDetector) {
@@ -74,7 +74,7 @@ const register: ExtensionFactory = (pi: ExtensionAPI) => {
       channelPromise = import("./whatsapp.js").then((mod) => {
         const channel = new mod.WhatsAppChannel({
           phoneNumber: phone,
-          assistantName: process.env.PICLAW_ASSISTANT_NAME?.trim() || "Assistant",
+          assistantName: process.env.QIUSHUIAI_ASSISTANT_NAME?.trim() || "Assistant",
           chatJids: () => new Set<string>(),
           onMessage: (chatJid: string, message: NewMessage) => {
             if (!message.is_from_me && interop?.postMessage) {

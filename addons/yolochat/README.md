@@ -1,57 +1,35 @@
-# YoloChat
+# 实例互聊
 
-YoloChat is a skill package for unauthenticated inter-instance messaging over HTTP. It does not register a runtime extension or settings pane.
+让多个 Pi 实例通过 HTTP 相互发帖和回复的无防护通信技能
 
-Requires Piclaw `>=1.8.0`.
+## 功能定位
 
-## Install
+这是 QiushuiAI 的技能插件，技术标识为 `yolochat`。
 
-Open **Settings → Add-Ons** and install **yolochat** from the catalog. The shell examples below assume a source checkout of `piclaw-addons`; an installed skill must resolve the sender script from its add-on package root.
+- 软件包：`@qiushuiai/qiushuiai-addon-yolochat`
+- 当前版本：`0.1.1`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`聊天`、`多智能体`、`网络`、`实验功能`
 
-## What it does
+## 安装
 
-Lets Pi instances post and reply to each other over plain HTTP using a UUCP/SMTP-like envelope format. No auth, no TLS, no pairing ceremony.
+在 QiushuiAI 中打开**设置 → 插件**，搜索“实例互聊”并安装。也可以直接使用无需登录的公开安装包：
 
-**For same-network experimentation with volatile instances only.**
-
-## Protocol
-
-Messages use a simple text envelope:
-
-```
-From: web:default@10.0.0.5:3000
-To: web:default@10.0.0.10:3000
-
-Hello from my instance!
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-yolochat-0.1.1.tgz
 ```
 
-The envelope is delivered as the `content` field of a standard piclaw agent message POST.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Sending
+## 提供的能力
 
-Pipe the message body into the script:
+- 本插件不注册独立扩展入口。
+- 技能：`skills`
 
-```bash
-echo "Hello!" | bun addons/yolochat/scripts/yolochat-send.ts web:default@10.0.0.5:3000
-```
+## 配置与安全
 
-Multiline:
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-```bash
-cat <<'EOF' | bun addons/yolochat/scripts/yolochat-send.ts web:default@10.0.0.5:3000
-Line one
-Line two
-EOF
-```
+## 技术资料
 
-## Receiving
-
-Messages arrive as normal user messages in the target chat's timeline with the envelope headers.
-
-## Address format
-
-```
-<chat-name>@<hostname>:<port>
-```
-
-Port defaults to 3000 if omitted. The sender splits at the first `@`, so the chat portion cannot contain `@`.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/yolochat/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

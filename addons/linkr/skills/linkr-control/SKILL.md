@@ -6,7 +6,7 @@ distribution: public
 
 # Linkr control
 
-Use this skill when Piclaw must interact with a specific machine through a Radxa Linkr KVM and safer direct methods such as SSH, guest agents, or browser automation are unavailable.
+Use this skill when QiushuiAI must interact with a specific machine through a Radxa Linkr KVM and safer direct methods such as SSH, guest agents, or browser automation are unavailable.
 
 See [tool contract](../../docs/tool-contract.md) and [safety rules](../../docs/safety-and-scope.md).
 

@@ -6,7 +6,7 @@ const ADDON_ID = "session-dashboard";
 const API_ACTION = "sessions";
 const DEFAULT_LIMIT = 8;
 const MAX_LIMIT = 12;
-const DEFAULT_MESSAGES_DB = "/workspace/.piclaw/store/messages.db";
+const DEFAULT_MESSAGES_DB = "/workspace/.qiushuiai/store/messages.db";
 
 export interface RecentSessionCard {
   chat_jid: string;
@@ -50,7 +50,7 @@ function clampLimit(value: unknown): number {
 }
 
 function getMessagesDbPath(): string {
-  return process.env.PICLAW_SESSION_DASHBOARD_DB?.trim() || process.env.PICLAW_MESSAGES_DB?.trim() || DEFAULT_MESSAGES_DB;
+  return process.env.QIUSHUIAI_SESSION_DASHBOARD_DB?.trim() || process.env.QIUSHUIAI_MESSAGES_DB?.trim() || DEFAULT_MESSAGES_DB;
 }
 
 function normalizeWhitespace(value: string): string {
@@ -204,7 +204,7 @@ function readLimit(payload: unknown, req: Request): number {
   }
 }
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi(ADDON_ID, API_ACTION, {
     get: async (payload, req) => ({

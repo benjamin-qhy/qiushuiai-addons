@@ -6,13 +6,13 @@ import { closePeerService } from "./runtime-service.js";
 test("direct settings API, client-ID tool and no peer HTTP route registration", async () => {
   const root = mkdtempSync(join(tmpdir(), "iroh-settings-"));
   const global = globalThis as any;
-  const oldRuntime = global.__piclaw_runtime,
-    oldRegister = global.__piclaw_registerAddonConfigApi;
+  const oldRuntime = global.__qiushuiai_runtime,
+    oldRegister = global.__qiushuiai_registerAddonConfigApi;
   const apis = new Map();
   const tools = new Map();
   let transports = 0,
     routes = 0;
-  global.__piclaw_runtime = {
+  global.__qiushuiai_runtime = {
     lifecycle: { version: 1, onShutdown: () => () => {} },
     messaging: {
       version: 1,
@@ -31,7 +31,7 @@ test("direct settings API, client-ID tool and no peer HTTP route registration", 
       },
     },
   };
-  global.__piclaw_registerAddonConfigApi = (
+  global.__qiushuiai_registerAddonConfigApi = (
     _id: string,
     action: string,
     handlers: any,
@@ -67,8 +67,8 @@ test("direct settings API, client-ID tool and no peer HTTP route registration", 
     ).rejects.toThrow("Unknown");
   } finally {
     await closePeerService();
-    global.__piclaw_runtime = oldRuntime;
-    global.__piclaw_registerAddonConfigApi = oldRegister;
+    global.__qiushuiai_runtime = oldRuntime;
+    global.__qiushuiai_registerAddonConfigApi = oldRegister;
     rmSync(root, { recursive: true, force: true });
   }
 });

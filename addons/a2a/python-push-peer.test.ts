@@ -8,7 +8,7 @@ import { A2aPushWorker } from "./push-worker.js";
 import type { A2aConfig } from "./config.js";
 import type { OperationAdapter } from "./runtime-api.js";
 const enabled =
-  process.env.PICLAW_E2E_DISPOSABLE === "1" && !!process.env.PICLAW_A2A_PYTHON;
+  process.env.QIUSHUIAI_E2E_DISPOSABLE === "1" && !!process.env.QIUSHUIAI_A2A_PYTHON;
 (enabled ? test : test.skip)(
   "independent Python SDK push CRUD delivers authenticated StreamResponse without task polling",
   async () => {
@@ -123,7 +123,7 @@ const enabled =
     try {
       const child = Bun.spawn(
         [
-          process.env.PICLAW_A2A_PYTHON!,
+          process.env.QIUSHUIAI_A2A_PYTHON!,
           new URL("./python-push-peer.py", import.meta.url).pathname,
           server.url.href.replace(/\/$/, ""),
           sink.url.href.replace(/\/$/, ""),

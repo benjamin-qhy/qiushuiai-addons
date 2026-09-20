@@ -177,7 +177,7 @@ const defaultRequestExecutor: RequestExecutor = async ({ url, method, headers, b
 };
 
 let requestExecutor: RequestExecutor = defaultRequestExecutor;
-const DEFAULT_PORTAINER_KEYCHAIN = process.env.PICLAW_PORTAINER_KEYCHAIN || "portainer/relay";
+const DEFAULT_PORTAINER_KEYCHAIN = process.env.QIUSHUIAI_PORTAINER_KEYCHAIN || "portainer/relay";
 
 export function setPortainerRequestExecutorForTests(executor: RequestExecutor | null): void {
   requestExecutor = executor ?? defaultRequestExecutor;
@@ -530,7 +530,7 @@ export async function resolvePortainerAuth(apiTokenKeychain: string): Promise<Po
 }
 
 export async function discoverPortainerInstances(defaultConfig?: Partial<Pick<PortainerApiConfig, "base_url" | "api_token_keychain" | "allow_insecure_tls">>): Promise<PortainerDiscoveryResult> {
-  const envBase = (process.env.PICLAW_PORTAINER_BASE || process.env.PORTAINER_BASE || "").trim() || null;
+  const envBase = (process.env.QIUSHUIAI_PORTAINER_BASE || process.env.PORTAINER_BASE || "").trim() || null;
   const defaultBaseUrl = defaultConfig?.base_url?.trim() || envBase || null;
   const defaultKeychain = defaultConfig?.api_token_keychain?.trim() || DEFAULT_PORTAINER_KEYCHAIN;
   const defaultAllowInsecureTls = defaultConfig?.allow_insecure_tls ?? true;

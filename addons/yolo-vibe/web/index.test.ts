@@ -10,9 +10,9 @@ import {
 
 test("yolo-vibe defines the requested quick prompts", () => {
   expect(YOLO_VIBE_BUTTONS).toEqual([
-    { id: "continue", label: "Continue", prompt: "continue, according to plan" },
-    { id: "audit", label: "Audit", prompt: "audit for code smells and logic errors, fixing as you go" },
-    { id: "docs", label: "Docs", prompt: "review and update all documentation, then commit and push" },
+    { id: "continue", label: "继续", prompt: "continue, according to plan" },
+    { id: "audit", label: "审计", prompt: "audit for code smells and logic errors, fixing as you go" },
+    { id: "docs", label: "文档", prompt: "review and update all documentation, then commit and push" },
   ]);
 });
 

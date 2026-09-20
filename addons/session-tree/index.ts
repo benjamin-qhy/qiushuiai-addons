@@ -1,7 +1,7 @@
 /*
- * session-tree/index.ts — Interactive renderer for Piclaw's /tree snapshot.
+ * session-tree/index.ts — Interactive renderer for QiushuiAI's /tree snapshot.
  *
- * Piclaw core owns command parsing, snapshot extraction, and navigation. This
+ * QiushuiAI core owns command parsing, snapshot extraction, and navigation. This
  * add-on owns the complete interactive renderer and never fetches tree data.
  */
 
@@ -158,7 +158,7 @@ function safeJson(value: unknown): string {
     .replace(/\u2029/g, "\\u2029");
 }
 
-/** Build the self-contained HTML fragment consumed by Piclaw's generic widget host. */
+/** Build the self-contained HTML fragment consumed by QiushuiAI's generic widget host. */
 export function buildTreeWidgetHtml(snapshot: unknown, chatJid: string): string {
   const model = buildSessionTreeModel(snapshot);
   return `<style>
@@ -314,11 +314,11 @@ function render() {
 }
 function submitTreeCommand(command) {
   const status = document.getElementById('st-status');
-  if (!window.piclawWidget || typeof window.piclawWidget.submit !== 'function') {
+  if (!window.qiushuiaiWidget || typeof window.qiushuiaiWidget.submit !== 'function') {
     if (status) { status.className = 'st-status error'; status.textContent = 'Widget bridge unavailable.'; }
     return;
   }
-  window.piclawWidget.submit({ text: command });
+  window.qiushuiaiWidget.submit({ text: command });
   if (status) { status.className = 'st-status'; status.textContent = 'Sent ' + command; }
 }
 document.getElementById('st-search').addEventListener('input', event => { filterText = event.currentTarget.value || ''; render(); });
@@ -332,14 +332,14 @@ requestAnimationFrame(() => document.querySelector('.st-row.active, .st-row.sele
 }
 
 export default function sessionTreeAddon(_pi: unknown): void {
-  const register = (globalThis as Record<string, unknown>).__piclaw_registerWidgetKind;
+  const register = (globalThis as Record<string, unknown>).__qiushuiai_registerWidgetKind;
   if (typeof register === "function") {
     (register as (kind: string, renderer: (artifact: Record<string, unknown>) => string) => void)(
       "session_tree",
       (artifact) => buildTreeWidgetHtml(artifact.tree, cleanId(artifact.chatJid)),
     );
-    console.log("[session-tree] Widget kind 'session_tree' registered via __piclaw_registerWidgetKind.");
+    console.log("[session-tree] Widget kind 'session_tree' registered via __qiushuiai_registerWidgetKind.");
   } else {
-    console.warn("[session-tree] __piclaw_registerWidgetKind not available — tree widget will use text fallback.");
+    console.warn("[session-tree] __qiushuiai_registerWidgetKind not available — tree widget will use text fallback.");
   }
 }

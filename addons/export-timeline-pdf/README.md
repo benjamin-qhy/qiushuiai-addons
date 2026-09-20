@@ -1,30 +1,35 @@
-# piclaw-addon-export-timeline-pdf
+# 导出时间线 PDF
 
-Export chat timelines to PDF with inline avatars and referenced message pills.
+将聊天时间线导出为 PDF，并保留头像和引用消息标记
 
-Requires Piclaw `>=2.3.0`.
+## 功能定位
 
-## Features
+这是 QiushuiAI 的技能插件，技术标识为 `export-timeline-pdf`。
 
-- Exports any chat timeline range to a self-contained HTML sidecar, then renders that local file to PDF via `wkhtmltopdf`
-- Inlines agent/user avatars as base64 data URIs (no broken images in PDF)
-- Renders `message:NNN` references as styled pills with author + preview
-- Supports light/dark themes, date ranges, row ranges, and last-N filters
-- Read-only — never opens SQLite, writes auth state, or passes bearer tokens to `wkhtmltopdf`
+- 软件包：`@qiushuiai/qiushuiai-addon-export-timeline-pdf`
+- 当前版本：`0.1.2`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`导出`、`PDF 文档`、`时间线`
 
-## Requirements
+## 安装
 
-- `wkhtmltopdf` installed and on PATH
-- Piclaw web server running locally
+在 QiushuiAI 中打开**设置 → 插件**，搜索“导出时间线 PDF”并安装。也可以直接使用无需登录的公开安装包：
 
-## Usage
-
-The agent uses the `export-timeline-pdf` skill automatically when asked to export a timeline to PDF.
-
-Manual invocation:
-
-```bash
-bun <addon-path>/scripts/export-timeline-pdf.ts --chat web:default --last 50
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-export-timeline-pdf-0.1.2.tgz
 ```
 
-See the skill SKILL.md for full option reference.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
+
+## 提供的能力
+
+- 本插件不注册独立扩展入口。
+- 技能：`skills`
+
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/export-timeline-pdf/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

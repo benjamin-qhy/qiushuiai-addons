@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 
 // Browser binary and core CSS are explicit local fixture dependencies, never a live URL.
 const enabled =
-  process.env.PICLAW_E2E_DISPOSABLE === "1" &&
-  !!process.env.PICLAW_A2A_CORE_SOURCE;
+  process.env.QIUSHUIAI_E2E_DISPOSABLE === "1" &&
+  !!process.env.QIUSHUIAI_A2A_CORE_SOURCE;
 const browserTest = enabled ? test : test.skip;
 let browser: any,
   server: ReturnType<typeof Bun.serve>,
@@ -23,7 +23,7 @@ const empty = {
 };
 beforeAll(async () => {
   if (!enabled) return;
-  const core = process.env.PICLAW_A2A_CORE_SOURCE!;
+  const core = process.env.QIUSHUIAI_A2A_CORE_SOURCE!;
   const { chromium } = await import(
     join(core, "node_modules/playwright/index.mjs")
   );
@@ -39,7 +39,7 @@ beforeAll(async () => {
   const shim = join(root, "shim.ts");
   await Bun.write(
     shim,
-    `import {h,render} from ${JSON.stringify(preact + "/dist/preact.module.js")};import {useEffect,useState} from ${JSON.stringify(preact + "/hooks/dist/hooks.module.js")};import htm from ${JSON.stringify(htm + "/dist/htm.module.js")};window.__piclawPreactHtm={html:htm.bind(h),useEffect,useState};window.__piclaw_web={registerSettingsPane(p){if(!p.component)throw new Error('Host requires component');render(h(p.component),document.getElementById('app'));}};await import('/settings.js');`,
+    `import {h,render} from ${JSON.stringify(preact + "/dist/preact.module.js")};import {useEffect,useState} from ${JSON.stringify(preact + "/hooks/dist/hooks.module.js")};import htm from ${JSON.stringify(htm + "/dist/htm.module.js")};window.__qiushuiaiPreactHtm={html:htm.bind(h),useEffect,useState};window.__qiushuiai_web={registerSettingsPane(p){if(!p.component)throw new Error('Host requires component');render(h(p.component),document.getElementById('app'));}};await import('/settings.js');`,
   );
   const compiled = await Bun.build({
     entrypoints: [shim],
@@ -171,7 +171,7 @@ for (const skin of ["classic", "visual"])
             .waitFor();
           expect(saved.at(-1).enabled).toBe(false);
           expect(errors).toEqual([]);
-          const out = process.env.PICLAW_A2A_EVIDENCE_DIR;
+          const out = process.env.QIUSHUIAI_A2A_EVIDENCE_DIR;
           if (out) {
             mkdirSync(out, { recursive: true });
             await page.screenshot({

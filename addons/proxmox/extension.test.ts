@@ -18,13 +18,13 @@ describe("proxmox settings helpers", () => {
     expect(deriveProxmoxHostInput("https://borg.local:8006/api2/json")).toBe("borg.local");
   });
 
-  test("compat shims do not import piclaw runtime source modules", () => {
+  test("compat shims do not import qiushuiai runtime source modules", () => {
     const kvSource = readFileSync(resolve(addonDir, "compat", "extension-kv.ts"), "utf8");
     const keychainSource = readFileSync(resolve(addonDir, "compat", "keychain.ts"), "utf8");
     expect(kvSource).not.toContain("require(");
-    expect(kvSource).not.toContain("piclaw/runtime/src");
+    expect(kvSource).not.toContain("qiushuiai/runtime/src");
     expect(keychainSource).not.toContain("require(");
-    expect(keychainSource).not.toContain("piclaw/runtime/src");
+    expect(keychainSource).not.toContain("qiushuiai/runtime/src");
   });
 
   test("tool schema uses Google-compatible string enums", () => {

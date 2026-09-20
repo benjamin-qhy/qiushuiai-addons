@@ -3,7 +3,7 @@ import { settingsStyles } from "./styles.ts";
 const ADDON_ID = "delegate";
 const API = `/agent/addons/api/${ADDON_ID}`;
 
-const preactHtm = globalThis.__piclawPreactHtm || globalThis.__piclawPreact || null;
+const preactHtm = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact || null;
 const html = preactHtm?.html;
 const useState = preactHtm?.useState;
 const useEffect = preactHtm?.useEffect;
@@ -190,7 +190,7 @@ function DelegateSettings() {
       <section class="settings-addon-section">
       <h4>Approved providers</h4>
       <p class="settings-addon-help" id="delegate-provider-help">
-        No provider is approved by default. Delegate can launch models only from providers marked <strong>Approved</strong>. Runtime-only Piclaw models are diagnostic only and cannot be selected.
+        No provider is approved by default. Delegate can launch models only from providers marked <strong>Approved</strong>. Runtime-only QiushuiAI models are diagnostic only and cannot be selected.
       </p>
       <div class="settings-addon-field">
         <label class="settings-addon-label" for="delegate-provider-filter">Filter providers</label>
@@ -255,7 +255,7 @@ function DelegateSettings() {
       <section class="settings-addon-section">
       <h4>Catalog differences and rejections</h4>
       <p class="settings-addon-help">
-        Runtime-only models are known to Piclaw but not executable by the child CLI. Rejected CLI models cannot be used by Delegate because their provider is unapproved, the model is excluded, or the model is unclassified.
+        Runtime-only models are known to QiushuiAI but not executable by the child CLI. Rejected CLI models cannot be used by Delegate because their provider is unapproved, the model is excluded, or the model is unclassified.
       </p>
       <div class="delegate-scroll" style="max-height:190px">
         ${runtimeOnlyModels.length === 0 && rejectedModels.length === 0 && html`<p class="settings-addon-help">No catalog differences or rejected models.</p>`}
@@ -276,14 +276,14 @@ function DelegateSettings() {
 try {
   if (HAS_RUNTIME) {
     let reg, notify;
-    const registry = globalThis.__piclawSettingsPaneRegistry;
+    const registry = globalThis.__qiushuiaiSettingsPaneRegistry;
     if (registry) { reg = registry.registerSettingsPane; notify = registry.notifySettingsPanesChanged; }
-    if (!reg && globalThis.__piclaw_web?.registerSettingsPane) {
-      reg = globalThis.__piclaw_web.registerSettingsPane;
-      notify = () => globalThis.dispatchEvent?.(new CustomEvent("piclaw:settings-panes-changed"));
+    if (!reg && globalThis.__qiushuiai_web?.registerSettingsPane) {
+      reg = globalThis.__qiushuiai_web.registerSettingsPane;
+      notify = () => globalThis.dispatchEvent?.(new CustomEvent("qiushuiai:settings-panes-changed"));
     }
     if (reg) {
-      reg({ id: ADDON_ID, label: "Delegate", icon: ICON, component: DelegateSettings, order: 169 });
+      reg({ id: ADDON_ID, label: "任务委派", icon: ICON, component: DelegateSettings, order: 169 });
       notify?.();
     }
   }

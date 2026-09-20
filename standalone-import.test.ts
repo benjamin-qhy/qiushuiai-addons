@@ -14,10 +14,10 @@ afterEach(() => {
 });
 
 async function importStandaloneAddon(slug: "a2a" | "autoresearch" | "cheapskate" | "codex-conversion" | "delegate" | "drawio-editor" | "editable-table" | "goal" | "image-processing" | "imap" | "kanban-editor" | "lite-term" | "m365" | "mindmap" | "observability" | "office-tools" | "office-viewer" | "plan-sidebar" | "portainer" | "proxmox" | "remote-peer" | "session-tree" | "skill-model-effort" | "smart-compaction" | "vent" | "voice-pipeline" | "win-ui" | "yolo-vibe") {
-  const tempRoot = mkdtempSync(join(tmpdir(), `piclaw-addon-${slug}-`));
+  const tempRoot = mkdtempSync(join(tmpdir(), `qiushuiai-addon-${slug}-`));
   tempDirs.push(tempRoot);
 
-  const packageDir = join(tempRoot, `piclaw-addon-${slug}`);
+  const packageDir = join(tempRoot, `qiushuiai-addon-${slug}`);
   cpSync(join(repoDir, "addons", slug), packageDir, { recursive: true });
 
   const manifestPath = join(packageDir, "package.json");
@@ -45,7 +45,7 @@ async function importStandaloneAddon(slug: "a2a" | "autoresearch" | "cheapskate"
   return import(pathToFileURL(join(packageDir, manifest.main || "index.ts")).href);
 }
 
-test("standalone piclaw-addon-a2a imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-a2a imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("a2a");
   expect(typeof mod.default).toBe("function");
   const tools: Array<{ execute: (...args: any[]) => Promise<any> }> = [];
@@ -53,80 +53,80 @@ test("standalone piclaw-addon-a2a imports outside the monorepo root", async () =
   expect((await tools[0].execute("test", { action: "status" })).details).toMatchObject({ enabled: false, networkActive: false });
 }, 120_000);
 
-test("standalone piclaw-addon-autoresearch imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-autoresearch imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("autoresearch");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-cheapskate imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-cheapskate imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("cheapskate");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-codex-conversion imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-codex-conversion imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("codex-conversion");
   expect(typeof mod.default).toBe("function");
 }, 300_000);
 
-test("standalone piclaw-addon-delegate imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-delegate imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("delegate");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-drawio-editor imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-drawio-editor imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("drawio-editor");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-editable-table imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-editable-table imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("editable-table");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-goal imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-goal imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("goal");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-image-processing imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-image-processing imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("image-processing");
   expect(typeof mod.default).toBe("function");
 }, 120_000);
 
-test("standalone piclaw-addon-imap imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-imap imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("imap");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-kanban-editor imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-kanban-editor imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("kanban-editor");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-lite-term imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-lite-term imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("lite-term");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-m365 imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-m365 imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("m365");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-mindmap imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-mindmap imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("mindmap");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-observability imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-observability imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("observability");
   expect(typeof mod.default).toBe("function");
 }, 120_000);
 
-test("standalone piclaw-addon-office-tools imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-office-tools imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("office-tools");
   expect(typeof mod.default).toBe("function");
-  const workspace = mkdtempSync(join(tmpdir(), "piclaw-office-tools-roundtrip-"));
+  const workspace = mkdtempSync(join(tmpdir(), "qiushuiai-office-tools-roundtrip-"));
   tempDirs.push(workspace);
   const markdown = "# Inventory\n\n| Item | Count |\n| --- | ---: |\n| Widget | 3 |";
 
@@ -143,62 +143,62 @@ test("standalone piclaw-addon-office-tools imports outside the monorepo root", a
   expect(docxRead.content[0]?.text).toContain("Inventory");
 }, 120_000);
 
-test("standalone piclaw-addon-office-viewer imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-office-viewer imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("office-viewer");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-plan-sidebar imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-plan-sidebar imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("plan-sidebar");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-portainer imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-portainer imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("portainer");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-proxmox imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-proxmox imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("proxmox");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-remote-peer imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-remote-peer imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("remote-peer");
   expect(typeof mod.default).toBe("function");
 }, 120_000);
 
-test("standalone piclaw-addon-session-tree imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-session-tree imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("session-tree");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-skill-model-effort imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-skill-model-effort imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("skill-model-effort");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-smart-compaction imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-smart-compaction imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("smart-compaction");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-vent imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-vent imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("vent");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-voice-pipeline imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-voice-pipeline imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("voice-pipeline");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-win-ui imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-win-ui imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("win-ui");
   expect(typeof mod.default).toBe("function");
 });
 
-test("standalone piclaw-addon-yolo-vibe imports outside the monorepo root", async () => {
+test("standalone qiushuiai-addon-yolo-vibe imports outside the monorepo root", async () => {
   const mod = await importStandaloneAddon("yolo-vibe");
   expect(typeof mod.default).toBe("function");
 });

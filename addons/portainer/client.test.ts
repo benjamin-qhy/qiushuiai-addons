@@ -9,12 +9,12 @@ import { listKeychainEntries } from "./compat/keychain.js";
 
 afterEach(() => {
   setPortainerRequestExecutorForTests(null);
-  delete (globalThis as { __piclawRuntimeInterop?: unknown }).__piclawRuntimeInterop;
+  delete (globalThis as { __qiushuiaiRuntimeInterop?: unknown }).__qiushuiaiRuntimeInterop;
 });
 
 describe("portainer client auth", () => {
   test("listKeychainEntries preserves canonical names from runtime metadata", () => {
-    (globalThis as { __piclawRuntimeInterop?: { listKeychainEntries?: () => unknown } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { listKeychainEntries?: () => unknown } }).__qiushuiaiRuntimeInterop = {
       listKeychainEntries: () => [
         { name: "portainer/relay", type: "token" },
         { name: "portainer/relay", type: "token" },
@@ -29,7 +29,7 @@ describe("portainer client auth", () => {
   });
 
   test("resolvePortainerAuth reads the token secret from keychain", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -44,7 +44,7 @@ describe("portainer client auth", () => {
   });
 
   test("resolvePortainerAuth unwraps a nested keychain entry JSON secret", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -64,7 +64,7 @@ describe("portainer client auth", () => {
   });
 
   test("requestPortainerApi prefers the configured base URL over legacy keychain username data", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -106,7 +106,7 @@ describe("portainer client auth", () => {
   });
 
   test("requestPortainerApi extracts the token from mixed-output keychain payloads", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -145,7 +145,7 @@ describe("portainer client auth", () => {
   });
 
   test("requestPortainerApi times out hung request executors", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -170,7 +170,7 @@ describe("portainer client auth", () => {
   });
 
   test("requestPortainerApi passes normalized timeouts to request executors", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",

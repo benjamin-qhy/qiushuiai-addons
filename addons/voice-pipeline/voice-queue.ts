@@ -1,5 +1,5 @@
 /**
- * VoiceQueue — serialises voice requests through the running piclaw agent.
+ * VoiceQueue — serialises voice requests through the running qiushuiai agent.
  *
  *   voice transcript → sendMessage() → agent_end → response text
  *

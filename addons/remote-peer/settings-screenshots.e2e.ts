@@ -5,15 +5,15 @@ import { tmpdir } from "node:os";
 import { createRequire } from "node:module";
 import { PeerService } from "./service.js";
 
-if (process.env.PICLAW_E2E_DISPOSABLE !== "1")
+if (process.env.QIUSHUIAI_E2E_DISPOSABLE !== "1")
   throw new Error(
-    "Set PICLAW_E2E_DISPOSABLE=1 for the owned screenshot fixture.",
+    "Set QIUSHUIAI_E2E_DISPOSABLE=1 for the owned screenshot fixture.",
   );
-const executablePath = process.env.PICLAW_E2E_BROWSER,
-  output = process.env.PICLAW_E2E_SCREENSHOT_DIR;
+const executablePath = process.env.QIUSHUIAI_E2E_BROWSER,
+  output = process.env.QIUSHUIAI_E2E_SCREENSHOT_DIR;
 if (!executablePath || !output)
   throw new Error(
-    "Set PICLAW_E2E_BROWSER and explicit PICLAW_E2E_SCREENSHOT_DIR.",
+    "Set QIUSHUIAI_E2E_BROWSER and explicit QIUSHUIAI_E2E_SCREENSHOT_DIR.",
   );
 const outputDir = resolve(output);
 if (!outputDir.endsWith("/addons/remote-peer/assets"))
@@ -58,7 +58,7 @@ try {
   const shim = join(root, "entry.js");
   await Bun.write(
     shim,
-    `import * as preact from ${JSON.stringify(require.resolve("preact").replace("preact.js", "preact.module.js"))};import * as hooks from ${JSON.stringify(require.resolve("preact/hooks").replace("hooks.js", "hooks.module.js"))};import htm from ${JSON.stringify(require.resolve("htm"))};globalThis.__piclawPreactHtm={html:htm.bind(preact.h),...hooks};globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component})=>preact.render(preact.h(component),document.getElementById('app')),notifySettingsPanesChanged:()=>{}};await import(${JSON.stringify(join(import.meta.dir, "web/index.ts"))});`,
+    `import * as preact from ${JSON.stringify(require.resolve("preact").replace("preact.js", "preact.module.js"))};import * as hooks from ${JSON.stringify(require.resolve("preact/hooks").replace("hooks.js", "hooks.module.js"))};import htm from ${JSON.stringify(require.resolve("htm"))};globalThis.__qiushuiaiPreactHtm={html:htm.bind(preact.h),...hooks};globalThis.__qiushuiaiSettingsPaneRegistry={registerSettingsPane:({component})=>preact.render(preact.h(component),document.getElementById('app')),notifySettingsPanesChanged:()=>{}};await import(${JSON.stringify(join(import.meta.dir, "web/index.ts"))});`,
   );
   const built = await Bun.build({
     entrypoints: [shim],

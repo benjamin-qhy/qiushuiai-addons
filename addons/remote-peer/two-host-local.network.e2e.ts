@@ -4,16 +4,16 @@ import { join } from "node:path";
 import { PeerService } from "./service.js";
 import { requireOwnedFixtureRoot, writeEvidence } from "./fixture-ownership.js";
 if (
-  process.env.PICLAW_E2E_DISPOSABLE !== "1" ||
-  !process.env.PICLAW_IROH_REMOTE_ID ||
-  !process.env.PICLAW_IROH_RESULT_DIR
+  process.env.QIUSHUIAI_E2E_DISPOSABLE !== "1" ||
+  !process.env.QIUSHUIAI_IROH_REMOTE_ID ||
+  !process.env.QIUSHUIAI_IROH_RESULT_DIR
 )
   throw new Error("Explicit disposable remote ID/result directory required.");
-const remote = process.env.PICLAW_IROH_REMOTE_ID,
+const remote = process.env.QIUSHUIAI_IROH_REMOTE_ID,
   resultDir = requireOwnedFixtureRoot(
-    process.env.PICLAW_IROH_RESULT_DIR,
+    process.env.QIUSHUIAI_IROH_RESULT_DIR,
     "iroh-two-host-",
-    process.env.PICLAW_IROH_FIXTURE_TOKEN,
+    process.env.QIUSHUIAI_IROH_FIXTURE_TOKEN,
   );
 const root = mkdtempSync(join(tmpdir(), "iroh-local-"));
 const received: any[] = [];

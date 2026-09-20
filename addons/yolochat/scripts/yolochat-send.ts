@@ -46,7 +46,7 @@ const port = colonIndex > 0 ? parseInt(hostPort.slice(colonIndex + 1), 10) : 300
 
 // Build local "from" address
 const localHost = process.env.HOSTNAME || process.env.HOST || "localhost";
-const localPort = process.env.PICLAW_PORT || process.env.PORT || "3000";
+const localPort = process.env.QIUSHUIAI_PORT || process.env.PORT || "3000";
 const fromAddr = `web:default@${localHost}:${localPort}`;
 
 // Build envelope

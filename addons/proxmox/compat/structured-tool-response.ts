@@ -1,13 +1,13 @@
 /**
- * compat/structured-tool-response.ts — Standalone version of piclaw's structured tool response formatter.
+ * compat/structured-tool-response.ts — Standalone version of qiushuiai's structured tool response formatter.
  */
 
 import { buildPreview, saveToolOutput } from "./tool-output.js";
 
-const STORE_THRESHOLD_BYTES = parseInt(process.env.PICLAW_TOOL_OUTPUT_STORE_BYTES || "4096", 10);
-const STORE_THRESHOLD_LINES = parseInt(process.env.PICLAW_TOOL_OUTPUT_STORE_LINES || "40", 10);
-const PREVIEW_LINES = parseInt(process.env.PICLAW_TOOL_OUTPUT_PREVIEW_LINES || "8", 10);
-const PREVIEW_LINE_CHARS = parseInt(process.env.PICLAW_TOOL_OUTPUT_PREVIEW_LINE_CHARS || "200", 10);
+const STORE_THRESHOLD_BYTES = parseInt(process.env.QIUSHUIAI_TOOL_OUTPUT_STORE_BYTES || "4096", 10);
+const STORE_THRESHOLD_LINES = parseInt(process.env.QIUSHUIAI_TOOL_OUTPUT_STORE_LINES || "40", 10);
+const PREVIEW_LINES = parseInt(process.env.QIUSHUIAI_TOOL_OUTPUT_PREVIEW_LINES || "8", 10);
+const PREVIEW_LINE_CHARS = parseInt(process.env.QIUSHUIAI_TOOL_OUTPUT_PREVIEW_LINE_CHARS || "200", 10);
 
 function formatBytes(bytes: number): string {
   if (!Number.isFinite(bytes)) return "0 B";

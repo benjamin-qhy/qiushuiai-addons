@@ -1,9 +1,9 @@
 /**
  * compat/keychain.ts — runtime keychain shim for the IMAP addon.
  *
- * Reads secrets from piclaw's injected environment variables first, then from
- * the runtime interop bridge when running inside piclaw. It deliberately avoids
- * importing piclaw runtime internals or spawning the piclaw CLI from inside the
+ * Reads secrets from qiushuiai's injected environment variables first, then from
+ * the runtime interop bridge when running inside qiushuiai. It deliberately avoids
+ * importing qiushuiai runtime internals or spawning the qiushuiai CLI from inside the
  * running process.
  */
 
@@ -25,7 +25,7 @@ function sanitizeEnvName(name: string): string {
 }
 
 function getRuntimeInterop(): RuntimeKeychainInterop | null {
-  return ((globalThis as any).__piclawRuntimeInterop || null) as RuntimeKeychainInterop | null;
+  return ((globalThis as any).__qiushuiaiRuntimeInterop || null) as RuntimeKeychainInterop | null;
 }
 
 function resolveFromEnv(name: string): KeychainEntry | null {

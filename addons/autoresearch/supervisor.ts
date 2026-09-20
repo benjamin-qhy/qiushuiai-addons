@@ -1,7 +1,7 @@
 /**
  * autoresearch-supervisor – Launch and monitor a pi-autoresearch sub-agent in tmux.
  *
- * Provides tools for piclaw to:
+ * Provides tools for qiushuiai to:
  *   - start_autoresearch: spawn a headless pi sub-agent in a named tmux session
  *   - stop_autoresearch: SIGINT the session, generate a report
  *   - autoresearch_status: read current JSONL state
@@ -16,7 +16,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, symlinkSync, rmSync
 import { join, resolve, dirname, basename } from "node:path";
 import { Type } from "typebox";
 import type { AgentToolResult, ExtensionAPI, ExtensionFactory } from "@earendil-works/pi-coding-agent";
-const WORKSPACE_DIR = process.env.PICLAW_WORKSPACE || "/workspace";
+const WORKSPACE_DIR = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
 import { createMedia, postMessagesToolMessage } from "./compat.js";
 
 const log = { info: console.log, warn: console.warn, error: console.error, debug: console.debug };
@@ -32,7 +32,7 @@ import { clearAutoresearchSessionFiles, prepareDirectAutoresearchWorktree } from
 // ── Paths ───────────────────────────────────────────────────────
 
 const VENDOR_DIR = resolve(import.meta.dir, "vendor", "autoresearch");
-const SESSIONS_DIR = join(WORKSPACE_DIR, ".piclaw", "autoresearch-sessions");
+const SESSIONS_DIR = join(WORKSPACE_DIR, ".qiushuiai", "autoresearch-sessions");
 const TMUX_SESSION_PREFIX = "autoresearch-";
 
 // ── State ───────────────────────────────────────────────────────
@@ -644,7 +644,7 @@ let pendingLaunch: PendingLaunch | null = null;
 /** Resolve the chat JID to use for live autoresearch status updates. */
 function resolveStatusChatJid(explicitChatJid?: string): string {
   if (explicitChatJid?.trim()) return explicitChatJid.trim();
-  if (process.env.PICLAW_CHAT_JID?.trim()) return process.env.PICLAW_CHAT_JID.trim();
+  if (process.env.QIUSHUIAI_CHAT_JID?.trim()) return process.env.QIUSHUIAI_CHAT_JID.trim();
   return "web:default";
 }
 
@@ -1226,12 +1226,12 @@ export const autoresearchSupervisor: ExtensionFactory = (pi: ExtensionAPI) => {
   // Broadcast helper — will be wired to web channel SSE if available
   let broadcastEvent: (type: string, data: unknown) => void = () => {};
 
-  // Try to detect piclaw's broadcastEvent from the runtime
+  // Try to detect qiushuiai's broadcastEvent from the runtime
   try {
-    const global = globalThis as { __PICLAW_BROADCAST_EVENT__?: (type: string, data: unknown) => void };
-    if (typeof global.__PICLAW_BROADCAST_EVENT__ === "function") {
-      broadcastEvent = global.__PICLAW_BROADCAST_EVENT__;
-      autoresearchWidgetBroadcast = global.__PICLAW_BROADCAST_EVENT__;
+    const global = globalThis as { __QIUSHUIAI_BROADCAST_EVENT__?: (type: string, data: unknown) => void };
+    if (typeof global.__QIUSHUIAI_BROADCAST_EVENT__ === "function") {
+      broadcastEvent = global.__QIUSHUIAI_BROADCAST_EVENT__;
+      autoresearchWidgetBroadcast = global.__QIUSHUIAI_BROADCAST_EVENT__;
     }
   } catch (error) {
     debugSuppressedError(log, "Autoresearch supervisor could not inspect the runtime broadcast hook; continuing without live widget broadcasts.", error);
@@ -1303,7 +1303,7 @@ export const autoresearchSupervisor: ExtensionFactory = (pi: ExtensionAPI) => {
     },
   });
 
-  // On piclaw restart, try to re-detect a running tmux session
+  // On qiushuiai restart, try to re-detect a running tmux session
   const reattachExisting = () => {
     let tmuxSession: string | null = null;
     let experimentId: string | null = null;

@@ -10,7 +10,7 @@ from a2a.types import SendMessageRequest, GetTaskRequest, CancelTaskRequest, Sub
 
 async def main():
     base = sys.argv[1]
-    if os.environ.get('PICLAW_E2E_DISPOSABLE') != '1' or not base.startswith('http://127.0.0.1:'):
+    if os.environ.get('QIUSHUIAI_E2E_DISPOSABLE') != '1' or not base.startswith('http://127.0.0.1:'):
         raise RuntimeError('Explicit disposable loopback required')
     async with httpx.AsyncClient(headers={'Authorization': 'Bearer independent-python-fixture-token', 'A2A-Version': '1.0'}, timeout=10) as http:
         card = await A2ACardResolver(http, base, '/api/addons/a2a/agents/echo/agent-card.json').get_agent_card()

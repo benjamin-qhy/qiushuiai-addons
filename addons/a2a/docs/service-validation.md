@@ -1,6 +1,6 @@
 # A2A service candidate validation
 
-The service candidate builds on A1's disabled SDK/profile package and Piclaw's generic operation foundation PR #1337. Neither implementation is installed or enabled in production. Tests use isolated filesystem preloads, disposable loopback listeners and fake executors; no provider or live operator agent is called.
+The service candidate builds on A1's disabled SDK/profile package and QiushuiAI's generic operation foundation PR #1337. Neither implementation is installed or enabled in production. Tests use isolated filesystem preloads, disposable loopback listeners and fake executors; no provider or live operator agent is called.
 
 ## Reproducible evidence
 
@@ -35,8 +35,8 @@ The broad repository test run needs existing per-package runtime dependencies in
 The explicit integration/browser companion is never the running installed runtime:
 
 ```sh
-PICLAW_E2E_DISPOSABLE=1 \
-PICLAW_A2A_CORE_SOURCE=/absolute/path/to/piclaw-candidate \
+QIUSHUIAI_E2E_DISPOSABLE=1 \
+QIUSHUIAI_A2A_CORE_SOURCE=/absolute/path/to/qiushuiai-candidate \
 PLAYWRIGHT_BROWSERS_PATH=/absolute/path/to/ms-playwright \
   bun test addons/a2a/host-integration.test.ts addons/a2a/settings-browser.test.ts
 ```
@@ -46,7 +46,7 @@ Independent Python client is a test-only optional environment, not an add-on run
 ```sh
 uv venv /tmp/a2a-python-peer
 uv pip install --python /tmp/a2a-python-peer/bin/python a2a-sdk==1.1.2
-PICLAW_E2E_DISPOSABLE=1 PICLAW_A2A_PYTHON=/tmp/a2a-python-peer/bin/python \
+QIUSHUIAI_E2E_DISPOSABLE=1 QIUSHUIAI_A2A_PYTHON=/tmp/a2a-python-peer/bin/python \
   bun test addons/a2a/python-peer.test.ts
 ```
 

@@ -105,8 +105,8 @@ export class WhatsAppChannel {
       ...opts,
       phoneNumber: opts.phoneNumber?.trim() || undefined,
       assistantName: opts.assistantName?.trim() || "Assistant",
-      storeDir: opts.storeDir?.trim() || process.env.PICLAW_STORE?.trim()
-        || resolve(process.env.PICLAW_WORKSPACE?.trim() || "/workspace", ".piclaw", "store"),
+      storeDir: opts.storeDir?.trim() || process.env.QIUSHUIAI_STORE?.trim()
+        || resolve(process.env.QIUSHUIAI_WORKSPACE?.trim() || "/workspace", ".qiushuiai", "store"),
     };
   }
 

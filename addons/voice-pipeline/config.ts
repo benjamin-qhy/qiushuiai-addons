@@ -2,7 +2,7 @@
  * Config for the voice pipeline, loaded from environment variables.
  *
  * Secrets (Azure Speech key, ESPHome password) are read from env, which in the
- * piclaw container is the keychain-injection path: a keychain entry named
+ * qiushuiai container is the keychain-injection path: a keychain entry named
  * `azure/speech-key` is injected as `$AZURE_SPEECH_KEY`, etc. Prefer storing
  * them in the keychain rather than plaintext env files.
  *
@@ -102,7 +102,7 @@ export function loadConfig(): VoiceConfig | null {
       sttTimeoutMs: num(process.env.AZURE_SPEECH_STT_TIMEOUT_MS, 15_000),
       ttsTimeoutMs: num(process.env.AZURE_SPEECH_TTS_TIMEOUT_MS, 15_000),
     },
-    dbPath: process.env.PICLAW_DB ?? "/workspace/.piclaw/store/messages.db",
+    dbPath: process.env.QIUSHUIAI_DB ?? "/workspace/.qiushuiai/store/messages.db",
     chatJid: "tts:default",
     storeTurns: process.env.VOICE_STORE_TURNS !== "0",
     debug: process.env.VOICE_DEBUG === "1",

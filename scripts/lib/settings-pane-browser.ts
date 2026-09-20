@@ -3,11 +3,11 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, extname, join, resolve } from "node:path";
 
-export const settingsBrowserEnabled = process.env.PICLAW_E2E_DISPOSABLE === "1"
-  && !!process.env.PICLAW_SETTINGS_CORE_SOURCE;
+export const settingsBrowserEnabled = process.env.QIUSHUIAI_E2E_DISPOSABLE === "1"
+  && !!process.env.QIUSHUIAI_SETTINGS_CORE_SOURCE;
 
 export async function settingsPaneFixture(entry: string, options: { realHost?: boolean } = {}) {
-  const core = process.env.PICLAW_SETTINGS_CORE_SOURCE!;
+  const core = process.env.QIUSHUIAI_SETTINGS_CORE_SOURCE!;
   if (!settingsBrowserEnabled || !core.startsWith("/")) throw new Error("Explicit disposable companion core required");
   const { chromium } = await import(join(core, "node_modules/playwright/index.mjs"));
   const root = mkdtempSync(join(tmpdir(), "addon-settings-fixture-"));
@@ -27,25 +27,25 @@ export async function settingsPaneFixture(entry: string, options: { realHost?: b
         const registry=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings/pane-registry.ts"))});
         const {requestOpenSettingsDialog}=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings-dialog-events.ts"))});
         const {SettingsDialogContent}=await import(${JSON.stringify(join(core, "runtime/web/src/components/settings-dialog.ts"))});
-        globalThis.__piclawPreactHtm=vendor;
-        globalThis.__piclawSettingsPaneRegistry=registry;
-        globalThis.__piclaw_web=registry;
+        globalThis.__qiushuiaiPreactHtm=vendor;
+        globalThis.__qiushuiaiSettingsPaneRegistry=registry;
+        globalThis.__qiushuiai_web=registry;
         await import('/addon/index.ts');
         requestOpenSettingsDialog({section:registry.getRegisteredSettingsPanes()[0].id});
         vendor.render(vendor.h(SettingsDialogContent,{onClose:()=>{}}),root);
       } else if (${options.realHost === true} && skin==='visual') {
         const registry=await import(${JSON.stringify(join(core, "runtime/web/static/visual/frontend/src/panels/settings/pane-registry.ts"))});
         const {SettingsPanel}=await import(${JSON.stringify(join(core, "runtime/web/static/visual/frontend/src/panels/SettingsPanel.tsx"))});
-        globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
-        globalThis.__piclawSettingsPaneRegistry={...registry,registerSettingsPane:registry.registerAddonSettingsPane};
-        globalThis.__piclaw_web=globalThis.__piclawSettingsPaneRegistry;
+        globalThis.__qiushuiaiPreactHtm={html:htm.bind(h),...hooks};
+        globalThis.__qiushuiaiSettingsPaneRegistry={...registry,registerSettingsPane:registry.registerAddonSettingsPane};
+        globalThis.__qiushuiai_web=globalThis.__qiushuiaiSettingsPaneRegistry;
         await import('/addon/index.ts');
-        localStorage.setItem('piclaw-settings-category',registry.getRegisteredPanes().find(p=>p.source==='addon').id);
+        localStorage.setItem('qiushuiai-settings-category',registry.getRegisteredPanes().find(p=>p.source==='addon').id);
         render(h(SettingsPanel),root);
       } else {
-        globalThis.__piclawPreactHtm={html:htm.bind(h),...hooks};
-        globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component})=>render(h(component),root),notifySettingsPanesChanged:()=>{}};
-        globalThis.__piclaw_web=globalThis.__piclawSettingsPaneRegistry;
+        globalThis.__qiushuiaiPreactHtm={html:htm.bind(h),...hooks};
+        globalThis.__qiushuiaiSettingsPaneRegistry={registerSettingsPane:({component})=>render(h(component),root),notifySettingsPanesChanged:()=>{}};
+        globalThis.__qiushuiai_web=globalThis.__qiushuiaiSettingsPaneRegistry;
         await import('/addon/index.ts');
       }
     `);

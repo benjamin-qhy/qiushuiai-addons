@@ -1,5 +1,5 @@
 /**
- * piclaw-addon-autoresearch — Autonomous experiment loop sub-agent.
+ * qiushuiai-addon-autoresearch — Autonomous experiment loop sub-agent.
  *
  * Provides start_autoresearch, stop_autoresearch, and autoresearch_status tools.
  */

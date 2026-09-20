@@ -1,19 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-smart-compaction",
-  "version": "0.1.4",
-  "description": "Standalone Pi-compatible smart compaction extension for vanilla pi users; Piclaw already includes this behavior natively.",
+  "name": "@qiushuiai/qiushuiai-addon-smart-compaction",
+  "version": "0.1.5",
+  "description": "为原生 Pi 用户提供独立的智能上下文压缩扩展",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.3.0",
-    "tags": [
-      "compaction",
-      "context",
-      "pi",
-      "vanilla-pi"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -24,13 +14,36 @@
     "@earendil-works/pi-coding-agent": "*"
   },
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
     "compaction",
     "context",
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
     "vanilla-pi"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/smart-compaction/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/smart-compaction",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/smart-compaction"
+  },
+  "qiushuiai": {
+    "displayName": "智能上下文压缩",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "compaction",
+      "context",
+      "pi",
+      "vanilla-pi"
+    ],
+    "displayTags": [
+      "上下文压缩",
+      "上下文",
+      "Pi 兼容",
+      "原生 Pi"
+    ],
+    "featured": false
+  }
 }

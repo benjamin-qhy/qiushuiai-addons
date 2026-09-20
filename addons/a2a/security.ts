@@ -6,7 +6,7 @@ import { A2aConfig, A2aPrincipal, A2aEndpoint, endpointUrl } from "./config.js";
 export type SecretResolver = (name: string) => Promise<string | null>;
 /** Host keychain facade/injected references only; never spawn a CLI or search workspace source. */
 export const resolveA2aSecret: SecretResolver = async (name) => {
-  const runtime = (globalThis as any).__piclawRuntimeInterop;
+  const runtime = (globalThis as any).__qiushuiaiRuntimeInterop;
   const entry = await runtime?.getKeychainEntry?.(name);
   const fromHost = typeof entry === "string" ? entry : entry?.secret;
   return (

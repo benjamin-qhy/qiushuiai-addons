@@ -24,7 +24,7 @@ function walk(dir: string, predicate: (path: string) => boolean): string[] {
 }
 
 function discoverAddons(): string[] {
-  const requested = resolveRequestedAddon(process.argv, process.env.PICLAW_ADDON);
+  const requested = resolveRequestedAddon(process.argv, process.env.QIUSHUIAI_ADDON);
   if (requested && requested !== 'all') return requested.split(',').map((s) => s.trim()).filter(Boolean);
   return readdirSync(addonsDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())

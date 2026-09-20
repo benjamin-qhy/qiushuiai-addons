@@ -146,7 +146,7 @@
  * ── Platform gate ────────────────────────────────────────────────────
  *
  * This extension only loads on Windows. On other platforms, the default
- * export is a no-op. Safe to include in cross-platform piclaw installs.
+ * export is a no-op. Safe to include in cross-platform qiushuiai installs.
  */
 
 import type { AgentToolResult, ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -154,12 +154,12 @@ import { Type } from "typebox";
 import { writeFileSync } from "fs";
 
 function registerToolStatusHintProvider(provider: { id: string; buildHints: (context: { toolName: string; args: unknown }) => unknown }): void {
-  const fn = (globalThis as any).__piclaw_registerToolStatusHintProvider;
+  const fn = (globalThis as any).__qiushuiai_registerToolStatusHintProvider;
   if (typeof fn === "function") fn(provider);
 }
 
 function debugSuppressedError(_log: unknown, message: string, error: unknown, details?: Record<string, unknown>): void {
-  if (process.env.PICLAW_DEBUG_WIN_UI !== "1") return;
+  if (process.env.QIUSHUIAI_DEBUG_WIN_UI !== "1") return;
   console.debug(`[win-ui] ${message}`, { error, ...details });
 }
 

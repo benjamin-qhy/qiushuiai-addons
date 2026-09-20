@@ -397,8 +397,8 @@ function showToast(msg) {
   toastTimer = setTimeout(function(){t.classList.remove("show");}, 2500);
 }
 function sendCmd(text) {
-  if(window.piclawWidget) {
-    piclawWidget.submit({text:text});
+  if(window.qiushuiaiWidget) {
+    qiushuiaiWidget.submit({text:text});
   } else if(IS_FULL_PAGE) {
     fetch("/agent/default/message", {
       method:"POST", credentials:"same-origin",
@@ -801,7 +801,7 @@ if(IS_FULL_PAGE) {
 
 /* ── Extension entry point ────────────────────────────────────────── */
 
-const registerRoute = (globalThis as Record<string, unknown>).__piclaw_registerRoute as
+const registerRoute = (globalThis as Record<string, unknown>).__qiushuiai_registerRoute as
   ((prefix: string, handler: (req: Request, pathname: string) => Response | Promise<Response> | null, ext: string) => void) | undefined;
 
 export default function (pi: ExtensionAPI) {
@@ -848,7 +848,7 @@ export default function (pi: ExtensionAPI) {
       } else {
         pi.sendMessage({
           customType: "kanban-board",
-          content: `📋 Board ready — ${totalTickets} tickets. Note: /board-page requires route registration (PiClaw).`,
+          content: `📋 Board ready — ${totalTickets} tickets. Note: /board-page requires route registration (QiushuiAI).`,
           display: true,
         });
       }

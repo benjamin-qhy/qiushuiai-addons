@@ -80,12 +80,12 @@ export const PROGRESSIVE_CHUNK_FRACTION = 0.72;
  *
  * Conservative estimate: ~4000 tokens (AGENTS.md ~2k, tools ~1k, skills/memory ~1k).
  * Can be overridden via PI_SMART_COMPACTION_SYSTEM_PROMPT_OVERHEAD_TOKENS.
- * The historical PICLAW_* name is also accepted for compatibility with copied
+ * The historical QIUSHUIAI_* name is also accepted for compatibility with copied
  * local configs.
  */
 export const SYSTEM_PROMPT_OVERHEAD_TOKENS = parseFirstPositiveEnvInt([
   "PI_SMART_COMPACTION_SYSTEM_PROMPT_OVERHEAD_TOKENS",
-  "PICLAW_SYSTEM_PROMPT_OVERHEAD_TOKENS",
+  "QIUSHUIAI_SYSTEM_PROMPT_OVERHEAD_TOKENS",
 ]) ?? 4_000;
 
 /**

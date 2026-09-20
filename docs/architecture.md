@@ -1,99 +1,79 @@
-# Architecture
+# QiushuiAI 插件架构
 
-## Catalog
+## Catalog v3
 
-`catalog.json` is the central index consumed by the piclaw web UI. It is auto-generated from each addon's `package.json` by the `sync-catalog` workflow and should never be hand-edited (except for the `owner` and `contributors` fields).
+`catalog.json` 是 QiushuiAI 主程序消费的正式插件目录。它由 `scripts/sync-catalog.ts` 根据每个插件的 `package.json` 自动生成，不应手工维护；`owner` 和 `contributors` 是例外，同步时会保留。
 
-Each entry:
+目录条目示例：
 
 ```json
 {
   "slug": "proxmox",
-  "name": "@rcarmo/piclaw-addon-proxmox",
-  "version": "0.1.8",
+  "name": "@qiushuiai/qiushuiai-addon-proxmox",
+  "displayName": "Proxmox 管理",
+  "version": "0.1.11",
+  "compatibleVersions": ">=3.0.0",
   "install": {
     "kind": "tarball",
-    "spec": "https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-proxmox-0.1.8.tgz"
-  },
-  "owner": { "login": "rcarmo", "url": "https://github.com/rcarmo" },
-  "contributors": [],
-  "updatedAt": "2026-04-29"
+    "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-proxmox-0.1.11.tgz"
+  }
 }
 ```
 
-| Field | Purpose |
-|---|---|
-| `install.kind` | First-party add-ons use `tarball` |
-| `install.spec` | Public GitHub Pages tarball URL used by the runtime installer |
-| `owner` | Primary maintainer — hand-managed, preserved by sync |
-| `contributors` | Additional contributors — hand-managed |
-| `updatedAt` | Date of last git commit to the addon directory (auto) |
+- `categories`：稳定的机器分类。
+- `displayName`、`description`、`displayTags`：中文用户文案。
+- `featured`：是否为核心推荐插件。
+- `install.spec`：无需登录即可下载的 GitHub Pages tarball。
 
-## Installation flow
+## 安装流程
 
-1. The piclaw web UI fetches `catalog.json` from GitHub Pages.
-2. The user picks an add-on and clicks Install.
-3. The runtime downloads the public tarball URL from `install.spec` and installs it into `/workspace/.pi/extensions/node_modules/`.
-4. The local `.pi/extensions/package.json` dependency record is updated to keep the same public tarball URL for later upgrade/remove flows.
-5. The user reloads Piclaw to load the runtime entry (`pi.extensions`) and browser entry (`pi.web.entries`).
+1. QiushuiAI 获取 GitHub Pages 上的 Catalog v3。
+2. 用户在“设置 → 插件”中选择插件。
+3. 主程序下载 `install.spec` 指向的公开 tarball。
+4. 安装记录保留同一个公开 URL，供升级和卸载使用。
+5. 重新加载后，运行时读取 `pi.extensions`，浏览器端读取 `pi.web.entries`。
 
-First-party install/remove must remain **zero-auth**. Do not route these flows back through npmjs.org or authenticated GitHub Packages reads.
+第一方插件的安装和卸载全程无需认证，不使用 npmjs.org 或需要令牌的 GitHub Packages。
 
-## Settings-pane config flow
+## 设置面板配置流程
 
-Settings panes are split across two environments:
+浏览器端 `web/index.ts`：
 
-### Browser side (`web/index.ts`)
+- 通过 QiushuiAI 提供的设置面板注册器注册。
+- 使用 `globalThis.__qiushuiaiPreactHtm` 或 `globalThis.__qiushuiaiPreact` 渲染。
+- 通过 `GET/POST /agent/addons/api/<addon>/config` 读写非密钥配置。
+- 密钥只通过 `/agent/keychain` 处理。
 
-- registers a settings pane via the runtime globals exposed by piclaw
-- renders with `globalThis.__piclawPreactHtm` / `globalThis.__piclawPreact`
-- reads/writes non-secret config through the local authenticated config API:
-  - `GET /agent/addons/api/<addon>/config`
-  - `POST /agent/addons/api/<addon>/config`
-- uses `/agent/keychain` for secrets
+运行时端 `index.ts` 或 `extension.ts`：
 
-### Runtime side (`index.ts` / `extension.ts`)
+- 通过 `globalThis.__qiushuiai_registerAddonConfigApi(...)` 注册配置处理器。
+- 非密钥设置存入扩展 KV 或运行时存储。
+- 运行时从密钥链解析密钥。
 
-- registers direct config handlers with `globalThis.__piclaw_registerAddonConfigApi(...)`
-- persists non-secret settings in extension KV / runtime storage
-- resolves secrets from the keychain at runtime
+v3 不提供旧版斜杠命令配置桥接。
 
-The old browser → slash-command config bridge is now legacy-only compatibility behavior. New or updated add-ons should register direct config handlers instead.
+## 仓库结构
 
-## Repo layout
-
-```
-piclaw-addons/
-├── addons/               # One directory per addon (independent npm packages)
-├── assets/               # Diagrams and static site assets
-├── lib/compat/           # Shared compatibility shims (not published separately)
-├── scripts/
-│   ├── browser-relay/    # WSL2 browser relay helper (see its README)
-│   └── sync-catalog.ts   # Catalog + root package metadata generator
-├── build.ts              # Static docs site builder
-├── catalog.json          # Auto-generated addon index
-├── package.json          # Root package manifest (@rcarmo/piclaw-addons)
-└── .github/workflows/
-    ├── build.yml              # Docs + GitHub Pages deploy
-    ├── sync-catalog.yml       # Catalog auto-regeneration on addon change
-    ├── validate-metadata.yml  # Metadata validation on PRs and pushes
-    ├── publish.yml            # GitHub Packages publish on catalog change
-    └── triage-issues.yml      # Auto-label issues by addon and notify owner
+```text
+qiushuiai-addons/
+├── addons/               # 独立插件包
+├── assets/               # 站点资源和架构图
+├── lib/compat/           # 仅供仓库内开发的兼容层
+├── scripts/              # 目录、审计和测试脚本
+├── build.ts              # 中文静态站点和 tarball 构建器
+├── catalog.json          # 自动生成的 Catalog v3
+└── package.json          # @qiushuiai/qiushuiai-addons
 ```
 
 ## CI/CD
 
-| Workflow | Trigger | What it does |
-|---|---|---|
-| `validate-metadata` | pull requests and pushes to `main` | Runs catalog validation, Earendil type-check/tests, standalone imports, and `bun pm pack --dry-run` |
-| `sync-catalog` | relevant `addons/**` or catalog-script pushes to `main` | Regenerates `catalog.json` and root package metadata, then commits changes |
-| `build` | relevant catalog, build, asset, or `addons/**` pushes to `main` | Runs opted-in add-on UX tests, builds the docs site and tarballs, then deploys GitHub Pages |
-| `publish` | add-on manifest pushes to `main` | Publishes version-bumped add-ons to GitHub Packages and skips unchanged versions |
-| `triage-issues` | issue opened | Scores issue text against addon slugs/tags, posts comment + applies `addon:<slug>` label |
-
-## Metadata commands
+- `validate-metadata`：校验目录、品牌、兼容性和独立导入。
+- `sync-catalog`：重新生成 `catalog.json` 和根包元数据。
+- `build`：构建中文站点、48 个公开 tarball，并部署 GitHub Pages。
+- `triage-issues`：按 slug 和分类处理问题。
 
 ```bash
-bun run check:catalog   # Validate catalog.json is in sync with addon package.json files
-bun run sync:catalog    # Regenerate catalog.json + root package.json metadata
+bun run check:catalog
+bun run sync:catalog
+bun run audit:brand
 ```

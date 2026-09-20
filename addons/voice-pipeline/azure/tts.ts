@@ -48,7 +48,7 @@ export async function synthesize(text: string, cfg: TtsConfig): Promise<Uint8Arr
         "Ocp-Apim-Subscription-Key": cfg.key,
         "Content-Type": "application/ssml+xml",
         "X-Microsoft-OutputFormat": "raw-16khz-16bit-mono-pcm",
-        "User-Agent": "piclaw-voice/0.2",
+        "User-Agent": "qiushuiai-voice/0.2",
       },
       body: ssml,
       signal: combineSignals(cfg.timeoutMs ?? 15_000, cfg.signal),

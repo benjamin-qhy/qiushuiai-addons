@@ -7,7 +7,7 @@ import { A2aTaskStore, type PublicOperation } from "./task-store.js";
 import type { OperationAdapter } from "./runtime-api.js";
 import type { A2aConfig } from "./config.js";
 const enabled =
-  process.env.PICLAW_E2E_DISPOSABLE === "1" && !!process.env.PICLAW_A2A_PYTHON;
+  process.env.QIUSHUIAI_E2E_DISPOSABLE === "1" && !!process.env.QIUSHUIAI_A2A_PYTHON;
 (enabled ? test : test.skip)(
   "independent Python A2A SDK 1.1.2 exercises actual HTTP discovery/tasks/cancel/SSE",
   async () => {
@@ -110,7 +110,7 @@ const enabled =
     try {
       const proc = Bun.spawn(
         [
-          process.env.PICLAW_A2A_PYTHON!,
+          process.env.QIUSHUIAI_A2A_PYTHON!,
           new URL("./python-peer.py", import.meta.url).pathname,
           server.url.href.replace(/\/$/, ""),
         ],

@@ -1,5 +1,5 @@
 /**
- * sample-addon/index.ts — Starter template for piclaw add-ons.
+ * sample-addon/index.ts — Starter template for qiushuiai add-ons.
  *
  * Demonstrates:
  *   - Reading/writing config to SQLite KV (extension_kv, global scope)
@@ -65,7 +65,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("sample-addon", "config", {
     get: async () => loadConfig(),

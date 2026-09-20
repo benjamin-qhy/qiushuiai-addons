@@ -63,10 +63,10 @@ Set via environment variables:
 
 | Variable | Description | Default |
 |---|---|---|
-| `PICLAW_STEALTH_SEED` | Fingerprint seed (identity stability) | hostname |
-| `PICLAW_STEALTH_PROFILE` | Profile ID override | auto-detected per OS |
-| `PICLAW_STEALTH_PROXY` | Proxy URL (`http://user:pass@host:port`) | none |
-| `PICLAW_STEALTH_HEADLESS` | Headless mode (`true`/`false`) | `true` |
+| `QIUSHUIAI_STEALTH_SEED` | Fingerprint seed (identity stability) | hostname |
+| `QIUSHUIAI_STEALTH_PROFILE` | Profile ID override | auto-detected per OS |
+| `QIUSHUIAI_STEALTH_PROXY` | Proxy URL (`http://user:pass@host:port`) | none |
+| `QIUSHUIAI_STEALTH_HEADLESS` | Headless mode (`true`/`false`) | `true` |
 
 ## Prerequisites
 

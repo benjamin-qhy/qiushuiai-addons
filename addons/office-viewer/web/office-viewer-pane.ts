@@ -134,7 +134,7 @@ class OfficeViewerInstance implements PaneInstance {
 
 export const officeViewerPaneExtension: WebPaneExtension = {
     id: 'office-viewer',
-    label: 'Office Viewer',
+    label: 'Office 文档查看器',
     icon: 'file-text',
     capabilities: ['readonly', 'preview'] as PaneCapability[],
     placement: 'tabs',
@@ -153,8 +153,8 @@ export const officeViewerPaneExtension: WebPaneExtension = {
     },
 };
 
-// Register with piclaw's addon web API
-const __webApiOV = (globalThis as any).__piclaw_web;
+// Register with qiushuiai's addon web API
+const __webApiOV = (globalThis as any).__qiushuiai_web;
 if (__webApiOV && typeof __webApiOV.registerPane === 'function') {
   __webApiOV.registerPane(officeViewerPaneExtension);
 }
@@ -163,7 +163,7 @@ if (__webApiOV && typeof __webApiOV.registerPane === 'function') {
 if (__webApiOV && typeof __webApiOV.registerAttachmentPreview === 'function') {
   __webApiOV.registerAttachmentPreview({
     id: 'office',
-    label: 'Office Viewer',
+    label: 'Office 文档查看器',
     match(contentType: unknown, filename: unknown): boolean {
       const name = typeof filename === 'string' ? filename.toLowerCase() : '';
       const ext = name.includes('.') ? '.' + name.split('.').pop() : '';

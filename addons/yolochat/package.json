@@ -1,29 +1,44 @@
 {
-  "name": "@rcarmo/piclaw-addon-yolochat",
-  "version": "0.1.0",
-  "description": "Zero-guardrail inter-instance messaging \u2014 lets Pi instances post and reply to each other over HTTP",
+  "name": "@qiushuiai/qiushuiai-addon-yolochat",
+  "version": "0.1.1",
+  "description": "让多个 Pi 实例通过 HTTP 相互发帖和回复的无防护通信技能",
   "type": "module",
-  "piclaw": {
-    "type": "skill",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "chat",
-      "multi-agent",
-      "networking",
-      "experimental"
-    ],
-    "skills": [
-      "skills/yolochat"
-    ]
-  },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "skills": [
       "skills"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/yolochat/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/yolochat",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/yolochat"
+  },
+  "qiushuiai": {
+    "displayName": "实例互聊",
+    "type": "skill",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "chat",
+      "multi-agent",
+      "networking",
+      "experimental"
+    ],
+    "displayTags": [
+      "聊天",
+      "多智能体",
+      "网络",
+      "实验功能"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/yolochat"
+    ]
+  }
 }

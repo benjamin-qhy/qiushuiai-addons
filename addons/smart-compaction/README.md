@@ -1,65 +1,34 @@
-# Smart Compaction Add-on
+# 智能上下文压缩
 
-> ⚠️ **For vanilla `pi` users.** Piclaw already includes smart compaction natively. If this package is loaded inside Piclaw it disables itself by default to avoid duplicate compaction handlers.
+为原生 Pi 用户提供独立的智能上下文压缩扩展
 
-Requires Piclaw `>=2.3.0`.
+## 功能定位
 
-This is a standalone, code-complete Pi extension package that ports Piclaw's selective smart-compaction behavior into a vanilla `pi` add-on. It does **not** import Piclaw runtime internals and does **not** move or replace Piclaw's built-in implementation.
+这是 QiushuiAI 的扩展插件，技术标识为 `smart-compaction`。
 
-## What it does
+- 软件包：`@qiushuiai/qiushuiai-addon-smart-compaction`
+- 当前版本：`0.1.5`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`上下文压缩`、`上下文`、`Pi 兼容`、`原生 Pi`
 
-- Hooks `session_before_compact` and returns a custom compaction result.
-- Selects high-signal conversation fragments instead of summarizing the full transcript blindly.
-- Preserves current/kept-window context so summaries do not over-focus on stale work.
-- Detects recent topic shifts and demotes older topics to background context.
-- Uses no-op mechanical compaction for safe split-turn/minimal-content cases.
-- Uses progressive chunk/merge compaction when the prompt is too large for the active model.
-- Adds deterministic `<read-files>` and `<modified-files>` sections.
-- Uses Pi's standard working-status feedback only; it does not create extra notification/message panes.
+## 安装
 
-## Install
+在 QiushuiAI 中打开**设置 → 插件**，搜索“智能上下文压缩”并安装。也可以直接使用无需登录的公开安装包：
 
-From a local checkout:
-
-```bash
-pi install https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-smart-compaction-0.1.4.tgz
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-smart-compaction-0.1.5.tgz
 ```
 
-Or run temporarily:
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-```bash
-pi -e /path/to/piclaw-addons/addons/smart-compaction
-```
+## 提供的能力
 
-## Piclaw behavior
+- 入口：`index.ts`
 
-This package is meant for users running upstream/vanilla `pi`. In Piclaw, the equivalent extension is already built in. To avoid registering two compaction handlers, this add-on checks for Piclaw runtime environment variables and stays inert unless explicitly forced:
+## 配置与安全
 
-```bash
-PI_SMART_COMPACTION_ALLOW_PICLAW=1 pi -e /path/to/smart-compaction
-```
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-Use that override only for local testing.
+## 技术资料
 
-## Configuration
-
-Optional environment variables:
-
-| Variable | Purpose |
-| --- | --- |
-| `PI_SMART_COMPACTION_DEBUG=1` | Log debug details to stderr/console. |
-| `PI_SMART_COMPACTION_SYSTEM_PROMPT_OVERHEAD_TOKENS` | Override estimated non-message prompt/tool overhead. |
-| `PI_SMART_COMPACTION_PROGRESSIVE=1` | Force progressive chunk/merge compaction. |
-| `PI_SMART_COMPACTION_PROGRESSIVE_PROMPT_CHARS` | Override the single-pass prompt character budget before progressive mode. |
-
-Historical compatibility names exist only for `PICLAW_SYSTEM_PROMPT_OVERHEAD_TOKENS`, `PICLAW_PROGRESSIVE_COMPACTION`, and `PICLAW_PROGRESSIVE_COMPACTION_PROMPT_CHARS`. Use the `PI_SMART_COMPACTION_*` names for other settings.
-
-## Notes
-
-The extension uses the active session model and public Pi/Pi-AI APIs:
-
-- `session_before_compact`
-- `ctx.modelRegistry.getApiKeyAndHeaders(model)`
-- `completeSimple`
-
-Message/file serialization is bundled locally so no Piclaw source imports are required at runtime.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/smart-compaction/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -47,7 +47,7 @@ function fixture() {
 const candidate = (id = "22".repeat(32)) => ({
   txt: { v: "1", endpoint: id, instance: id },
   name: "other",
-  fqdn: "other._piclaw-peer._udp.local",
+  fqdn: "other._qiushuiai-peer._udp.local",
   addresses: ["192.168.1.3"],
   port: 4567,
   ttl: 1,

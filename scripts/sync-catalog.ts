@@ -2,13 +2,21 @@
 import { existsSync } from 'node:fs';
 import { readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
+import {
+  QIUSHUIAI_ADDON_SOURCE,
+  catalogEntryFromManifest,
+  validateCatalog,
+  type QiushuiAIAddonCatalog,
+  type QiushuiAIAddonCatalogEntry,
+  type QiushuiAIAddonManifest,
+} from './lib/qiushuiai-addon-identity';
 
 interface AgentSkillEntry {
   name?: string;
   path?: string;
 }
 
-interface AddonPackage {
+interface AddonPackage extends QiushuiAIAddonManifest {
   name?: string;
   version?: string;
   description?: string;
@@ -23,12 +31,6 @@ interface AddonPackage {
     themes?: string[];
     image?: string;
     video?: string;
-  };
-  piclaw?: {
-    type?: string;
-    compatibleVersions?: string;
-    tags?: string[];
-    skills?: string[];
   };
   agents?: {
     skills?: AgentSkillEntry[];
@@ -45,28 +47,9 @@ const CORE_PEER_DEPENDENCIES = [
 
 type CorePeerDependency = (typeof CORE_PEER_DEPENDENCIES)[number];
 
-// IMPORTANT: first-party piclaw-addons must install from public GitHub Pages
+// IMPORTANT: first-party QiushuiAI add-ons must install from public GitHub Pages
 // tarball URLs. Do not emit npm/GitHub Packages install specs here — runtime
 // install/remove must work without registry auth.
-interface CatalogEntry {
-  slug: string;
-  name: string;
-  version: string;
-  type: string;
-  description: string;
-  path: string;
-  homepage?: string;
-  tags: string[];
-  skills: string[];
-  install: {
-    kind: 'tarball';
-    spec: string;     // https://rcarmo.github.io/piclaw-addons/packages/<name>-<version>.tgz
-  };
-  updatedAt?:    string;  // ISO date of last git commit touching this addon
-  owner?: { login: string; url: string };
-  contributors?: { login: string; url: string }[];
-}
-
 const repoRoot = resolve(import.meta.dir, '..');
 const addonsDir = join(repoRoot, 'addons');
 const rootPackagePath = join(repoRoot, 'package.json');
@@ -148,16 +131,16 @@ async function validateCorePeerDependencies(addonRoot: string, slug: string, pkg
 
 async function buildMetadata() {
   const slugs = await listAddonSlugs();
-  const catalogEntries: CatalogEntry[] = [];
+  const catalogEntries: QiushuiAIAddonCatalogEntry[] = [];
   const extensionPaths: string[] = [];
   const skillRoots: string[] = [];
   const agentSkills: AgentSkillEntry[] = [];
 
   // Load existing catalog to preserve hand-managed fields (owner, contributors)
-  let existingEntries: Map<string, Partial<CatalogEntry>> = new Map();
+  let existingEntries: Map<string, Partial<QiushuiAIAddonCatalogEntry>> = new Map();
   if (existsSync(catalogPath)) {
     try {
-      const existing = await readJson<{ addons: CatalogEntry[] }>(catalogPath);
+      const existing = await readJson<{ addons: QiushuiAIAddonCatalogEntry[] }>(catalogPath);
       for (const e of existing.addons ?? []) existingEntries.set(e.slug, e);
     } catch { /* ignore */ }
   }
@@ -172,8 +155,8 @@ async function buildMetadata() {
     if (!pkg.description) throw new Error(`addons/${slug}/package.json: missing description`);
     if (!pkg.pi?.extensions?.length && !pkg.pi?.skills?.length) throw new Error(`addons/${slug}/package.json: missing pi.extensions or pi.skills — addon must declare at least one`);
     const kws = pkg.keywords || [];
-    if (!kws.includes('pi-package') && !kws.includes('piclaw-addon')) {
-      throw new Error(`addons/${slug}/package.json: keywords must include "pi-package" or "piclaw-addon"`);
+    if (!kws.includes('pi-package') && !kws.includes('qiushuiai-addon')) {
+      throw new Error(`addons/${slug}/package.json: keywords must include "pi-package" or "qiushuiai-addon"`);
     }
 
     await validateCorePeerDependencies(addonRoot, slug, pkg);
@@ -209,24 +192,17 @@ async function buildMetadata() {
     const updatedAt  = await gitLastCommitDate(`addons/${slug}`);
     const prev = existingEntries.get(slug) ?? {};
 
-    catalogEntries.push({
-      slug,
-      name: pkg.name,
-      version: pkg.version,
-      type: pkg.piclaw?.type || 'extension',
-      description: pkg.description,
-      path: `addons/${slug}`,
-      ...(typeof pkg.homepage === 'string' && pkg.homepage.trim() ? { homepage: pkg.homepage.trim() } : {}),
-      tags: dedupeSorted(pkg.piclaw?.tags || []),
-      skills: dedupeSorted(addonSkillNames),
-      install: {
-        kind: 'tarball',
-        spec: `https://rcarmo.github.io/piclaw-addons/packages/${pkg.name.replace('@rcarmo/', '')}-${pkg.version}.tgz`,
-      },
-      ...(updatedAt              ? { updatedAt }              : {}),
-      ...(prev.owner             ? { owner:        prev.owner }        : {}),
-      ...(prev.contributors      ? { contributors: prev.contributors } : {}),
-    });
+    try {
+      catalogEntries.push(catalogEntryFromManifest(pkg, slug, {
+        skills: addonSkillNames,
+        updatedAt,
+        owner: prev.owner,
+        contributors: prev.contributors,
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`addons/${slug}/package.json: ${message}`);
+    }
   }
 
   const rootPackage = await readJson<Record<string, unknown>>(rootPackagePath);
@@ -245,11 +221,12 @@ async function buildMetadata() {
     },
   };
 
-  const nextCatalog = {
-    version: 2,
-    source: 'github:rcarmo/piclaw-addons',
+  const nextCatalog: QiushuiAIAddonCatalog = {
+    version: 3,
+    source: QIUSHUIAI_ADDON_SOURCE,
     addons: catalogEntries,
   };
+  validateCatalog(nextCatalog);
 
   return {
     nextRootPackage: stableStringify(nextRootPackage),

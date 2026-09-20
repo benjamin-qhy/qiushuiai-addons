@@ -1,5 +1,5 @@
 /**
- * vent/index.ts — Piclaw vent-log addon.
+ * vent/index.ts — QiushuiAI vent-log addon.
  *
  * Adapted from pi-vent by Igor Warzocha:
  *   https://github.com/IgorWarzocha/pi-vent
@@ -196,7 +196,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("vent", "config", {
     get: async () => loadConfig(),

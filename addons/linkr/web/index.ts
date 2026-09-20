@@ -1,7 +1,7 @@
 import { settingsFieldStyles } from "./settings-fields.ts";
 // Host-provided Preact/HTM; no runtime SDK or secrets shipped to the browser.
 const host = globalThis as any;
-const runtime = host.__piclawPreactHtm || host.__piclawPreact;
+const runtime = host.__qiushuiaiPreactHtm || host.__qiushuiaiPreact;
 export default function register(api: any) {
   if (!runtime?.html || !runtime?.useState || !runtime?.useEffect) return;
   const { html, useState, useEffect } = runtime;
@@ -131,7 +131,7 @@ export default function register(api: any) {
   }
   api?.registerSettingsPane?.({
     id: "linkr",
-    label: "Linkr",
+    label: "Linkr 远程控制",
     // Classic hides navigation text on phones; retain a visible, named icon.
     icon: html`<svg role="img" aria-label="Linkr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="12" rx="2"/><path d="M8 21h8M12 15v6M7 8h10"/></svg>`,
     order: 179,
@@ -140,4 +140,4 @@ export default function register(api: any) {
 }
 
 // Hosts import web entries for side effects; do not rely on a default-export caller.
-register(host.__piclawSettingsPaneRegistry || host.__piclaw_web);
+register(host.__qiushuiaiSettingsPaneRegistry || host.__qiushuiai_web);

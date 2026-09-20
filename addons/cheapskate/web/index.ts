@@ -21,13 +21,13 @@ type SettingsPaneRegistry = {
 };
 
 type WebGlobals = typeof globalThis & {
-  __piclawPreactHtm?: PreactRuntime;
-  __piclawPreact?: PreactRuntime;
-  __piclawSettingsPaneRegistry?: SettingsPaneRegistry;
+  __qiushuiaiPreactHtm?: PreactRuntime;
+  __qiushuiaiPreact?: PreactRuntime;
+  __qiushuiaiSettingsPaneRegistry?: SettingsPaneRegistry;
 };
 
 const globals = globalThis as WebGlobals;
-const preact = globals.__piclawPreactHtm || globals.__piclawPreact || {};
+const preact = globals.__qiushuiaiPreactHtm || globals.__qiushuiaiPreact || {};
 const html = preact.html;
 const useState = preact.useState;
 const useEffect = preact.useEffect;
@@ -221,9 +221,9 @@ let registered = false;
 
 function registerPane(): boolean {
   if (!HAS_RUNTIME || registered) return registered;
-  const registry = globals.__piclawSettingsPaneRegistry;
+  const registry = globals.__qiushuiaiSettingsPaneRegistry;
   if (!registry?.registerSettingsPane) return false;
-  registry.registerSettingsPane({ id: "cheapskate", label: "Cheapskate", icon: ICON, order: 35, searchable: false, component: CheapskateSettings });
+  registry.registerSettingsPane({ id: "cheapskate", label: "零成本模型", icon: ICON, order: 35, searchable: false, component: CheapskateSettings });
   registry.notifySettingsPanesChanged?.();
   registered = true;
   return true;
@@ -235,7 +235,7 @@ function scheduleRegistration(): void {
   queueMicrotask(attempt);
   setTimeout(attempt, 0);
   setTimeout(attempt, 250);
-  globalThis.addEventListener?.("piclaw:addons-loaded", attempt);
+  globalThis.addEventListener?.("qiushuiai:addons-loaded", attempt);
 }
 
 scheduleRegistration();

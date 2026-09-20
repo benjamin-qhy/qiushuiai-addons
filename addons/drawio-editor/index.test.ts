@@ -32,14 +32,14 @@ const appSource = readFileSync(join(addonDir, "vendor", "js", "app.min.js"), "ut
 const roots: string[] = [];
 
 function tempWorkspace(): string {
-  const root = mkdtempSync(join(tmpdir(), "piclaw-drawio-test-"));
+  const root = mkdtempSync(join(tmpdir(), "qiushuiai-drawio-test-"));
   roots.push(root);
   return root;
 }
 
 async function save(workspace: string, payload: Record<string, unknown>): Promise<Response> {
-  const previous = process.env.PICLAW_WORKSPACE;
-  process.env.PICLAW_WORKSPACE = workspace;
+  const previous = process.env.QIUSHUIAI_WORKSPACE;
+  process.env.QIUSHUIAI_WORKSPACE = workspace;
   try {
     return await handleRoute(new Request("http://localhost/drawio/save", {
       method: "POST",
@@ -47,8 +47,8 @@ async function save(workspace: string, payload: Record<string, unknown>): Promis
       body: JSON.stringify(payload),
     }), "/drawio/save") as Response;
   } finally {
-    if (previous === undefined) delete process.env.PICLAW_WORKSPACE;
-    else process.env.PICLAW_WORKSPACE = previous;
+    if (previous === undefined) delete process.env.QIUSHUIAI_WORKSPACE;
+    else process.env.QIUSHUIAI_WORKSPACE = previous;
   }
 }
 
@@ -58,8 +58,8 @@ afterEach(() => {
 
 describe("draw.io 31.4.2 vendor integrity", () => {
   test("aligns add-on, metadata, runtime and bundled JavaScript versions", () => {
-    expect(packageManifest.version).toBe("31.4.3");
-    expect(packageManifest.piclaw.vendorVersion).toBe("31.4.2");
+    expect(packageManifest.version).toBe("31.4.4");
+    expect(packageManifest.qiushuiai.vendorVersion).toBe("31.4.2");
     expect(DRAWIO_VERSION).toBe("v31.4.2");
     expect(vendorMetadata.package_version).toBe(DRAWIO_VERSION);
     expect(vendorMetadata.source_url).toBe("https://github.com/jgraph/drawio/releases/download/v31.4.2/draw.war");
@@ -111,9 +111,9 @@ describe("draw.io wrapper and route contract", () => {
     expect(candidates).toEqual([
       resolve("/addon", "vendor"),
       resolve("/workspace", "runtime/extensions/viewers/drawio-editor/vendor"),
-      resolve("/workspace", "piclaw/runtime/extensions/viewers/drawio-editor/vendor"),
+      resolve("/workspace", "qiushuiai/runtime/extensions/viewers/drawio-editor/vendor"),
       resolve("/workspace", "generated/cache/vendor/drawio", "v31.4.2"),
-      resolve("/workspace", "piclaw/generated/cache/vendor/drawio", "v31.4.2"),
+      resolve("/workspace", "qiushuiai/generated/cache/vendor/drawio", "v31.4.2"),
     ]);
     expect(resolveDrawioVendorDir(addonDir, "/missing")).toBe(resolve(addonDir, "vendor"));
   });
@@ -127,9 +127,9 @@ describe("draw.io wrapper and route contract", () => {
     expect(MINIMAL_DRAWIO_FILE_MENU_ACTIONS).toEqual(["save", "-"]);
     expect(MINIMAL_DRAWIO_EXPORT_ACTIONS).toEqual(["exportPng", "exportJpg", "exportSvg"]);
     const frame = {};
-    expect(isTrustedDrawioMessageEvent("https://piclaw.test", "https://piclaw.test", frame, frame)).toBe(true);
-    expect(isTrustedDrawioMessageEvent("https://evil.test", "https://piclaw.test", frame, frame)).toBe(false);
-    expect(isTrustedDrawioMessageEvent("https://piclaw.test", "https://piclaw.test", {}, frame)).toBe(false);
+    expect(isTrustedDrawioMessageEvent("https://qiushuiai.test", "https://qiushuiai.test", frame, frame)).toBe(true);
+    expect(isTrustedDrawioMessageEvent("https://evil.test", "https://qiushuiai.test", frame, frame)).toBe(false);
+    expect(isTrustedDrawioMessageEvent("https://qiushuiai.test", "https://qiushuiai.test", {}, frame)).toBe(false);
 
     const wrapper = await handleRoute(new Request("http://localhost/drawio/edit?path=test.drawio"), "/drawio/edit") as Response;
     const html = await wrapper.text();
@@ -205,10 +205,10 @@ describe("draw.io save and export persistence", () => {
 });
 
 describe("draw.io tool integration", () => {
-  test("creates a new diagram and opens the Piclaw pane", async () => {
+  test("creates a new diagram and opens the QiushuiAI pane", async () => {
     const workspace = tempWorkspace();
-    const previous = process.env.PICLAW_WORKSPACE;
-    process.env.PICLAW_WORKSPACE = workspace;
+    const previous = process.env.QIUSHUIAI_WORKSPACE;
+    process.env.QIUSHUIAI_WORKSPACE = workspace;
     const tools = new Map<string, any>();
     const paneCalls: unknown[] = [];
     try {
@@ -232,8 +232,8 @@ describe("draw.io tool integration", () => {
       expect(fallback.details).toMatchObject({ ok: false, opened: false, reason: "not_supported", editorUrl: "/drawio/edit?path=diagrams%2Ffallback.drawio" });
       expect(fallback.content[0].text).toContain("Fallback URL");
     } finally {
-      if (previous === undefined) delete process.env.PICLAW_WORKSPACE;
-      else process.env.PICLAW_WORKSPACE = previous;
+      if (previous === undefined) delete process.env.QIUSHUIAI_WORKSPACE;
+      else process.env.QIUSHUIAI_WORKSPACE = previous;
     }
   });
 });

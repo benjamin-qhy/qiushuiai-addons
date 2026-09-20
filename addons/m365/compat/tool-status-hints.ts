@@ -1,4 +1,4 @@
-/** Host bridge for optional Piclaw tool-status hints. */
+/** Host bridge for optional QiushuiAI tool-status hints. */
 
 export interface ToolStatusHint {
   key?: string;
@@ -23,6 +23,6 @@ export interface ToolStatusHintProvider {
 type ToolStatusHintRegistrar = (provider: ToolStatusHintProvider) => void;
 
 export function registerToolStatusHintProvider(provider: ToolStatusHintProvider): void {
-  const registrar = (globalThis as Record<string, unknown>).__piclaw_registerToolStatusHintProvider;
+  const registrar = (globalThis as Record<string, unknown>).__qiushuiai_registerToolStatusHintProvider;
   if (typeof registrar === "function") (registrar as ToolStatusHintRegistrar)(provider);
 }

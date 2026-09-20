@@ -16,12 +16,12 @@ HOST="${BROWSER_RELAY_HOST:-localhost}"
 
 chmod +x "$RELAY_SCRIPT"
 
-persist_with_piclaw_env() {
-  command -v piclaw >/dev/null 2>&1 || return 1
-  echo "Setting workspace env via piclaw env..."
-  piclaw env set BROWSER "$RELAY_SCRIPT" || return 1
-  piclaw env set BROWSER_RELAY_PORT "$PORT" || return 1
-  piclaw env set BROWSER_RELAY_HOST "$HOST" || return 1
+persist_with_qiushuiai_env() {
+  command -v qiushuiai >/dev/null 2>&1 || return 1
+  echo "Setting workspace env via qiushuiai env..."
+  qiushuiai env set BROWSER "$RELAY_SCRIPT" || return 1
+  qiushuiai env set BROWSER_RELAY_PORT "$PORT" || return 1
+  qiushuiai env set BROWSER_RELAY_HOST "$HOST" || return 1
 }
 
 persist_with_env_file() {
@@ -43,10 +43,10 @@ persist_with_env_file() {
     } >> "$ENV_FILE"
   fi
   echo "Updated $ENV_FILE"
-  echo "Restart piclaw or source $ENV_FILE if the current shell needs the new values immediately."
+  echo "Restart qiushuiai or source $ENV_FILE if the current shell needs the new values immediately."
 }
 
-persist_with_piclaw_env || persist_with_env_file
+persist_with_qiushuiai_env || persist_with_env_file
 
 export BROWSER="$RELAY_SCRIPT"
 export BROWSER_RELAY_PORT="$PORT"

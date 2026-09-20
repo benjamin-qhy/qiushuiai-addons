@@ -1,42 +1,36 @@
-# @rcarmo/piclaw-addon-settings-dialog-screenshot
+# 设置截图
 
-## Install
+用于截取 Pi Web 设置对话框紧凑画面的开发技能
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-Open **Settings → Add-Ons** and install **settings-dialog-screenshot** from the catalog.
+这是 QiushuiAI 的技能插件，技术标识为 `settings-dialog-screenshot`。
 
-Developer add-on for capturing screenshots of the Pi web settings dialog, cropped to the dialog window only.
+- 软件包：`@qiushuiai/qiushuiai-addon-settings-dialog-screenshot`
+- 当前版本：`0.1.1`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`开发工具`、`文档`、`截图`、`界面`
 
-## Included skill
+## 安装
 
-- `settings-dialog-screenshot`
+在 QiushuiAI 中打开**设置 → 插件**，搜索“设置截图”并安装。也可以直接使用无需登录的公开安装包：
 
-## Purpose
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-settings-dialog-screenshot-0.1.1.tgz
+```
 
-Use this when documenting Pi/piclaw settings panes or add-ons and you need:
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-- a screenshot of the settings dialog only
-- a tight crop around the dialog window
-- no full-page browser chrome unless unavoidable
+## 提供的能力
 
-## Development notes
+- 本插件不注册独立扩展入口。
+- 技能：`skills`
+- 技能：`settings-dialog-screenshot`
 
-This add-on follows the repository conventions in the root `AGENTS.md`.
+## 配置与安全
 
-In practice that means:
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-- keep the add-on self-contained under `addons/settings-dialog-screenshot/`
-- keep the skill in `skills/settings-dialog-screenshot/SKILL.md`
-- run `bun run sync:catalog` after package metadata changes
-- use `bun run check:catalog` to validate metadata sync
-- bump the package version on functional changes
-- avoid importing piclaw runtime internals directly
+## 技术资料
 
-If you extend this add-on, the canonical contributor guidance is in the repository root:
-
-- `AGENTS.md`
-
-## Notes
-
-This is a skill-only add-on intended for piclaw development and documentation workflows.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/settings-dialog-screenshot/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

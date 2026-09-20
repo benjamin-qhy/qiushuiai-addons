@@ -208,7 +208,7 @@ test("untrusted JOSE key URLs, embedded keys, algorithm confusion and unprotecte
   await expect(verifyCard(signed, policy(), k.resolve, now)).rejects.toThrow();
 });
 
-(process.env.PICLAW_A2A_PYTHON ? test : test.skip)(
+(process.env.QIUSHUIAI_A2A_PYTHON ? test : test.skip)(
   "independent Python protobuf descriptors/RFC8785/cryptography verify the emitted JWS bytes",
   async () => {
     const k = await keys();
@@ -234,7 +234,7 @@ test("untrusted JOSE key URLs, embedded keys, algorithm confusion and unprotecte
     );
     const proc = Bun.spawn(
       [
-        process.env.PICLAW_A2A_PYTHON!,
+        process.env.QIUSHUIAI_A2A_PYTHON!,
         new URL("./protocol/verify-card-python.py", import.meta.url).pathname,
       ],
       {

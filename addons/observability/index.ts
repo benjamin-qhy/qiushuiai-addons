@@ -1,5 +1,5 @@
 /**
- * piclaw-addon-observability — OpenTelemetry tracing for piclaw instances.
+ * qiushuiai-addon-observability — OpenTelemetry tracing for qiushuiai instances.
  *
  * Uses @azure/monitor-opentelemetry (the official Azure Monitor distro) for:
  *   - Trace export to Application Insights
@@ -113,7 +113,7 @@ function instanceName(config: ObservabilityConfig): string {
 }
 
 function detectDeploymentMode(): string {
-  if (process.env.PICLAW_DEPLOYMENT_MODE) return process.env.PICLAW_DEPLOYMENT_MODE.trim();
+  if (process.env.QIUSHUIAI_DEPLOYMENT_MODE) return process.env.QIUSHUIAI_DEPLOYMENT_MODE.trim();
   if (existsSync("/.dockerenv")) return "docker";
   if (existsSync("/run/systemd/container")) return "lxc";
   return "host-native";
@@ -124,7 +124,7 @@ const DEPLOYMENT_MODE = detectDeploymentMode();
 // ── OTel lifecycle ───────────────────────────────────────────────
 
 let otelActive = false;
-let piclawTracer: Tracer | null = null;
+let qiushuiaiTracer: Tracer | null = null;
 let shutdownFn: (() => Promise<void>) | null = null;
 
 function formatError(err: unknown): string {
@@ -159,7 +159,7 @@ async function startOtel(config: ObservabilityConfig): Promise<boolean> {
     try {
       const { useAzureMonitor, shutdownAzureMonitor } = await import("@azure/monitor-opentelemetry");
       const resource = await createOtelResource({
-        "service.name": "piclaw",
+        "service.name": "qiushuiai",
         "service.instance.id": instanceName(config),
         "service.version": process.env.npm_package_version || "unknown",
         "deployment.environment": DEPLOYMENT_MODE,
@@ -190,7 +190,7 @@ async function startOtel(config: ObservabilityConfig): Promise<boolean> {
     }
   }
 
-  piclawTracer = trace.getTracer("piclaw", process.env.npm_package_version || "0.0.0");
+  qiushuiaiTracer = trace.getTracer("qiushuiai", process.env.npm_package_version || "0.0.0");
   otelActive = true;
   return true;
 }
@@ -200,14 +200,14 @@ async function stopOtel(): Promise<void> {
     try { await shutdownFn(); } catch (err) { log.warn("OTel shutdown error", { error: formatError(err) }); }
     shutdownFn = null;
   }
-  piclawTracer = null;
+  qiushuiaiTracer = null;
   otelActive = false;
 }
 
 // ── Tracer access ────────────────────────────────────────────────
 
 export function getTracer(): Tracer {
-  return piclawTracer || trace.getTracer("piclaw-noop");
+  return qiushuiaiTracer || trace.getTracer("qiushuiai-noop");
 }
 
 export function isActive(): boolean { return otelActive; }
@@ -230,8 +230,8 @@ function setSyntheticResultCode(span: Span, code: number): void {
   const normalized = Number.isFinite(code) ? Math.trunc(code) : 200;
   span.setAttribute("http.status_code", normalized);
   span.setAttribute("http.response.status_code", normalized);
-  span.setAttribute("piclaw.result_code", normalized);
-  span.setAttribute("piclaw.result_code_source", "synthetic");
+  span.setAttribute("qiushuiai.result_code", normalized);
+  span.setAttribute("qiushuiai.result_code_source", "synthetic");
 }
 
 export function buildSyntheticRequestAttributes(
@@ -244,10 +244,10 @@ export function buildSyntheticRequestAttributes(
     ...attributes,
     "http.request.method": "POST",
     "http.route": normalizedRoute,
-    "url.full": `piclaw://request${normalizedRoute}`,
+    "url.full": `qiushuiai://request${normalizedRoute}`,
     "server.address": instance,
-    "network.protocol.name": "piclaw",
-    "piclaw.telemetry_class": "request",
+    "network.protocol.name": "qiushuiai",
+    "qiushuiai.telemetry_class": "request",
   };
 }
 
@@ -258,17 +258,17 @@ export function buildSyntheticDependencyAttributes(
   dependencyKind: string,
 ): Record<string, string | number | boolean> {
   const normalizedRoute = route.startsWith("/") ? route : `/${route}`;
-  const normalizedTarget = target.trim() || "piclaw";
+  const normalizedTarget = target.trim() || "qiushuiai";
   return {
     ...attributes,
     "http.request.method": "POST",
     "http.route": normalizedRoute,
-    "url.full": `piclaw://${normalizedTarget}${normalizedRoute}`,
+    "url.full": `qiushuiai://${normalizedTarget}${normalizedRoute}`,
     "server.address": normalizedTarget,
     "peer.service": normalizedTarget,
-    "network.protocol.name": "piclaw",
-    "piclaw.telemetry_class": "dependency",
-    "piclaw.dependency.kind": dependencyKind,
+    "network.protocol.name": "qiushuiai",
+    "qiushuiai.telemetry_class": "dependency",
+    "qiushuiai.dependency.kind": dependencyKind,
   };
 }
 
@@ -283,10 +283,10 @@ export function startAgentTurnSpan(chatJid: string, opts?: { model?: string | nu
   return getTracer().startSpan("agent.turn", {
     kind: SpanKind.SERVER,
     attributes: buildSyntheticRequestAttributes({
-      "piclaw.instance": inst(),
+      "qiushuiai.instance": inst(),
       ...buildAppInsightsActorAttributes(chatJid, null, inst()),
-      ...(opts?.model ? { "piclaw.model": opts.model } : {}),
-      ...(opts?.turnId ? { "piclaw.turn_id": opts.turnId } : {}),
+      ...(opts?.model ? { "qiushuiai.model": opts.model } : {}),
+      ...(opts?.turnId ? { "qiushuiai.turn_id": opts.turnId } : {}),
     }, "/agent/turn", inst()),
   });
 }
@@ -305,12 +305,12 @@ export function endAgentTurnSpan(span: Span, result: {
     span.setStatus({ code: SpanStatusCode.OK });
     setSyntheticResultCode(span, 200);
   }
-  span.setAttribute("piclaw.turn.status", result.status);
-  if (result.tokenCount != null) span.setAttribute("piclaw.turn.tokens", result.tokenCount);
+  span.setAttribute("qiushuiai.turn.status", result.status);
+  if (result.tokenCount != null) span.setAttribute("qiushuiai.turn.tokens", result.tokenCount);
   if (result.recovery) {
-    if (result.recovery.attemptsUsed != null) span.setAttribute("piclaw.recovery.attempts", result.recovery.attemptsUsed);
-    if (result.recovery.exhausted) span.setAttribute("piclaw.recovery.exhausted", true);
-    if (result.recovery.lastClassifier) span.setAttribute("piclaw.recovery.classifier", result.recovery.lastClassifier);
+    if (result.recovery.attemptsUsed != null) span.setAttribute("qiushuiai.recovery.attempts", result.recovery.attemptsUsed);
+    if (result.recovery.exhausted) span.setAttribute("qiushuiai.recovery.exhausted", true);
+    if (result.recovery.lastClassifier) span.setAttribute("qiushuiai.recovery.classifier", result.recovery.lastClassifier);
   }
   span.end();
 }
@@ -319,7 +319,7 @@ export function recordToolCall(chatJid: string, toolName: string, durationMs: nu
   const span = getTracer().startSpan("tool.call", {
     kind: SpanKind.CLIENT,
     attributes: buildSyntheticDependencyAttributes(
-      { ...buildAppInsightsActorAttributes(chatJid, null, inst()), "piclaw.tool.name": toolName, "piclaw.instance": inst() },
+      { ...buildAppInsightsActorAttributes(chatJid, null, inst()), "qiushuiai.tool.name": toolName, "qiushuiai.instance": inst() },
       "/tool/call",
       toolName,
       "tool",
@@ -335,17 +335,17 @@ export function recordToolCall(chatJid: string, toolName: string, durationMs: nu
     span.setStatus({ code: SpanStatusCode.OK });
     setSyntheticResultCode(span, 200);
   }
-  span.setAttribute("piclaw.tool.duration_ms", durationMs);
+  span.setAttribute("qiushuiai.tool.duration_ms", durationMs);
   span.end();
 }
 
 export function recordProviderError(chatJid: string, error: string, opts?: { model?: string; provider?: string; classifier?: string }): void {
   const span = getTracer().startSpan("provider.error", {
     attributes: {
-      ...buildAppInsightsActorAttributes(chatJid, null, inst()), "piclaw.instance": inst(),
-      ...(opts?.model ? { "piclaw.model": opts.model } : {}),
-      ...(opts?.provider ? { "piclaw.provider": opts.provider } : {}),
-      ...(opts?.classifier ? { "piclaw.error.classifier": opts.classifier } : {}),
+      ...buildAppInsightsActorAttributes(chatJid, null, inst()), "qiushuiai.instance": inst(),
+      ...(opts?.model ? { "qiushuiai.model": opts.model } : {}),
+      ...(opts?.provider ? { "qiushuiai.provider": opts.provider } : {}),
+      ...(opts?.classifier ? { "qiushuiai.error.classifier": opts.classifier } : {}),
     },
   });
   span.setStatus({ code: SpanStatusCode.ERROR, message: error });
@@ -391,7 +391,7 @@ function scheduleUsageTelemetry(config: ObservabilityConfig): void {
     const exportConfig = {
       graphite_host: config.graphite_host,
       graphite_port: config.graphite_port,
-      graphite_prefix: "piclaw",
+      graphite_prefix: "qiushuiai",
       instance_name: config.instance_name,
     };
     try {
@@ -432,7 +432,7 @@ export function buildRuntimeConfigKey(config: ObservabilityConfig): string {
     graphite_enabled: Boolean(config.graphite_enabled),
     graphite_host: config.graphite_host.trim(),
     graphite_port: config.graphite_port,
-    graphite_prefix: "piclaw",
+    graphite_prefix: "qiushuiai",
     usage_telemetry_enabled: Boolean(config.usage_telemetry_enabled),
     usage_telemetry_interval_minutes: Math.max(1, Math.min(60, Number(config.usage_telemetry_interval_minutes) || 15)),
     graphite_render_url: config.graphite_render_url?.trim() || "",
@@ -455,7 +455,7 @@ async function applyRuntimeConfig(config: ObservabilityConfig): Promise<void> {
 
   if (config.graphite_enabled && config.graphite_host) {
     teardownGraphite();
-    graphiteCfg = { host: config.graphite_host, port: config.graphite_port, prefix: "piclaw" };
+    graphiteCfg = { host: config.graphite_host, port: config.graphite_port, prefix: "qiushuiai" };
     ensureGraphite();
   } else {
     teardownGraphite();
@@ -518,7 +518,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("observability", "config", {
     get: async () => handleGetConfig(),
@@ -583,9 +583,9 @@ export function buildAppInsightsActorAttributes(chatJid: string, sessionLeafId: 
   const aiSessionId = normalizedSessionLeafId || normalizedChatJid || instance;
 
   if (normalizedChatJid) {
-    attrs["piclaw.chat_jid"] = normalizedChatJid;
-    attrs["piclaw.actor.kind"] = "chat_jid";
-    attrs["piclaw.actor.id"] = normalizedChatJid;
+    attrs["qiushuiai.chat_jid"] = normalizedChatJid;
+    attrs["qiushuiai.actor.kind"] = "chat_jid";
+    attrs["qiushuiai.actor.id"] = normalizedChatJid;
     // Azure Monitor maps these OpenTelemetry attributes into App Insights user fields:
     // enduser.id -> ai.user.authUserId, enduser.pseudo.id -> ai.user.id.
     attrs["enduser.id"] = normalizedChatJid;
@@ -598,20 +598,20 @@ export function buildAppInsightsActorAttributes(chatJid: string, sessionLeafId: 
   if (aiSessionId) {
     attrs["session.id"] = aiSessionId;
     attrs["ai.session.id"] = aiSessionId;
-    attrs["piclaw.session.id"] = aiSessionId;
+    attrs["qiushuiai.session.id"] = aiSessionId;
   }
-  if (normalizedSessionLeafId) attrs["piclaw.session_leaf_id"] = normalizedSessionLeafId;
+  if (normalizedSessionLeafId) attrs["qiushuiai.session_leaf_id"] = normalizedSessionLeafId;
   return attrs;
 }
 
 function getSharedSpanAttributes(record: LogRecord, chatJid: string, instance: string): Record<string, string | number | boolean> {
   const sessionLeafId = readRecordString(record, "sessionLeafId", "session_leaf_id");
   const attrs: Record<string, string | number | boolean> = {
-    "piclaw.instance": instance,
+    "qiushuiai.instance": instance,
     ...buildAppInsightsActorAttributes(chatJid, sessionLeafId, instance),
   };
   const turnId = readRecordString(record, "turnId", "turn_id");
-  if (turnId) attrs["piclaw.turn_id"] = turnId;
+  if (turnId) attrs["qiushuiai.turn_id"] = turnId;
   return attrs;
 }
 
@@ -651,9 +651,9 @@ function startModelCallSpan(turnEntry: InflightTurnEntry, sharedAttrs: Record<st
     kind: SpanKind.CLIENT,
     attributes: buildSyntheticDependencyAttributes({
       ...sharedAttrs,
-      ...(model ? { "piclaw.model": model } : {}),
-      "piclaw.model.sequence": sequence,
-      ...(reason ? { "piclaw.model.resume_reason": reason } : {}),
+      ...(model ? { "qiushuiai.model": model } : {}),
+      "qiushuiai.model.sequence": sequence,
+      ...(reason ? { "qiushuiai.model.resume_reason": reason } : {}),
     }, "/model/call", modelDependencyTarget(model), "model"),
   }, trace.setSpan(context.active(), turnEntry.span));
   const key = `${turnEntry.turnKey}:${sequence}`;
@@ -678,8 +678,8 @@ function endModelCallSpan(turnEntry: InflightTurnEntry | null, opts: { stopReaso
     turnEntry.activeModelKey = null;
     return;
   }
-  if (opts.durationMs != null) entry.span.setAttribute("piclaw.model.duration_ms", opts.durationMs);
-  if (opts.stopReason) entry.span.setAttribute("piclaw.model.stop_reason", opts.stopReason);
+  if (opts.durationMs != null) entry.span.setAttribute("qiushuiai.model.duration_ms", opts.durationMs);
+  if (opts.stopReason) entry.span.setAttribute("qiushuiai.model.stop_reason", opts.stopReason);
   stampUsageAttributes(entry.span, opts.usage);
   if (opts.speed) setModelSpeedAttributes(entry.span, opts.speed);
   if (opts.errorMessage) {
@@ -699,12 +699,12 @@ function stampUsageAttributes(span: Span, usage: unknown): void {
   if (!usage || typeof usage !== "object" || Array.isArray(usage)) return;
   const record = usage as Record<string, unknown>;
   const pairs: Array<[string, string[]]> = [
-    ["piclaw.model.input_tokens", ["input", "inputTokens", "input_tokens", "promptTokens", "prompt_tokens"]],
-    ["piclaw.model.output_tokens", ["output", "outputTokens", "output_tokens", "completionTokens", "completion_tokens"]],
-    ["piclaw.model.reasoning_tokens", ["reasoning", "reasoningTokens", "reasoning_tokens"]],
-    ["piclaw.model.cache_read_tokens", ["cacheRead", "cacheReadTokens", "cache_read_tokens"]],
-    ["piclaw.model.cache_write_tokens", ["cacheWrite", "cacheWriteTokens", "cache_write_tokens"]],
-    ["piclaw.model.total_tokens", ["totalTokens", "total_tokens"]],
+    ["qiushuiai.model.input_tokens", ["input", "inputTokens", "input_tokens", "promptTokens", "prompt_tokens"]],
+    ["qiushuiai.model.output_tokens", ["output", "outputTokens", "output_tokens", "completionTokens", "completion_tokens"]],
+    ["qiushuiai.model.reasoning_tokens", ["reasoning", "reasoningTokens", "reasoning_tokens"]],
+    ["qiushuiai.model.cache_read_tokens", ["cacheRead", "cacheReadTokens", "cache_read_tokens"]],
+    ["qiushuiai.model.cache_write_tokens", ["cacheWrite", "cacheWriteTokens", "cache_write_tokens"]],
+    ["qiushuiai.model.total_tokens", ["totalTokens", "total_tokens"]],
   ];
   for (const [attr, keys] of pairs) {
     for (const key of keys) {
@@ -762,7 +762,7 @@ function bridgeSink(record: LogRecord): void {
       kind: SpanKind.SERVER,
       attributes: buildSyntheticRequestAttributes({
         ...sharedAttrs,
-        ...(record.model ? { "piclaw.model": String(record.model) } : {}),
+        ...(record.model ? { "qiushuiai.model": String(record.model) } : {}),
       }, "/agent/turn", i),
     });
     const turnEntry: InflightTurnEntry = {
@@ -830,10 +830,10 @@ function bridgeSink(record: LogRecord): void {
       clearInflightChildrenForTurn(entry.turnKey, "turn completed");
       entry.span.setStatus({ code: SpanStatusCode.OK });
       setSyntheticResultCode(entry.span, 200);
-      entry.span.setAttribute("piclaw.turn.status", "success");
-      if (typeof record.durationMs === "number") entry.span.setAttribute("piclaw.turn.duration_ms", record.durationMs);
-      if (typeof record.outputChars === "number") entry.span.setAttribute("piclaw.turn.output_chars", record.outputChars);
-      if (typeof record.recoveryAttemptsUsed === "number") entry.span.setAttribute("piclaw.recovery.attempts", record.recoveryAttemptsUsed);
+      entry.span.setAttribute("qiushuiai.turn.status", "success");
+      if (typeof record.durationMs === "number") entry.span.setAttribute("qiushuiai.turn.duration_ms", record.durationMs);
+      if (typeof record.outputChars === "number") entry.span.setAttribute("qiushuiai.turn.output_chars", record.outputChars);
+      if (typeof record.recoveryAttemptsUsed === "number") entry.span.setAttribute("qiushuiai.recovery.attempts", record.recoveryAttemptsUsed);
       entry.span.end();
       inflightTurns.delete(entry.turnKey);
     }
@@ -852,9 +852,9 @@ function bridgeSink(record: LogRecord): void {
       entry.span.setStatus({ code: SpanStatusCode.ERROR, message: errorMsg });
       setSyntheticResultCode(entry.span, 400);
       entry.span.recordException(new Error(errorMsg));
-      entry.span.setAttribute("piclaw.turn.status", "error");
-      if (typeof record.durationMs === "number") entry.span.setAttribute("piclaw.turn.duration_ms", record.durationMs);
-      if (typeof record.classifier === "string") entry.span.setAttribute("piclaw.error.classifier", record.classifier);
+      entry.span.setAttribute("qiushuiai.turn.status", "error");
+      if (typeof record.durationMs === "number") entry.span.setAttribute("qiushuiai.turn.duration_ms", record.durationMs);
+      if (typeof record.classifier === "string") entry.span.setAttribute("qiushuiai.error.classifier", record.classifier);
       entry.span.end();
       inflightTurns.delete(entry.turnKey);
     }
@@ -872,7 +872,7 @@ function bridgeSink(record: LogRecord): void {
       entry.span.setStatus({ code: SpanStatusCode.ERROR, message: detail });
       setSyntheticResultCode(entry.span, syntheticResultCodeForLevel(record.level));
       entry.span.recordException(new Error(detail));
-      entry.span.setAttribute("piclaw.turn.status", "no_reply");
+      entry.span.setAttribute("qiushuiai.turn.status", "no_reply");
       entry.span.end();
       inflightTurns.delete(entry.turnKey);
     }
@@ -889,8 +889,8 @@ function bridgeSink(record: LogRecord): void {
       kind: SpanKind.CLIENT,
       attributes: buildSyntheticDependencyAttributes({
         ...sharedAttrs,
-        "piclaw.tool.name": toolName,
-        ...(readRecordString(record, "toolCallId", "tool_call_id") ? { "piclaw.tool.call_id": readRecordString(record, "toolCallId", "tool_call_id")! } : {}),
+        "qiushuiai.tool.name": toolName,
+        ...(readRecordString(record, "toolCallId", "tool_call_id") ? { "qiushuiai.tool.call_id": readRecordString(record, "toolCallId", "tool_call_id")! } : {}),
       }, "/tool/call", toolName, "tool"),
       ...(parentEntry ? { context: trace.setSpan(context.active(), parentEntry.span) } : {}),
     });
@@ -909,11 +909,11 @@ function bridgeSink(record: LogRecord): void {
       kind: SpanKind.CLIENT,
       attributes: buildSyntheticDependencyAttributes({
         ...sharedAttrs,
-        "piclaw.tool.name": toolName,
+        "qiushuiai.tool.name": toolName,
       }, "/tool/call", toolName, "tool"),
       ...(parentEntry ? { context: trace.setSpan(context.active(), parentEntry.span) } : {}),
     });
-    span.setAttribute("piclaw.tool.duration_ms", durationMs);
+    span.setAttribute("qiushuiai.tool.duration_ms", durationMs);
     if (isError) {
       span.setStatus({ code: SpanStatusCode.ERROR, message: `${toolName} failed` });
       setSyntheticResultCode(span, 400);
@@ -938,8 +938,8 @@ function bridgeSink(record: LogRecord): void {
     const span = getTracer().startSpan("provider.error", {
       attributes: {
         ...sharedAttrs,
-        "piclaw.error.classifier": classifier,
-        ...(record.model ? { "piclaw.model": String(record.model) } : {}),
+        "qiushuiai.error.classifier": classifier,
+        ...(record.model ? { "qiushuiai.model": String(record.model) } : {}),
       },
       ...(parentEntry ? { context: trace.setSpan(context.active(), parentEntry.span) } : {}),
     });
@@ -958,22 +958,22 @@ function bridgeSink(record: LogRecord): void {
     const span = getTracer().startSpan("compaction", {
       kind: SpanKind.INTERNAL,
       attributes: {
-        "piclaw.instance": i,
-        "piclaw.compaction.trigger": readRecordString(record, "trigger") || "unknown",
-        "piclaw.compaction.method": readRecordString(record, "method") || "unknown",
-        "piclaw.compaction.execution": readRecordString(record, "execution") || "unknown",
-        "piclaw.compaction.outcome": outcome,
-        ...(provider ? { "piclaw.provider": provider } : {}),
-        ...(model ? { "piclaw.model": `${provider ? `${provider}/` : ""}${model}` } : {}),
-        ...(readRecordString(record, "timeoutStage") ? { "piclaw.compaction.timeout_stage": readRecordString(record, "timeoutStage")! } : {}),
-        ...(readRecordNumber(record, "totalDurationMs") != null ? { "piclaw.compaction.duration_ms": readRecordNumber(record, "totalDurationMs")! } : {}),
-        ...(readRecordNumber(record, "deterministicDurationMs") != null ? { "piclaw.compaction.deterministic_duration_ms": readRecordNumber(record, "deterministicDurationMs")! } : {}),
-        ...(readRecordNumber(record, "timeToFirstTokenMs") != null ? { "piclaw.compaction.ttft_ms": readRecordNumber(record, "timeToFirstTokenMs")! } : {}),
-        ...(readRecordNumber(record, "providerGenerationMs") != null ? { "piclaw.compaction.provider_generation_ms": readRecordNumber(record, "providerGenerationMs")! } : {}),
-        ...(readRecordNumber(record, "providerRequestCount") != null ? { "piclaw.compaction.provider_request_count": readRecordNumber(record, "providerRequestCount")! } : {}),
-        ...(readRecordNumber(record, "processedChunkCount") != null ? { "piclaw.compaction.processed_chunks": readRecordNumber(record, "processedChunkCount")! } : {}),
-        ...(readRecordNumber(record, "totalChunkCount") != null ? { "piclaw.compaction.total_chunks": readRecordNumber(record, "totalChunkCount")! } : {}),
-        "piclaw.compaction.settlement_timed_out": Boolean(record.settlementTimedOut),
+        "qiushuiai.instance": i,
+        "qiushuiai.compaction.trigger": readRecordString(record, "trigger") || "unknown",
+        "qiushuiai.compaction.method": readRecordString(record, "method") || "unknown",
+        "qiushuiai.compaction.execution": readRecordString(record, "execution") || "unknown",
+        "qiushuiai.compaction.outcome": outcome,
+        ...(provider ? { "qiushuiai.provider": provider } : {}),
+        ...(model ? { "qiushuiai.model": `${provider ? `${provider}/` : ""}${model}` } : {}),
+        ...(readRecordString(record, "timeoutStage") ? { "qiushuiai.compaction.timeout_stage": readRecordString(record, "timeoutStage")! } : {}),
+        ...(readRecordNumber(record, "totalDurationMs") != null ? { "qiushuiai.compaction.duration_ms": readRecordNumber(record, "totalDurationMs")! } : {}),
+        ...(readRecordNumber(record, "deterministicDurationMs") != null ? { "qiushuiai.compaction.deterministic_duration_ms": readRecordNumber(record, "deterministicDurationMs")! } : {}),
+        ...(readRecordNumber(record, "timeToFirstTokenMs") != null ? { "qiushuiai.compaction.ttft_ms": readRecordNumber(record, "timeToFirstTokenMs")! } : {}),
+        ...(readRecordNumber(record, "providerGenerationMs") != null ? { "qiushuiai.compaction.provider_generation_ms": readRecordNumber(record, "providerGenerationMs")! } : {}),
+        ...(readRecordNumber(record, "providerRequestCount") != null ? { "qiushuiai.compaction.provider_request_count": readRecordNumber(record, "providerRequestCount")! } : {}),
+        ...(readRecordNumber(record, "processedChunkCount") != null ? { "qiushuiai.compaction.processed_chunks": readRecordNumber(record, "processedChunkCount")! } : {}),
+        ...(readRecordNumber(record, "totalChunkCount") != null ? { "qiushuiai.compaction.total_chunks": readRecordNumber(record, "totalChunkCount")! } : {}),
+        "qiushuiai.compaction.settlement_timed_out": Boolean(record.settlementTimedOut),
       },
     });
     if (outcome === "success" || outcome === "partial") {
@@ -1001,9 +1001,9 @@ function bridgeSink(record: LogRecord): void {
     const span = getTracer().startSpan("dream", {
       attributes: {
         ...sharedAttrs,
-        "piclaw.dream.mode": typeof record.mode === "string" ? record.mode : "unknown",
-        "piclaw.dream.days": typeof record.days === "number" ? record.days : 0,
-        "piclaw.dream.duration_ms": durationMs,
+        "qiushuiai.dream.mode": typeof record.mode === "string" ? record.mode : "unknown",
+        "qiushuiai.dream.days": typeof record.days === "number" ? record.days : 0,
+        "qiushuiai.dream.duration_ms": durationMs,
       },
     });
     span.setStatus({ code: SpanStatusCode.OK });
@@ -1017,8 +1017,8 @@ function bridgeSink(record: LogRecord): void {
     const span = getTracer().startSpan(`log.${record.level}`, {
       attributes: {
         ...sharedAttrs,
-        "piclaw.operation": op,
-        "piclaw.module": record.module,
+        "qiushuiai.operation": op,
+        "qiushuiai.module": record.module,
       },
     });
     span.setStatus({ code: SpanStatusCode.ERROR, message: record.message });

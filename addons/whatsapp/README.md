@@ -1,37 +1,35 @@
-# @rcarmo/piclaw-addon-whatsapp
+# WhatsApp 频道
 
-WhatsApp channel add-on for Piclaw. The package declares Baileys and `qrcode-terminal` as runtime dependencies and keeps its channel contracts, logging and storage-path handling inside the package.
+通过 Baileys 连接 WhatsApp Web，收发消息并转交智能体处理
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-## Configuration
+这是 QiushuiAI 的扩展插件，技术标识为 `whatsapp`。
 
-Use **Settings → WhatsApp** to store the phone number and enable the channel through the direct add-on config API, then reload Piclaw. Environment overrides are also supported:
+- 软件包：`@qiushuiai/qiushuiai-addon-whatsapp`
+- 当前版本：`0.1.5`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`频道`、`消息通信`、`WhatsApp 集成`
 
-| Env var | Description |
-|---|---|
-| `PICLAW_WHATSAPP_PHONE` | Phone number to connect (with country code) |
-| `PICLAW_WHATSAPP_ENABLED` | Set to `1` to enable the channel |
+## 安装
 
-## How it works
+在 QiushuiAI 中打开**设置 → 插件**，搜索“WhatsApp 频道”并安装。也可以直接使用无需登录的公开安装包：
 
-1. On `session_start`, lazy-loads the Baileys client and connects to WhatsApp Web
-2. Registers a channel detector for WhatsApp JIDs (`@s.whatsapp.net`, `@g.us`) via `registerChannelDetector`
-3. Inbound messages are posted to the agent via `__piclawRuntimeInterop.postMessage`
-4. On `session_shutdown`, disconnects cleanly
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-whatsapp-0.1.5.tgz
+```
 
-## Files
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-- `index.ts` — Addon entry point: env gate, channel detector, lifecycle hooks
-- `whatsapp.ts` — Baileys WhatsApp client (connection, messaging, presence)
-- `whatsapp-presence.ts` — Typing indicator helpers
-- `channel-types.ts` — Package-local inbound message contracts
-- `logger.ts` — Package-local lifecycle logging
+## 提供的能力
 
-## Settings field appearance (0.1.4)
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/whatsapp/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

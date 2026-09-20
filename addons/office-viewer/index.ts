@@ -1,5 +1,5 @@
 /**
- * office-viewer/index.ts — Lightweight Office document viewer addon for Piclaw.
+ * office-viewer/index.ts — Lightweight Office document viewer addon for QiushuiAI.
  *
  * Registers an HTTP route at /office-viewer/* that serves a self-contained
  * viewer page using browser-side JS libraries:
@@ -10,8 +10,8 @@
  * No WASM, no SharedArrayBuffer, no HTTPS requirement.
  * Works over plain HTTP.
  *
- * Uses piclaw's __piclaw_registerRoute global to serve vendor assets
- * and __piclaw_registerToolStatusHintProvider for tool progress hints.
+ * Uses qiushuiai's __qiushuiai_registerRoute global to serve vendor assets
+ * and __qiushuiai_registerToolStatusHintProvider for tool progress hints.
  */
 
 import { resolve, extname, dirname } from "node:path";
@@ -74,7 +74,7 @@ function registerToolStatusHintProvider(provider: {
   id: string;
   buildHints: (ctx: { toolName: string; args: unknown }) => unknown;
 }): void {
-  const fn = (globalThis as any).__piclaw_registerToolStatusHintProvider;
+  const fn = (globalThis as any).__qiushuiai_registerToolStatusHintProvider;
   if (typeof fn === "function") fn(provider);
 }
 
@@ -119,7 +119,7 @@ function handleRoute(req: Request, pathname: string): Response | null {
 
 export default function officeViewer(pi: any) {
   // Register the /office-viewer/* route to serve viewer assets.
-  const registerRoute = (globalThis as any).__piclaw_registerRoute as
+  const registerRoute = (globalThis as any).__qiushuiai_registerRoute as
     | ((prefix: string, handler: typeof handleRoute, extensionPath?: string) => "created" | "updated")
     | undefined;
 
@@ -129,7 +129,7 @@ export default function officeViewer(pi: any) {
       console.log("[office-viewer] Route registered: /office-viewer/* → " + VENDOR_DIR);
     }
   } else {
-    console.warn("[office-viewer] WARNING: __piclaw_registerRoute not available. Route NOT registered.");
+    console.warn("[office-viewer] WARNING: __qiushuiai_registerRoute not available. Route NOT registered.");
   }
 
   // Register tool status hints (shows file path during open_office_viewer calls).

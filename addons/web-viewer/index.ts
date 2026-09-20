@@ -1,7 +1,7 @@
 /**
- * web-viewer/index.ts — Combined HTML, image, and video viewer addon for Piclaw.
+ * web-viewer/index.ts — Combined HTML, image, and video viewer addon for QiushuiAI.
  *
- * Registers three viewer routes via __piclaw_registerRoute:
+ * Registers three viewer routes via __qiushuiai_registerRoute:
  *   /html-viewer   — sandboxed HTML preview
  *   /image-viewer  — workspace and media image viewer
  *   /video-viewer  — workspace video player
@@ -14,9 +14,9 @@ const EXT_DIR = typeof import.meta.dir === "string"
   : dirname(new URL(import.meta.url).pathname);
 
 function reg(prefix: string, handler: (req: Request, pathname: string) => Response | null): void {
-  const fn = (globalThis as any).__piclaw_registerRoute;
+  const fn = (globalThis as any).__qiushuiai_registerRoute;
   if (typeof fn === "function") fn(prefix, handler, EXT_DIR);
-  else console.warn(`[web-viewer] __piclaw_registerRoute unavailable — ${prefix} not registered.`);
+  else console.warn(`[web-viewer] __qiushuiai_registerRoute unavailable — ${prefix} not registered.`);
 }
 
 // ── HTML viewer ──────────────────────────────────────────────────────────────
@@ -101,7 +101,7 @@ export function generateHtmlViewerPage(): string {
     document.getElementById('btnSource').addEventListener('click', function() {
       // Navigate the parent to the editor view for this file
       if (window.parent !== window) {
-        window.parent.postMessage({ type: 'piclaw:open-file', path: filePath, mode: 'edit' }, '*');
+        window.parent.postMessage({ type: 'qiushuiai:open-file', path: filePath, mode: 'edit' }, '*');
       } else {
         window.location.href = '/workspace/edit?path=' + encodeURIComponent(filePath);
       }

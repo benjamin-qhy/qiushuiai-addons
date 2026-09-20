@@ -17,7 +17,7 @@ export function findBrowserCommand(
   env: NodeJS.ProcessEnv = process.env,
   which: (command: string) => string | null = Bun.which,
 ): BrowserCommand | null {
-  for (const key of ["PICLAW_BROWSER_PATH", "CHROME_PATH", "CHROMIUM_PATH"] as const) {
+  for (const key of ["QIUSHUIAI_BROWSER_PATH", "CHROME_PATH", "CHROMIUM_PATH"] as const) {
     const command = env[key]?.trim();
     if (command && existsSync(command)) return { name: key, command };
   }
@@ -35,7 +35,7 @@ export async function printHtmlToPdf(options: {
 }): Promise<void> {
   const browser = findBrowserCommand();
   if (!browser) {
-    throw new Error("No Chromium browser found. Install Edge, Chrome, or Chromium, or set PICLAW_BROWSER_PATH.");
+    throw new Error("No Chromium browser found. Install Edge, Chrome, or Chromium, or set QIUSHUIAI_BROWSER_PATH.");
   }
   if (options.signal?.aborted) throw options.signal.reason ?? new Error("PDF rendering aborted");
 

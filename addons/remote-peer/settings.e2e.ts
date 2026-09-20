@@ -1,4 +1,4 @@
-/** Isolated Settings UI fixture only; never connects to a running Piclaw instance. */
+/** Isolated Settings UI fixture only; never connects to a running QiushuiAI instance. */
 import { mkdtemp, mkdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -6,13 +6,13 @@ import { createRequire } from "node:module";
 import { PeerService } from "./service.js";
 const require = createRequire(import.meta.url);
 export async function testSettings() {
-  if (process.env.PICLAW_E2E_DISPOSABLE !== "1")
+  if (process.env.QIUSHUIAI_E2E_DISPOSABLE !== "1")
     throw new Error(
-      "Set PICLAW_E2E_DISPOSABLE=1 to run the owned local Settings fixture.",
+      "Set QIUSHUIAI_E2E_DISPOSABLE=1 to run the owned local Settings fixture.",
     );
-  const executablePath = process.env.PICLAW_E2E_BROWSER;
+  const executablePath = process.env.QIUSHUIAI_E2E_BROWSER;
   if (!executablePath)
-    throw new Error("Set PICLAW_E2E_BROWSER to an installed Chromium binary.");
+    throw new Error("Set QIUSHUIAI_E2E_BROWSER to an installed Chromium binary.");
   const { chromium } = await import("playwright");
   const root = await mkdtemp(join(tmpdir(), "iroh-ui-"));
   let browser: any, server: any, service: PeerService | undefined;
@@ -33,7 +33,7 @@ export async function testSettings() {
     const shim = join(root, "entry.js");
     await Bun.write(
       shim,
-      `import * as preact from ${JSON.stringify(require.resolve("preact").replace("preact.js", "preact.module.js"))};import * as hooks from ${JSON.stringify(require.resolve("preact/hooks").replace("hooks.js", "hooks.module.js"))};import htm from ${JSON.stringify(require.resolve("htm"))};globalThis.__piclawPreactHtm={html:htm.bind(preact.h),...hooks};globalThis.__piclawSettingsPaneRegistry={registerSettingsPane:({component,icon,label})=>{preact.render(preact.h('button',null,icon,label),document.getElementById('nav'));preact.render(preact.h(component),document.getElementById('app'));},notifySettingsPanesChanged:()=>{}};await import(${JSON.stringify(join(import.meta.dir, "web/index.ts"))});`,
+      `import * as preact from ${JSON.stringify(require.resolve("preact").replace("preact.js", "preact.module.js"))};import * as hooks from ${JSON.stringify(require.resolve("preact/hooks").replace("hooks.js", "hooks.module.js"))};import htm from ${JSON.stringify(require.resolve("htm"))};globalThis.__qiushuiaiPreactHtm={html:htm.bind(preact.h),...hooks};globalThis.__qiushuiaiSettingsPaneRegistry={registerSettingsPane:({component,icon,label})=>{preact.render(preact.h('button',null,icon,label),document.getElementById('nav'));preact.render(preact.h(component),document.getElementById('app'));},notifySettingsPanesChanged:()=>{}};await import(${JSON.stringify(join(import.meta.dir, "web/index.ts"))});`,
     );
     const built = await Bun.build({
       entrypoints: [shim],

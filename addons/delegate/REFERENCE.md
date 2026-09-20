@@ -14,7 +14,7 @@ Delegate deliberately distinguishes three model roles.
 
 | Role | Source | Purpose |
 |---|---|---|
-| Runtime models | `ctx.modelRegistry.getAvailable()` | Piclaw-visible providers, capabilities, context/output limits, and diagnostics |
+| Runtime models | `ctx.modelRegistry.getAvailable()` | QiushuiAI-visible providers, capabilities, context/output limits, and diagnostics |
 | Executable models | Child `pi --list-models` | The only models allowed in subprocess selection or explicit override |
 | Current model | `ctx.model` plus runtime metadata | Establishes the maximum automatic tier and current family |
 
@@ -106,7 +106,7 @@ When a native raster attachment is present, every automatic or explicit candidat
 - It must exactly match an entry in **Settings → Delegate → Approved delegate models**.
 - It can bypass automatic current-tier and category-tier selection.
 - It cannot bypass provider approval, ordered classification, provider/model exclusions, child-CLI executability, or image-capability validation.
-- A runtime-only match reports that Piclaw can see it but child Pi cannot execute it.
+- A runtime-only match reports that QiushuiAI can see it but child Pi cannot execute it.
 - Any other mismatch asks for an exact approved Settings candidate.
 - Explicit calls do not use automatic model fallback.
 
@@ -165,7 +165,7 @@ The prompt is written to stdin. There is no shell wrapper and no prompt temp fil
 `--no-extensions` is always used. Delegate may explicitly load:
 
 1. The known MCP adapter entrypoint when installed.
-It does not recursively load Delegate, inherit Piclaw add-on tools, or scan/load arbitrary top-level workspace `.ts` extensions.
+It does not recursively load Delegate, inherit QiushuiAI add-on tools, or scan/load arbitrary top-level workspace `.ts` extensions.
 
 ### Structured JSON protocol
 
@@ -285,4 +285,4 @@ The Delegate Settings pane uses the direct add-on config API and reports:
 - Runtime-only, unapproved-provider, unclassified, and excluded models cannot be explicitly delegated.
 - Image support is fail-closed when runtime capability metadata is absent.
 - Child tool profiles restrict the tool list but are not an operating-system sandbox. A child granted `bash` or external MCP services can execute capabilities outside Delegate's child-model launcher.
-- MCP is available only when its adapter can be discovered; other Piclaw add-on tools are not inherited by the child.
+- MCP is available only when its adapter can be discovered; other QiushuiAI add-on tools are not inherited by the child.

@@ -9,7 +9,7 @@ const addonDir = import.meta.dir;
 test("plan compat storage avoids runtime source imports", () => {
   const source = readFileSync(resolve(addonDir, "compat", "extension-kv.ts"), "utf8");
   expect(source).not.toContain("require(");
-  expect(source).not.toContain("piclaw/runtime/src");
+  expect(source).not.toContain("qiushuiai/runtime/src");
 });
 
 test("plan tool schema uses string enums throughout", () => {
@@ -45,7 +45,7 @@ test("runtime API exposes structured session plans for sibling add-ons", () => {
     { step: "done", status: "completed" },
     { step: "next", status: "pending" },
   ]);
-  const api = (globalThis as any).__piclaw_planSidebarApi;
+  const api = (globalThis as any).__qiushuiai_planSidebarApi;
   expect(typeof api?.getPlan).toBe("function");
   expect(api.getPlan("web:goal").plan).toEqual(direct.plan);
 });
@@ -54,8 +54,8 @@ test("plan tool gets and sets active session plan", async () => {
   resetPlanSidebarAddonForTests();
   let tool: any = null;
   const events: Array<{ type: string; data: any }> = [];
-  const previousBroadcast = (globalThis as any).__PICLAW_BROADCAST_EVENT__;
-  (globalThis as any).__PICLAW_BROADCAST_EVENT__ = (type: string, data: any) => events.push({ type, data });
+  const previousBroadcast = (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__;
+  (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__ = (type: string, data: any) => events.push({ type, data });
   const pi: any = {
     on() {},
     registerTool(definition: any) { tool = definition; },
@@ -77,8 +77,8 @@ test("plan tool gets and sets active session plan", async () => {
     const readResult = await tool.execute("2", { action: "read" }, undefined, undefined, ctx);
     expect(readResult.content[0].text).toContain("- [x] done");
   } finally {
-    if (previousBroadcast) (globalThis as any).__PICLAW_BROADCAST_EVENT__ = previousBroadcast;
-    else delete (globalThis as any).__PICLAW_BROADCAST_EVENT__;
+    if (previousBroadcast) (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__ = previousBroadcast;
+    else delete (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__;
   }
 });
 
@@ -86,8 +86,8 @@ test("plan action=update stores a Codex-style structured plan in the sidebar", a
   resetPlanSidebarAddonForTests();
   const tools = new Map<string, any>();
   const events: Array<{ type: string; data: any }> = [];
-  const previousBroadcast = (globalThis as any).__PICLAW_BROADCAST_EVENT__;
-  (globalThis as any).__PICLAW_BROADCAST_EVENT__ = (type: string, data: any) => events.push({ type, data });
+  const previousBroadcast = (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__;
+  (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__ = (type: string, data: any) => events.push({ type, data });
   const pi: any = {
     on() {},
     registerTool(definition: any) { tools.set(definition.name, definition); },
@@ -124,8 +124,8 @@ test("plan action=update stores a Codex-style structured plan in the sidebar", a
       data: { key: "plan.changes", addon: "plan-sidebar", chat_jid: "web:default", source: "tool", action: "update" },
     });
   } finally {
-    if (previousBroadcast) (globalThis as any).__PICLAW_BROADCAST_EVENT__ = previousBroadcast;
-    else delete (globalThis as any).__PICLAW_BROADCAST_EVENT__;
+    if (previousBroadcast) (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__ = previousBroadcast;
+    else delete (globalThis as any).__QIUSHUIAI_BROADCAST_EVENT__;
   }
 });
 
@@ -370,7 +370,7 @@ test("web sidebar uses a real wrapped Markdown editor with checklist decorations
 test("sidebar listens for plan.changes events and refreshes without clobbering dirty edits", () => {
   const source = readFileSync(resolve(addonDir, "web", "index.ts"), "utf8");
   const handlerSource = source.slice(source.indexOf("function handleRemotePlanUpdate"), source.indexOf("async function resetPlan"));
-  expect(source).toContain('window.addEventListener("piclaw-extension-ui:status", handleRemotePlanUpdate);');
+  expect(source).toContain('window.addEventListener("qiushuiai-extension-ui:status", handleRemotePlanUpdate);');
   expect(source).toContain('key !== "plan.changes" && key !== "plan-sidebar.plan-updated"');
   expect(handlerSource).not.toContain("if (!state.open) return;");
   expect(source).toContain("const hadPendingRemoteRefresh = state.pendingRemoteRefresh;");

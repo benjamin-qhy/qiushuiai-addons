@@ -1,21 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-goal",
-  "version": "0.1.48",
-  "description": "Codex-style persisted thread goals with a hardened autonomous continuation loop and visible completion/stop summaries",
+  "name": "@qiushuiai/qiushuiai-addon-goal",
+  "version": "0.1.49",
+  "description": "提供持久化线程目标、加固的自主续行循环和清晰的完成或停止摘要",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "automation",
-      "goal-seeking",
-      "loop",
-      "productivity",
-      "session",
-      "core"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -41,8 +29,36 @@
     "goal-seeking",
     "loop",
     "pi-package",
-    "piclaw-addon"
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/goal/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/goal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/goal"
+  },
+  "qiushuiai": {
+    "displayName": "目标管理",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "automation",
+      "goal-seeking",
+      "loop",
+      "productivity",
+      "session",
+      "core"
+    ],
+    "displayTags": [
+      "自动化",
+      "目标驱动",
+      "自动续行",
+      "效率",
+      "会话",
+      "核心推荐"
+    ],
+    "featured": true
+  }
 }

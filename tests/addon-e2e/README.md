@@ -1,6 +1,6 @@
 # Add-on UX E2E tests
 
-This harness mirrors Piclaw's UX regression workflow for add-ons.
+This harness mirrors QiushuiAI's UX regression workflow for add-ons.
 
 ## Opt-in convention
 
@@ -20,15 +20,15 @@ Shared steps are in `tests/addon-e2e/steps/`.
 
 ## Running locally
 
-Start or prepare a Piclaw test instance with the target add-on installed, then run:
+Start or prepare a QiushuiAI test instance with the target add-on installed, then run:
 
 These tests can edit settings, upload files and post messages. Require an explicit disposable URL; a fresh browser alone does not isolate server-side state. Production internal-secret variables are not a fallback.
 
 ```bash
 cd tests/addon-e2e
-PICLAW_E2E_URL=http://127.0.0.1:9999 PICLAW_E2E_DISPOSABLE=1 \
-PICLAW_E2E_INTERNAL_SECRET=<same-secret-as-the-test-instance> \
-  PICLAW_ADDON=sample-addon \
+QIUSHUIAI_E2E_URL=http://127.0.0.1:9999 QIUSHUIAI_E2E_DISPOSABLE=1 \
+QIUSHUIAI_E2E_INTERNAL_SECRET=<same-secret-as-the-test-instance> \
+  QIUSHUIAI_ADDON=sample-addon \
   bun run test -- --project=desktop-chrome
 bun run report
 ```
@@ -36,14 +36,14 @@ bun run report
 To prepare a temporary workspace installation path for the add-on:
 
 ```bash
-PICLAW_ADDON=sample-addon \
-PICLAW_RUNTIME_ROOT=/path/to/piclaw/runtime \
+QIUSHUIAI_ADDON=sample-addon \
+QIUSHUIAI_RUNTIME_ROOT=/path/to/qiushuiai/runtime \
 bun run tests/addon-e2e/scripts/prepare-addon-test-instance.ts
 ```
 
 Preparation always creates its own temporary root and prints workspace, store, data, home and Pi-profile paths. It ignores inherited workspace paths. Use the printed paths for the disposable server and remove that owned root only after stopping it.
 
-Preparation also prints XDG and temporary paths and copies dependencies into its owned root; it never links to writable host dependencies. Export the printed path fields, then start the runtime with `bun run scripts/run-test-instance.ts -- bun /path/to/piclaw/runtime/src/index.ts`. The wrapper validates the owner marker and every path and removes inherited service credentials. Supply only test-instance `PICLAW_E2E_INTERNAL_SECRET` and `PICLAW_E2E_KEYCHAIN_KEY` if needed; the wrapper maps them to runtime bootstrap variables.
+Preparation also prints XDG and temporary paths and copies dependencies into its owned root; it never links to writable host dependencies. Export the printed path fields, then start the runtime with `bun run scripts/run-test-instance.ts -- bun /path/to/qiushuiai/runtime/src/index.ts`. The wrapper validates the owner marker and every path and removes inherited service credentials. Supply only test-instance `QIUSHUIAI_E2E_INTERNAL_SECRET` and `QIUSHUIAI_E2E_KEYCHAIN_KEY` if needed; the wrapper maps them to runtime bootstrap variables.
 
 The test run generates Playwright specs from Gherkin into `.generated/` and writes Playwright output to:
 

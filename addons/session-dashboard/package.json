@@ -1,20 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-session-dashboard",
-  "version": "0.2.4",
-  "description": "Roll-down active session dashboard with recent work summaries and context indicators",
+  "name": "@qiushuiai/qiushuiai-addon-session-dashboard",
+  "version": "0.2.5",
+  "description": "提供可下拉的活动会话仪表盘、近期工作摘要和上下文状态",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "session",
-      "dashboard",
-      "navigation",
-      "ui",
-      "core"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -29,13 +18,38 @@
     "@earendil-works/pi-coding-agent": "*"
   },
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
-    "session",
     "dashboard",
-    "navigation"
+    "navigation",
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
+    "session"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/session-dashboard/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/session-dashboard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/session-dashboard"
+  },
+  "qiushuiai": {
+    "displayName": "会话仪表盘",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "session",
+      "dashboard",
+      "navigation",
+      "ui",
+      "core"
+    ],
+    "displayTags": [
+      "会话",
+      "仪表盘",
+      "导航",
+      "界面",
+      "核心推荐"
+    ],
+    "featured": true
+  }
 }

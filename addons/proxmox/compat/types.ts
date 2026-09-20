@@ -1,6 +1,6 @@
 /**
- * compat/types.ts — Inlined type interfaces from piclaw runtime/src/types.ts.
- * Standalone versions for addon use without importing piclaw internals.
+ * compat/types.ts — Inlined type interfaces from qiushuiai runtime/src/types.ts.
+ * Standalone versions for addon use without importing qiushuiai internals.
  */
 
 export interface ProxmoxConfig {
@@ -8,7 +8,7 @@ export interface ProxmoxConfig {
   chat_jid: string;
   /** Proxmox API base URL, typically ending in /api2/json. */
   base_url: string;
-  /** Proxmox API token username, e.g. root@pam!piclaw. */
+  /** Proxmox API token username, e.g. root@pam!qiushuiai. */
   username?: string;
   /** Keychain entry name containing the Proxmox API token secret. */
   api_token_keychain: string;

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # browser-relay — send a URL from the container to the WSL2 host-side relay.
-# Intended for use as BROWSER=browser-relay inside PiClaw containers.
+# Intended for use as BROWSER=browser-relay inside QiushuiAI containers.
 
 set -euo pipefail
 

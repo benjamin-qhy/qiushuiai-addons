@@ -1,24 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-late-night-regrets",
-  "version": "0.1.4",
-  "description": "Nightly Bayesian interaction-quality classifier — trains on chat history, flags behavioral patterns, and writes self-improvement reflections",
+  "name": "@qiushuiai/qiushuiai-addon-late-night-regrets",
+  "version": "0.1.5",
+  "description": "夜间训练贝叶斯交互质量分类器，识别行为模式并生成自我改进反思",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.1.0",
-    "tags": [
-      "self-improvement",
-      "classifier",
-      "bayesian",
-      "reflection",
-      "quality",
-      "nightly"
-    ],
-    "skills": [
-      "skills/late-night-regrets"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -29,14 +14,44 @@
     "typebox": "*"
   },
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
-    "self-improvement",
     "bayesian",
     "classifier",
-    "reflection"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
+    "reflection",
+    "self-improvement"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/late-night-regrets/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/late-night-regrets",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/late-night-regrets"
+  },
+  "qiushuiai": {
+    "displayName": "夜间反思",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "self-improvement",
+      "classifier",
+      "bayesian",
+      "reflection",
+      "quality",
+      "nightly"
+    ],
+    "displayTags": [
+      "自我改进",
+      "分类器",
+      "贝叶斯",
+      "反思",
+      "质量",
+      "夜间任务"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/late-night-regrets"
+    ]
+  }
 }

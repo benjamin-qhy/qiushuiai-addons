@@ -44,11 +44,11 @@ test("anonymous terminal client token is stable in local storage", () => {
   expect(getOrCreateAnonymousTerminalClientToken(win)).toBe("uuid-token");
 });
 
-test("lite-term pane extensions replace Piclaw terminal pane IDs", () => {
+test("lite-term pane extensions replace QiushuiAI terminal pane IDs", () => {
   expect(liteTermPaneExtension.id).toBe("terminal");
   expect(liteTermPaneExtension.placement).toBe("dock");
   expect(liteTermTabPaneExtension.id).toBe("terminal-tab");
-  expect(liteTermTabPaneExtension.canHandle({ path: "piclaw://terminal" })).toBe(10_000);
+  expect(liteTermTabPaneExtension.canHandle({ path: "qiushuiai://terminal" })).toBe(10_000);
   expect(liteTermTabPaneExtension.canHandle({ path: "README.md" })).toBe(false);
 });
 
@@ -75,7 +75,7 @@ test("vendored xterm runtime and addon files are present", () => {
   }
 });
 
-test("vendored ligatures bundle remains safe after Piclaw asset transpilation", async () => {
+test("vendored ligatures bundle remains safe after QiushuiAI asset transpilation", async () => {
   const source = await Bun.file(join(addonDir, "web", "vendor", "addon-ligatures.mjs")).text();
   const transpiled = new Bun.Transpiler({ loader: "js" }).transformSync(source);
   expect(transpiled).toContain("globalThis.require");

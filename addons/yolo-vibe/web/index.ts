@@ -1,13 +1,13 @@
 // @ts-nocheck
 const ADDON_ID = "yolo-vibe";
-const STYLE_ID = "piclaw-yolo-vibe-style";
-const TOOLBAR_CLASS = "piclaw-yolo-vibe-toolbar";
+const STYLE_ID = "qiushuiai-yolo-vibe-style";
+const TOOLBAR_CLASS = "qiushuiai-yolo-vibe-toolbar";
 const DEFAULT_CHAT_JID = "web:default";
 
 export const YOLO_VIBE_BUTTONS = [
-  { id: "continue", label: "Continue", prompt: "continue, according to plan" },
-  { id: "audit", label: "Audit", prompt: "audit for code smells and logic errors, fixing as you go" },
-  { id: "docs", label: "Docs", prompt: "review and update all documentation, then commit and push" },
+  { id: "continue", label: "继续", prompt: "continue, according to plan" },
+  { id: "audit", label: "审计", prompt: "audit for code smells and logic errors, fixing as you go" },
+  { id: "docs", label: "文档", prompt: "review and update all documentation, then commit and push" },
 ];
 
 export function normalizeChatJid(value) {
@@ -16,9 +16,9 @@ export function normalizeChatJid(value) {
 }
 
 export function getCurrentChatJid() {
-  const fromApi = normalizeChatJid(globalThis.__piclaw_web?.getCurrentChatJid?.());
+  const fromApi = normalizeChatJid(globalThis.__qiushuiai_web?.getCurrentChatJid?.());
   if (fromApi !== DEFAULT_CHAT_JID) return fromApi;
-  const fromGlobal = normalizeChatJid(globalThis.__piclawCurrentChatJid);
+  const fromGlobal = normalizeChatJid(globalThis.__qiushuiaiCurrentChatJid);
   if (fromGlobal !== DEFAULT_CHAT_JID) return fromGlobal;
   try {
     const url = new URL(globalThis.location?.href || "https://example.test/");

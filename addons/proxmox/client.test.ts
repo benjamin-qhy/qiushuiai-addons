@@ -9,27 +9,27 @@ import { listKeychainEntries } from "./compat/keychain.js";
 
 afterEach(() => {
   setProxmoxCurlExecutorForTests(null);
-  delete (globalThis as { __piclawRuntimeInterop?: unknown }).__piclawRuntimeInterop;
+  delete (globalThis as { __qiushuiaiRuntimeInterop?: unknown }).__qiushuiaiRuntimeInterop;
 });
 
 describe("proxmox client auth", () => {
   test("listKeychainEntries preserves canonical names from runtime metadata", () => {
-    (globalThis as { __piclawRuntimeInterop?: { listKeychainEntries?: () => unknown } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { listKeychainEntries?: () => unknown } }).__qiushuiaiRuntimeInterop = {
       listKeychainEntries: () => [
-        { name: "proxmox/piclaw-management-token", type: "token" },
-        { name: "proxmox/piclaw-management-token", type: "token" },
+        { name: "proxmox/qiushuiai-management-token", type: "token" },
+        { name: "proxmox/qiushuiai-management-token", type: "token" },
         { name: "other/service", type: "secret" },
       ],
     };
 
     expect(listKeychainEntries()).toEqual([
-      { name: "proxmox/piclaw-management-token", type: "token" },
+      { name: "proxmox/qiushuiai-management-token", type: "token" },
       { name: "other/service", type: "secret" },
     ]);
   });
 
   test("resolveProxmoxToken combines configured username with a raw keychain secret", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -37,14 +37,14 @@ describe("proxmox client auth", () => {
       }),
     };
 
-    await expect(resolveProxmoxToken("root@pam!piclaw", "proxmox/piclaw-management-token")).resolves.toEqual({
-      username: "root@pam!piclaw",
+    await expect(resolveProxmoxToken("root@pam!qiushuiai", "proxmox/qiushuiai-management-token")).resolves.toEqual({
+      username: "root@pam!qiushuiai",
       secret: "f1630-uuid-token",
     });
   });
 
   test("requestProxmoxApi uses the configured username in the authorization header", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -57,7 +57,7 @@ describe("proxmox client auth", () => {
       capturedCommand = command;
       return {
         exitCode: 0,
-        stdout: '{"data":{"version":"9.1.7"}}\n__PICLAW_PROXMOX_STATUS__:200',
+        stdout: '{"data":{"version":"9.1.7"}}\n__QIUSHUIAI_PROXMOX_STATUS__:200',
         stderr: "",
       };
     });
@@ -65,8 +65,8 @@ describe("proxmox client auth", () => {
     const response = await requestProxmoxApi(
       {
         base_url: "https://borg.local:8006/api2/json",
-        username: "root@pam!piclaw",
-        api_token_keychain: "proxmox/piclaw-management-token",
+        username: "root@pam!qiushuiai",
+        api_token_keychain: "proxmox/qiushuiai-management-token",
         allow_insecure_tls: true,
       },
       {
@@ -78,12 +78,12 @@ describe("proxmox client auth", () => {
     expect(response.status).toBe(200);
     expect(capturedCommand).toEqual(expect.arrayContaining([
       "-H",
-      "Authorization: PVEAPIToken=root@pam!piclaw=f1630-uuid-token",
+      "Authorization: PVEAPIToken=root@pam!qiushuiai=f1630-uuid-token",
     ]));
   });
 
   test("requestProxmoxApi times out hung curl executors", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -96,8 +96,8 @@ describe("proxmox client auth", () => {
     await expect(requestProxmoxApi(
       {
         base_url: "https://borg.local:8006/api2/json",
-        username: "root@pam!piclaw",
-        api_token_keychain: "proxmox/piclaw-management-token",
+        username: "root@pam!qiushuiai",
+        api_token_keychain: "proxmox/qiushuiai-management-token",
         allow_insecure_tls: true,
       },
       {
@@ -109,7 +109,7 @@ describe("proxmox client auth", () => {
   });
 
   test("requestProxmoxApi passes a hard timeout to the curl executor", async () => {
-    (globalThis as { __piclawRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__piclawRuntimeInterop = {
+    (globalThis as { __qiushuiaiRuntimeInterop?: { getKeychainEntry?: (name: string) => Promise<unknown> } }).__qiushuiaiRuntimeInterop = {
       getKeychainEntry: async (name: string) => ({
         name,
         type: "secret",
@@ -122,7 +122,7 @@ describe("proxmox client auth", () => {
       capturedTimeout = timeoutMs ?? 0;
       return {
         exitCode: 0,
-        stdout: '{"data":{"version":"9.1.7"}}\n__PICLAW_PROXMOX_STATUS__:200',
+        stdout: '{"data":{"version":"9.1.7"}}\n__QIUSHUIAI_PROXMOX_STATUS__:200',
         stderr: "",
       };
     });
@@ -130,8 +130,8 @@ describe("proxmox client auth", () => {
     await requestProxmoxApi(
       {
         base_url: "https://borg.local:8006/api2/json",
-        username: "root@pam!piclaw",
-        api_token_keychain: "proxmox/piclaw-management-token",
+        username: "root@pam!qiushuiai",
+        api_token_keychain: "proxmox/qiushuiai-management-token",
         allow_insecure_tls: true,
       },
       {

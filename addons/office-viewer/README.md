@@ -1,36 +1,35 @@
-# piclaw-addon-office-viewer
+# Office 文档查看器
 
-Office document viewer addon for [Piclaw](https://github.com/rcarmo/piclaw).
+在 QiushuiAI 中查看 DOCX、XLSX、PPTX、ODT、ODS 和 ODP 文档
 
-Requires Piclaw `>=1.8.0`.
+## 功能定位
 
-Opens `.docx`, `.xlsx`, `.pptx`, `.odt`, `.ods`, `.odp`, `.doc`, `.xls`, `.ppt`, `.rtf`, `.csv` files in a self-contained browser-side viewer with no WASM or HTTPS requirements.
+这是 QiushuiAI 的扩展插件，技术标识为 `office-viewer`。
 
-## Libraries
+- 软件包：`@qiushuiai/qiushuiai-addon-office-viewer`
+- 当前版本：`0.1.4`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`办公文档`、`查看器`、`文档处理`、`Word 文档`、`电子表格`、`演示文稿`
 
-All viewer libraries are vendored and served locally:
+## 安装
 
-| Library | Format | Licence |
-|---|---|---|
-| [docx-preview](https://github.com/VolodymyrBaydalka/docxjs) | `.docx` / `.odt` | Apache-2.0 |
-| [SheetJS (xlsx)](https://sheetjs.com/) | `.xlsx` / `.csv` | Apache-2.0 |
-| [PptxViewJS](https://github.com/meshesha/PptxViewJS) | `.pptx` / `.ppt` | MIT |
-| [JSZip](https://stuk.github.io/jszip/) | zip dependency | (MIT OR GPL-3.0-or-later) |
-| [Chart.js](https://www.chartjs.org/) | chart dependency | MIT |
+在 QiushuiAI 中打开**设置 → 插件**，搜索“Office 文档查看器”并安装。也可以直接使用无需登录的公开安装包：
 
-## Agent tool
-
-Exposes the `open_office_viewer` tool:
-
-```
-open_office_viewer(path: "/workspace/doc.docx")
-→ Returns a viewer URL the user can open in their browser.
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-office-viewer-0.1.4.tgz
 ```
 
-## Route
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-Serves viewer assets at `/office-viewer/*`.
+## 提供的能力
 
-## Installation
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-Open **Settings → Add-Ons** and install **office-viewer** from the public catalog.
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/office-viewer/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

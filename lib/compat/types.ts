@@ -1,6 +1,6 @@
 /**
- * compat/types.ts — Inlined type interfaces from piclaw runtime/src/types.ts.
- * Standalone versions for addon use without importing piclaw internals.
+ * compat/types.ts — Inlined type interfaces from qiushuiai runtime/src/types.ts.
+ * Standalone versions for addon use without importing qiushuiai internals.
  */
 
 export interface ProxmoxConfig {

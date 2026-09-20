@@ -1,7 +1,7 @@
 // @ts-nocheck
 const ADDON_ID = "session-dashboard";
 const API = `/agent/addons/api/${ADDON_ID}/sessions`;
-const STORAGE_OPEN = "piclaw:session-dashboard:open";
+const STORAGE_OPEN = "qiushuiai:session-dashboard:open";
 const DEFAULT_LIMIT = 8;
 const DEFAULT_CHAT_JID = "web:default";
 const NARROW_LAYOUT_MAX_WIDTH = 759;
@@ -13,8 +13,8 @@ const LIVE_REFRESH_DEBOUNCE_MS = 1000;
 const PREVIEW_REFRESH_INTERVAL_MS = 3000;
 const PREVIEW_MAX_LENGTH = 220;
 
-if (!globalThis.__piclawSessionDashboardInstalled) {
-  globalThis.__piclawSessionDashboardInstalled = true;
+if (!globalThis.__qiushuiaiSessionDashboardInstalled) {
+  globalThis.__qiushuiaiSessionDashboardInstalled = true;
   installSessionDashboard();
 }
 
@@ -385,10 +385,10 @@ export function installSessionDashboard() {
 
   toggle.addEventListener("click", () => setOpen(!state.open));
   refreshButton.addEventListener("click", () => void refreshNow("manual"));
-  window.addEventListener("piclaw:current-chat-changed", handleCurrentChatChanged);
+  window.addEventListener("qiushuiai:current-chat-changed", handleCurrentChatChanged);
   window.addEventListener("popstate", handleCurrentChatChanged);
-  window.addEventListener("piclaw-extension-ui", handleLiveEvent);
-  window.addEventListener("piclaw-extension-ui:status", handleLiveEvent);
+  window.addEventListener("qiushuiai-extension-ui", handleLiveEvent);
+  window.addEventListener("qiushuiai-extension-ui:status", handleLiveEvent);
   window.addEventListener("focus", handleWindowFocus);
   window.addEventListener("resize", handleWindowResize);
   document.addEventListener("keydown", handleKeydown, true);
@@ -403,7 +403,7 @@ export function installSessionDashboard() {
   schedulePreviewPolling();
   scheduleFooterClock();
   if (state.open) void refreshNow("startup");
-  return { root, refreshNow, refreshSessionPreviews, destroy: () => { if (state.pollTimer) clearTimeout(state.pollTimer); if (state.previewTimer) clearTimeout(state.previewTimer); if (state.footerClockTimer) clearTimeout(state.footerClockTimer); if (state.liveRefreshTimer) clearTimeout(state.liveRefreshTimer); if (state.resizeTimer) clearTimeout(state.resizeTimer); state.panelResizeObserver?.disconnect?.(); document.removeEventListener("keydown", handleKeydown, true); window.removeEventListener("piclaw:current-chat-changed", handleCurrentChatChanged); window.removeEventListener("popstate", handleCurrentChatChanged); window.removeEventListener("piclaw-extension-ui", handleLiveEvent); window.removeEventListener("piclaw-extension-ui:status", handleLiveEvent); window.removeEventListener("focus", handleWindowFocus); window.removeEventListener("resize", handleWindowResize); root.remove(); } };
+  return { root, refreshNow, refreshSessionPreviews, destroy: () => { if (state.pollTimer) clearTimeout(state.pollTimer); if (state.previewTimer) clearTimeout(state.previewTimer); if (state.footerClockTimer) clearTimeout(state.footerClockTimer); if (state.liveRefreshTimer) clearTimeout(state.liveRefreshTimer); if (state.resizeTimer) clearTimeout(state.resizeTimer); state.panelResizeObserver?.disconnect?.(); document.removeEventListener("keydown", handleKeydown, true); window.removeEventListener("qiushuiai:current-chat-changed", handleCurrentChatChanged); window.removeEventListener("popstate", handleCurrentChatChanged); window.removeEventListener("qiushuiai-extension-ui", handleLiveEvent); window.removeEventListener("qiushuiai-extension-ui:status", handleLiveEvent); window.removeEventListener("focus", handleWindowFocus); window.removeEventListener("resize", handleWindowResize); root.remove(); } };
 }
 
 const EDITABLE_SHORTCUT_SELECTOR = [
@@ -590,7 +590,7 @@ function normalizeToolPreview(value) {
 
   return {
     kind: "tool",
-    label: "tool",
+    label: "工具",
     text: truncateText(text, PREVIEW_MAX_LENGTH),
     totalLines: 1,
   };
@@ -708,9 +708,9 @@ async function apiJson(url, options) {
 }
 
 function getCurrentChatJid() {
-  const fromApi = normalizeChatJid(globalThis.__piclaw_web?.getCurrentChatJid?.());
+  const fromApi = normalizeChatJid(globalThis.__qiushuiai_web?.getCurrentChatJid?.());
   if (fromApi !== DEFAULT_CHAT_JID) return fromApi;
-  const fromGlobal = normalizeChatJid(globalThis.__piclawCurrentChatJid);
+  const fromGlobal = normalizeChatJid(globalThis.__qiushuiaiCurrentChatJid);
   if (fromGlobal !== DEFAULT_CHAT_JID) return fromGlobal;
   try {
     const url = new URL(globalThis.location?.href || "https://example.test/");

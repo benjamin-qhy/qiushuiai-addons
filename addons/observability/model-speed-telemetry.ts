@@ -86,16 +86,16 @@ export function deriveModelSpeedTelemetry(record: Record<string, unknown>): Mode
 export function buildModelSpeedSpanAttributes(telemetry: ModelSpeedTelemetry): Record<string, number> {
   const attributes: Record<string, number> = {};
   const values: Array<[string, number | null]> = [
-    ["piclaw.model.call_duration_ms", telemetry.timing.callDurationMs],
-    ["piclaw.model.response_duration_ms", telemetry.timing.responseDurationMs],
-    ["piclaw.model.response_start_latency_ms", telemetry.timing.responseStartLatencyMs],
-    ["piclaw.model.time_to_first_output_ms", telemetry.timing.timeToFirstOutputMs],
-    ["piclaw.model.time_to_first_text_ms", telemetry.timing.timeToFirstTextMs],
-    ["piclaw.model.generation_duration_ms", telemetry.timing.generationDurationMs],
-    ["piclaw.model.text_generation_duration_ms", telemetry.timing.textGenerationDurationMs],
-    ["piclaw.model.output_tokens_per_second", telemetry.outputTokensPerSecond],
-    ["piclaw.model.non_reasoning_output_tokens_per_second", telemetry.nonReasoningOutputTokensPerSecond],
-    ["piclaw.model.reasoning_tokens", telemetry.usage.reasoningTokens],
+    ["qiushuiai.model.call_duration_ms", telemetry.timing.callDurationMs],
+    ["qiushuiai.model.response_duration_ms", telemetry.timing.responseDurationMs],
+    ["qiushuiai.model.response_start_latency_ms", telemetry.timing.responseStartLatencyMs],
+    ["qiushuiai.model.time_to_first_output_ms", telemetry.timing.timeToFirstOutputMs],
+    ["qiushuiai.model.time_to_first_text_ms", telemetry.timing.timeToFirstTextMs],
+    ["qiushuiai.model.generation_duration_ms", telemetry.timing.generationDurationMs],
+    ["qiushuiai.model.text_generation_duration_ms", telemetry.timing.textGenerationDurationMs],
+    ["qiushuiai.model.output_tokens_per_second", telemetry.outputTokensPerSecond],
+    ["qiushuiai.model.non_reasoning_output_tokens_per_second", telemetry.nonReasoningOutputTokensPerSecond],
+    ["qiushuiai.model.reasoning_tokens", telemetry.usage.reasoningTokens],
   ];
   for (const [name, value] of values) if (value != null) attributes[name] = value;
   return attributes;

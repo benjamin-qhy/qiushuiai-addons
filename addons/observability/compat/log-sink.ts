@@ -1,7 +1,7 @@
 /**
  * compat/log-sink.ts — Log sink client for standalone addons.
  *
- * Resolves piclaw's runtime addLogSink/removeLogSink when available.
+ * Resolves qiushuiai's runtime addLogSink/removeLogSink when available.
  * Falls back to no-op when running standalone.
  */
 
@@ -25,11 +25,11 @@ function resolveRuntime(): boolean {
 
   try {
     const interop = (globalThis as {
-      __piclawRuntimeInterop?: {
+      __qiushuiaiRuntimeInterop?: {
         addLogSink?: (sink: LogSink) => void;
         removeLogSink?: (sink: LogSink) => void;
       };
-    }).__piclawRuntimeInterop;
+    }).__qiushuiaiRuntimeInterop;
     if (typeof interop?.addLogSink === "function" && typeof interop?.removeLogSink === "function") {
       runtimeAddLogSink = interop.addLogSink;
       runtimeRemoveLogSink = interop.removeLogSink;

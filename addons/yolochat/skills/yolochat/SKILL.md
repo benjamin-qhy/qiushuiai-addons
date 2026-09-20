@@ -1,6 +1,6 @@
 ---
 name: yolochat
-description: Send unauthenticated best-effort messages to another reachable Piclaw instance over HTTP.
+description: Send unauthenticated best-effort messages to another reachable QiushuiAI instance over HTTP.
 distribution: public
 ---
 
@@ -31,7 +31,7 @@ To: web:default@10.0.0.10:3000
 Hello from my instance!
 ```
 
-The envelope is posted as the `content` field of a standard piclaw agent message POST.
+The envelope is posted as the `content` field of a standard qiushuiai agent message POST.
 
 ## Sending a message
 

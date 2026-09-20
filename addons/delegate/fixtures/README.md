@@ -5,7 +5,7 @@ Repository baseline: `14c8e2c8a1c39cb9dabad87cb7811d43120bc870` on `main`.
 
 These fixtures freeze the behavior observed before the Delegate 0.2.0 remediation:
 
-- `runtime-models-42.json`: the scoped Piclaw runtime registry exposed for `web:addons`.
+- `runtime-models-42.json`: the scoped QiushuiAI runtime registry exposed for `web:addons`.
 - `cli-models-29.txt`: the child `pi --list-models` catalog that Delegate can execute through its subprocess.
 - `legacy-candidates-26.json`: Delegate 0.1.9 fuzzy candidate assignments, ignored executable models, and models assigned to multiple tiers.
 

@@ -1,34 +1,34 @@
-# Code Validator
+# 代码校验
 
-The `diagnostics` tool validates workspace code files. Requires Piclaw `>=1.8.0`.
+提供 Python、JavaScript、TypeScript 和 JSON 诊断，并支持通过 validators.json 扩展
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **code-validator** from the catalog. Install the validator binaries needed by your project.
+这是 QiushuiAI 的扩展插件，技术标识为 `code-validator`。
 
-## Built-in validators
+- 软件包：`@qiushuiai/qiushuiai-addon-code-validator`
+- 当前版本：`0.1.4`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`诊断`、`校验`、`代码检查`
 
-| Files | Command |
-|---|---|
-| `.ts`, `.tsx`, `.js`, `.jsx` | `bunx oxlint <file>` |
-| `.py` | `python3 -m py_compile <file>` |
-| `.json` | `jq . <file>` |
+## 安装
 
-Call `diagnostics` without a file to list the configured extensions and commands. Missing binaries are reported as warnings rather than hard failures.
+在 QiushuiAI 中打开**设置 → 插件**，搜索“代码校验”并安装。也可以直接使用无需登录的公开安装包：
 
-## Custom validators
-
-Add validators in `/workspace/.pi/validators.json`. Each extension may map to one command or an array of commands; use `$FILE` where the validated path belongs.
-
-```json
-{
-  ".go": { "command": ["go", "test", "$FILE"] }
-}
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-code-validator-0.1.4.tgz
 ```
 
-## Limits
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-- file paths must remain under `/workspace`
-- each validator has a 30-second timeout
-- process capture is capped at 10 MiB
-- displayed diagnostics are truncated to 30 lines per validator
+## 提供的能力
+
+- 入口：`index.ts`
+
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/code-validator/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。
