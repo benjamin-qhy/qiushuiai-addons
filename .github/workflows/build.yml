@@ -50,11 +50,17 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Detect add-on UX tests
         id: addon_tests
+        env:
+          QIUSHUIAI_REPOSITORY_TOKEN: ${{ secrets.QIUSHUIAI_REPOSITORY_TOKEN }}
         run: |
-          if find addons -path '*/tests/features/*.feature' -print -quit | grep -q .; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
+          if ! find addons -path '*/tests/features/*.feature' -print -quit | grep -q .; then
             echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No add-on UX feature files found."
+          elif [ -z "$QIUSHUIAI_REPOSITORY_TOKEN" ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping add-on UX tests: QIUSHUIAI_REPOSITORY_TOKEN is not configured."
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Checkout QiushuiAI runtime for add-on UX tests
         if: steps.addon_tests.outputs.present == 'true'
@@ -63,6 +69,7 @@ jobs:
           repository: benjamin-qhy/qiushuiai
           ref: main
           path: .qiushuiai-runtime
+          token: ${{ secrets.QIUSHUIAI_REPOSITORY_TOKEN }}
       - name: Install QiushuiAI runtime dependencies
         if: steps.addon_tests.outputs.present == 'true'
         run: bun install --frozen-lockfile
