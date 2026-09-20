@@ -40,7 +40,7 @@ Errors tested: parse `-32700`; invalid envelope `-32600`; method `-32601`; param
 
 ## SDK choice and limitations
 
-The SDK provides a framework-independent `JsonRpcTransportHandler.handle` and native fetch client, so Piclaw needs no Express/gRPC dependency. All A2A imports stay in the add-on. The official generated codecs normalise data but do not replace security/schema validation of untrusted JSON.
+The SDK provides a framework-independent `JsonRpcTransportHandler.handle` and native fetch client, so QiushuiAI needs no Express/gRPC dependency. All A2A imports stay in the add-on. The official generated codecs normalise data but do not replace security/schema validation of untrusted JSON.
 
 `DefaultRequestHandler` and `InMemoryTaskStore` are fixture-only. The default handler can mark a task cancelled when its event bus has disappeared without calling an underlying executor cancellation. The fixture keeps WORKING buses using the **numeric** TaskState enum and checks that cancellation reaches the executor. Production will use C2's truthful cancel result.
 

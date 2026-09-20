@@ -1,14 +1,14 @@
 import { chromium } from "playwright";
 import { requireDisposableTestTarget } from "./lib/test-target.js";
 
-const url = requireDisposableTestTarget(process.argv[2] || process.env.PICLAW_E2E_URL);
+const url = requireDisposableTestTarget(process.argv[2] || process.env.QIUSHUIAI_E2E_URL);
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1180, height: 820 } });
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30_000 });
   await page.waitForSelector(".compose-box", { timeout: 60_000 });
   await page.waitForTimeout(2_000);
-  await page.evaluate(() => window.dispatchEvent(new CustomEvent("piclaw:open-settings")));
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent("qiushuiai:open-settings")));
   const pane = page.getByText("Remote Peer", { exact: true });
   await pane.waitFor({ timeout: 30_000 });
   await pane.click();

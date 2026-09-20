@@ -43,7 +43,7 @@ class MockKvStore {
 const kvStore = new MockKvStore();
 const keychain = new Map<string, { name: string; type: string; secret: string; username?: string }>();
 
-(globalThis as any).__piclawRuntimeInterop = {
+(globalThis as any).__qiushuiaiRuntimeInterop = {
   getExtensionKvStore: () => kvStore,
   getKeychainEntry: async (name: string) => {
     const entry = keychain.get(name);
@@ -59,10 +59,10 @@ const keychain = new Map<string, { name: string; type: string; secret: string; u
 const store = await import("./account-store.ts");
 
 describe("IMAP account store", () => {
-  test("uses runtime interop instead of spawning the piclaw CLI", () => {
+  test("uses runtime interop instead of spawning the qiushuiai CLI", () => {
     const source = readFileSync(resolve(import.meta.dir, "account-store.ts"), "utf8");
     expect(source).not.toContain("Bun.spawn");
-    expect(source).not.toContain("piclaw keychain");
+    expect(source).not.toContain("qiushuiai keychain");
     expect(source).toContain("getKeychainEntry");
   });
 
@@ -103,8 +103,8 @@ describe("IMAP account store", () => {
   });
 
   test("does not persist metadata if keychain write fails", async () => {
-    const originalInterop = (globalThis as any).__piclawRuntimeInterop;
-    (globalThis as any).__piclawRuntimeInterop = {
+    const originalInterop = (globalThis as any).__qiushuiaiRuntimeInterop;
+    (globalThis as any).__qiushuiaiRuntimeInterop = {
       ...originalInterop,
       setKeychainEntry: async () => { throw new Error("keychain unavailable"); },
     };
@@ -117,7 +117,7 @@ describe("IMAP account store", () => {
       starttls: false,
     }, "secret")).rejects.toThrow(/keychain unavailable/);
 
-    (globalThis as any).__piclawRuntimeInterop = originalInterop;
+    (globalThis as any).__qiushuiaiRuntimeInterop = originalInterop;
     const account = await store.getAccount("PartialFailure");
     expect(account).toBeNull();
   });

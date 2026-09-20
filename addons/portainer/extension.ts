@@ -44,8 +44,8 @@ interface ResolvedPortainerConfigState {
   source: "session" | "settings" | "merged" | "none";
 }
 
-const DEFAULT_PORTAINER_TOKEN_KEYCHAIN = process.env.PICLAW_PORTAINER_KEYCHAIN?.trim() || "portainer/relay";
-const DEFAULT_PORTAINER_PORT = process.env.PICLAW_PORTAINER_PORT?.trim() || "9443";
+const DEFAULT_PORTAINER_TOKEN_KEYCHAIN = process.env.QIUSHUIAI_PORTAINER_KEYCHAIN?.trim() || "portainer/relay";
+const DEFAULT_PORTAINER_PORT = process.env.QIUSHUIAI_PORTAINER_PORT?.trim() || "9443";
 const DEFAULT_PORTAINER_SETTINGS: PortainerSettingsConfig = {
   host: "",
   base_url: "",
@@ -240,7 +240,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("portainer", "config", {
     get: async () => handleGetPortainerSettings(),

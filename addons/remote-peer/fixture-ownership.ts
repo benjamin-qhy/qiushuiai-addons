@@ -9,7 +9,7 @@ import {
 } from "node:fs";
 import { resolve, join, sep } from "node:path";
 import { randomBytes } from "node:crypto";
-const MAGIC = "piclaw disposable iroh fixture";
+const MAGIC = "qiushuiai disposable iroh fixture";
 function validToken(value: string | undefined): value is string {
   return typeof value === "string" && /^[a-f0-9]{48}$/.test(value);
 }
@@ -21,10 +21,14 @@ export function requireOwnedFixtureRoot(
   if (!value || !validToken(token))
     throw new Error("Owned temporary root and token required.");
   const path = resolve(value),
+    requestedTmp = resolve('/tmp'),
     tmp = realpathSync("/tmp");
-  if (path === tmp || !path.startsWith(tmp + sep))
+  if (!path.startsWith(requestedTmp + sep) && !path.startsWith(tmp + sep))
     throw new Error("Fixture root is outside canonical /tmp.");
-  const relative = path.slice(tmp.length + 1),
+  const realPath = realpathSync(path);
+  if (realPath === tmp || !realPath.startsWith(tmp + sep))
+    throw new Error("Fixture root is outside canonical /tmp.");
+  const relative = realPath.slice(tmp.length + 1),
     first = relative.split(sep)[0];
   if (!first?.startsWith(prefix))
     throw new Error("Fixture root is outside the allowed temporary prefix.");
@@ -32,19 +36,20 @@ export function requireOwnedFixtureRoot(
   if (
     !stat.isDirectory() ||
     stat.isSymbolicLink() ||
-    realpathSync(path) !== path
+    realpathSync(path) !== realPath
   )
     throw new Error("Fixture root must be a real directory.");
+  const lexicalTmp = path.startsWith(requestedTmp + sep) ? requestedTmp : tmp;
   let current = path;
-  while (current !== tmp) {
+  while (current !== lexicalTmp) {
     if (lstatSync(current).isSymbolicLink())
       throw new Error("Fixture root has a symlink ancestor.");
     const parent = resolve(current, "..");
-    if (parent === current || !parent.startsWith(tmp))
+    if (parent === current || !parent.startsWith(lexicalTmp))
       throw new Error("Fixture ancestry escaped canonical /tmp.");
     current = parent;
   }
-  const markerPath = join(path, ".piclaw-iroh-fixture");
+  const markerPath = join(path, ".qiushuiai-iroh-fixture");
   let marker: any = null;
   try {
     const s = lstatSync(markerPath);
@@ -61,7 +66,7 @@ export function createFixtureMarker(
 ) {
   if (!validToken(token)) throw new Error("Invalid fixture token.");
   writeFileSync(
-    join(path, ".piclaw-iroh-fixture"),
+    join(path, ".qiushuiai-iroh-fixture"),
     JSON.stringify({ magic: MAGIC, token }) + "\n",
     { flag: "wx", mode: 0o600 },
   );

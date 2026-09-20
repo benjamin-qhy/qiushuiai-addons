@@ -1,65 +1,35 @@
-# Lite Term
+# 轻量终端
 
-`@rcarmo/piclaw-addon-lite-term` is the add-on form of Piclaw's bundled default xterm.js terminal pane.
+提供基于 xterm.js 的轻量终端面板，适合作为终端定制起点
 
-Requires Piclaw `>=1.8.0`.
+## 功能定位
 
-It is intentionally identical to the built-in default terminal renderer, keeping Piclaw's existing terminal backend, authentication, session handoff, theme colors, terminal font stack, and vendored xterm.js assets. Use it as a reference implementation and a good starting point for terminal customizations without changing Piclaw core.
+这是 QiushuiAI 的扩展插件，技术标识为 `lite-term`。
 
-## What it includes
+- 软件包：`@qiushuiai/qiushuiai-addon-lite-term`
+- 当前版本：`0.1.3`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`终端`、`Web 终端`、`轻量`、`低配置`、`图标字体`
 
-Vendored runtime assets:
+## 安装
 
-- `@xterm/xterm`
-- `@xterm/addon-attach` — vendored for completeness, not activated because Piclaw uses JSON WebSocket control frames
-- `@xterm/addon-canvas`
-- `@xterm/addon-clipboard`
-- `@xterm/addon-fit`
-- `@xterm/addon-image`
-- `@xterm/addon-ligatures`
-- `@xterm/addon-progress`
-- `@xterm/addon-search`
-- `@xterm/addon-serialize`
-- `@xterm/addon-unicode-graphemes`
-- `@xterm/addon-unicode11`
-- `@xterm/addon-web-links`
-- `@xterm/addon-webgl`
+在 QiushuiAI 中打开**设置 → 插件**，搜索“轻量终端”并安装。也可以直接使用无需登录的公开安装包：
 
-Piclaw's existing Nerd Font assets are used through the same CSS terminal font stack. The add-on does not vendor font files.
-
-## Behavior
-
-- Registers replacement `terminal` and `terminal-tab` panes.
-- Uses `/terminal/session` and `/terminal/handoff`, then connects to the WebSocket path returned by `/terminal/session` (`session.ws_path`, with `/terminal/ws` as the fallback).
-- Sends Piclaw's JSON terminal frames for input and resize.
-- Defaults to the canvas renderer for low-spec machines.
-- Supports ligatures, Unicode width/grapheme handling, clickable links, clipboard helpers, image protocol rendering, search, serialize support, and progress add-on loading.
-- Keeps WebGL vendored and available for experiments.
-
-## Renderer selection
-
-The default renderer is canvas. To force WebGL in a browser tab:
-
-```js
-localStorage.setItem("piclaw:lite-term:renderer", "webgl")
-location.reload()
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-lite-term-0.1.3.tgz
 ```
 
-To return to the default:
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-```js
-localStorage.removeItem("piclaw:lite-term:renderer")
-location.reload()
-```
+## 提供的能力
 
-## Why not `AttachAddon`?
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-Piclaw's terminal WebSocket is not a raw PTY byte stream. It exchanges JSON frames such as:
+## 配置与安全
 
-```json
-{ "type": "input", "data": "..." }
-{ "type": "resize", "cols": 120, "rows": 30 }
-{ "type": "output", "data": "..." }
-```
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-`AttachAddon` sends and receives raw terminal bytes, so activating it would bypass Piclaw's resize/control protocol. The add-on vendors it as part of the complete xterm add-on set but uses custom socket glue at runtime.
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/lite-term/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

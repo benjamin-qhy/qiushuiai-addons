@@ -1,6 +1,6 @@
 /**
  * compat/logger.ts — Lightweight logger shim for standalone addons.
- * Replaces piclaw's utils/logger.ts without any internal dependencies.
+ * Replaces qiushuiai's utils/logger.ts without any internal dependencies.
  */
 
 export interface Logger {

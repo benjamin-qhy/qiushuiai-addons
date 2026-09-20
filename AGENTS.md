@@ -1,12 +1,12 @@
-# 开发 piclaw 附加组件
+# 开发 qiushuiai 附加组件
 
-本指南介绍如何为 [piclaw](https://github.com/rcarmo/piclaw) 创建、测试和发布扩展。
+本指南介绍如何为 [qiushuiai](https://github.com/benjamin-qhy/qiushuiai) 创建、测试和发布扩展。
 
 ---
 
 ## 快速开始
 
-> **安装路径规则：**第一方 `piclaw-addons` 必须通过 `catalog.json` 中**由 GitHub 公开托管的 tarball URL** 安装。
+> **安装路径规则：**第一方 `qiushuiai-addons` 必须通过 `catalog.json` 中**由 GitHub 公开托管的 tarball URL** 安装。
 > **不要**将文档、生成的目录条目或运行时集成改回 npmjs.org 软件包说明，或改为通过身份验证读取 GitHub Packages。
 > 运行时安装和移除必须始终无需身份验证。
 
@@ -40,7 +40,7 @@ gh pr create
 ## 附加组件结构
 
 > **重要：**独立附加组件软件包必须自包含。
-> 如果附加组件以独立 npm 软件包的形式发布（例如 `@rcarmo/piclaw-addon-portainer`），运行时不得依赖其软件包目录之外的仓库根目录文件。除非已将相关文件内置到软件包中，否则不要在已发布的独立软件包中导入 `../../lib/compat/*`。
+> 如果附加组件以独立 npm 软件包的形式发布（例如 `@qiushuiai/qiushuiai-addon-portainer`），运行时不得依赖其软件包目录之外的仓库根目录文件。除非已将相关文件内置到软件包中，否则不要在已发布的独立软件包中导入 `../../lib/compat/*`。
 
 ```
 addons/<slug>/
@@ -92,15 +92,18 @@ export default function myAddon(pi: ExtensionAPI) {
 
 ```json
 {
-  "name": "@rcarmo/piclaw-addon-<slug>",
+  "name": "@qiushuiai/qiushuiai-addon-<slug>",
   "version": "0.1.0",
   "description": "一句话说明",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
+  "qiushuiai": {
+    "displayName": "中文展示名",
     "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": ["相关", "标签"]
+    "compatibleVersions": ">=3.0.0",
+    "categories": ["machine-category"],
+    "displayTags": ["中文标签"],
+    "featured": false
   },
   "pi": {
     "extensions": ["index.ts"],
@@ -113,19 +116,22 @@ export default function myAddon(pi: ExtensionAPI) {
     "@earendil-works/pi-coding-agent": "*",
     "@sinclair/typebox": "*"
   },
-  "keywords": ["piclaw", "piclaw-addon"],
+  "keywords": ["qiushuiai", "qiushuiai-addon"],
   "license": "MIT"
 }
 ```
 
 | 字段 | 必填 | 说明 |
 |---|---|---|
-| `name` | ✓ | `@rcarmo/piclaw-addon-<slug>` |
+| `name` | ✓ | `@qiushuiai/qiushuiai-addon-<slug>` |
 | `version` | ✓ | 每次功能变更都必须提升版本号 |
 | `description` | ✓ | 显示在目录和 Web 界面中 |
-| `piclaw.type` | ✓ | `"extension"` 或 `"skill"` |
-| `piclaw.compatibleVersions` | ✓ | 实际支持的最低 Piclaw 版本范围；当前附加组件介于 `>=1.8.0` 至 `>=2.5.5` |
-| `piclaw.tags` | ✓ | 用于搜索和展示的分类 |
+| `qiushuiai.displayName` | ✓ | 中文展示名 |
+| `qiushuiai.type` | ✓ | `"extension"` 或 `"skill"` |
+| `qiushuiai.compatibleVersions` | ✓ | 当前正式目录统一为 `>=3.0.0` |
+| `qiushuiai.categories` | ✓ | 稳定的英文机器分类，用于检索和程序判断 |
+| `qiushuiai.displayTags` | ✓ | 用于网站和主程序展示的中文标签 |
+| `qiushuiai.featured` | ✓ | 是否为核心推荐插件；不得根据中文标签推断 |
 | `pi.extensions` | ✓ | 入口文件——通常为 `["index.ts"]` |
 | `peerDependencies` | ✓ | 必须声明导入的 Pi 核心软件包（`@earendil-works/pi-coding-agent`、`@earendil-works/pi-ai`、`@earendil-works/pi-tui`），导入 `@sinclair/typebox` 时也必须声明 |
 
@@ -202,10 +208,10 @@ kv.set("prefs", value, "global");            // 跨聊天共享
 
 #### 运行时端
 
-使用 piclaw 暴露的全局注册器，直接从运行时入口注册配置处理器：
+使用 qiushuiai 暴露的全局注册器，直接从运行时入口注册配置处理器：
 
 ```ts
-const registerAddonConfigApi = globalThis.__piclaw_registerAddonConfigApi;
+const registerAddonConfigApi = globalThis.__qiushuiai_registerAddonConfigApi;
 
 registerAddonConfigApi?.("my-addon", "config", {
   get: async () => loadConfig(),
@@ -218,11 +224,11 @@ registerAddonConfigApi?.("my-addon", "config", {
 
 #### 浏览器端
 
-使用 piclaw 提供的浏览器全局对象，并请求经过身份验证的本地配置 API：
+使用 qiushuiai 提供的浏览器全局对象，并请求经过身份验证的本地配置 API：
 
 ```ts
 const API = "/agent/addons/api/my-addon";
-const preactHtm = globalThis.__piclawPreactHtm || globalThis.__piclawPreact;
+const preactHtm = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact;
 
 await fetch(`${API}/config`);
 await fetch(`${API}/config`, {
@@ -238,9 +244,9 @@ await fetch(`${API}/config`, {
 
 ## 测试
 
-单元测试必须保留仓库和测试目录 `bunfig.toml` 中的预加载配置。每次运行都会在导入附加组件前隔离工作区、数据库、主目录、Pi 配置和临时目录，并移除继承的生产环境凭据。新建的测试目录需要有自己的预加载配置（系统会自动检查）。浏览器测试必须明确指定可随时销毁的 `PICLAW_E2E_URL`、`PICLAW_E2E_DISPOSABLE=1`；如果启用了身份验证，还必须指定仅供测试使用的 `PICLAW_E2E_INTERNAL_SECRET`。切勿将当前活动实例作为默认测试目标。
+单元测试必须保留仓库和测试目录 `bunfig.toml` 中的预加载配置。每次运行都会在导入附加组件前隔离工作区、数据库、主目录、Pi 配置和临时目录，并移除继承的生产环境凭据。新建的测试目录需要有自己的预加载配置（系统会自动检查）。浏览器测试必须明确指定可随时销毁的 `QIUSHUIAI_E2E_URL`、`QIUSHUIAI_E2E_DISPOSABLE=1`；如果启用了身份验证，还必须指定仅供测试使用的 `QIUSHUIAI_E2E_INTERNAL_SECRET`。切勿将当前活动实例作为默认测试目标。
 
-`prepare-addon-test-instance.ts` 始终会创建一个全新的临时工作区，并输出其路径。它绝不会安装到继承的 `PICLAW_WORKSPACE` 中。在可随时销毁的运行时停止之前，保留所准备的目录；之后只移除输出中明确归属本次测试的根目录。
+`prepare-addon-test-instance.ts` 始终会创建一个全新的临时工作区，并输出其路径。它绝不会安装到继承的 `QIUSHUIAI_WORKSPACE` 中。在可随时销毁的运行时停止之前，保留所准备的目录；之后只移除输出中明确归属本次测试的根目录。
 
 ### 独立导入测试
 
@@ -279,7 +285,7 @@ bun run check:catalog
    - 如果安装了 `cheapskate` 用于常规测试，请在截图**之前**将其移除，以免它扰乱设置导航栏
 3. 使用共享脚本截取界面：
    ```bash
-   cd /workspace/piclaw-addons
+   cd /workspace/qiushuiai-addons
    PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright \
      bun run scripts/capture-addon-settings-screenshot.ts \
      --url http://192.168.1.78:8080 \
@@ -301,7 +307,7 @@ bun run check:catalog
 1. `validate-metadata` 会在拉取请求和推送到 `main` 时运行；它会检查生成的元数据和 Earendil 兼容性。
 2. 附加组件或目录脚本发生变更后，`sync-catalog` 会在 `main` 上运行，并可能同时更新 `catalog.json` 和根目录的 `package.json`。
 3. 附加组件、目录、资源或构建发生变更后，`build + deploy` 会在 `main` 上运行，并发布 GitHub Pages 网站和公开的 `.tgz` 文件。
-4. 当附加组件清单中的版本号提升后，`publish` 会在 `main` 上运行，并将软件包镜像到 GitHub Packages，供归档或以其他方式使用。
+4. Pages 构建会校验并发布全部 48 个公开 tarball；仓库不使用 GitHub Packages。
 
 ### 手动同步
 
@@ -326,17 +332,17 @@ bun run check:catalog   # 只验证（不同步时以状态码 1 退出）
 - 短标识：使用小写 kebab-case（`proxmox`、`dev-tools`、`kanban-board-widget`）
 - 每个附加组件只设一个扩展入口
 - 只使用对等依赖——绝不打包导入的 Pi 核心软件包（`@earendil-works/pi-coding-agent`、`@earendil-works/pi-ai`、`@earendil-works/pi-tui`）
-- 绝不从 piclaw 运行时内部模块导入
+- 绝不从 qiushuiai 运行时内部模块导入
 - `lib/compat/` 仅供仓库内开发使用——已发布的软件包必须内置自身所需的所有兼容层
 - 浏览器端设置面板必须使用**直接的后端附加组件配置 API**（`/agent/addons/api/<addon>/<action>`），密钥仍应通过 `/agent/keychain` 处理
-- 运行时端的设置和配置处理器应在模块加载时通过 `globalThis.__piclaw_registerAddonConfigApi(...)` 注册，使 Web 面板不依赖斜杠命令
-- 斜杠命令配置桥接仅用作旧版回退方案；不要添加依赖 `/addon-config-get` / `/addon-config-set` 的新设置面板代码
+- 运行时端的设置和配置处理器应在模块加载时通过 `globalThis.__qiushuiai_registerAddonConfigApi(...)` 注册，使 Web 面板不依赖斜杠命令
+- v3 不提供旧版斜杠命令配置桥接；禁止依赖 `/addon-config-get` / `/addon-config-set`
 - 设置面板附加组件的界面发生实质性变化时，应至少包含一张从 microVM 测试实例截取并提交到 README 的截图
 - 执行截图时，应将 microVM 用作干净的测试环境：优先使用 overlayfs，只暴露目标附加组件，确保实际截图中不出现 `cheapskate`，然后重新安装或恢复 `cheapskate`
 - 技能应放在 `skills/<name>/SKILL.md` 中
 - 每次功能变更都必须提升版本号
 - 每次编辑 `package.json` 后都要运行 `sync:catalog`
-- 第一方附加组件的目录安装条目必须保持 `kind: "tarball"`，并使用公开的 `https://rcarmo.github.io/piclaw-addons/packages/...tgz` URL
+- 第一方附加组件的目录安装条目必须保持 `kind: "tarball"`，并使用公开的 `https://benjamin-qhy.github.io/qiushuiai-addons/packages/...tgz` URL
 
 ## Git 工作流
 

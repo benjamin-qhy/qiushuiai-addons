@@ -8,7 +8,7 @@ The Iroh endpoint key is the sole fresh client identity. QUIC authentication and
 - The receiver applies permissions for every request, including on already connected streams. Revoked identities cannot send or request automatic re-pairing.
 - Unpaired requests are rate limited; peers, discovery candidates, frame lengths, file sizes, request concurrency and pending outbound byte storage are bounded.
 - State lives in a fresh `iroh-v1` directory. Key file mode is 0600. Native imports and local Settings registration do not enable networking by themselves.
-- Local Settings is authenticated by Piclaw. Relay credentials are referenced by keychain name and never returned to the browser.
+- Local Settings is authenticated by QiushuiAI. Relay credentials are referenced by keychain name and never returned to the browser.
 - mDNS may disclose the public client ID and configured instance label to the local segment only after opt-in. Public address lookup has a separate publication warning and defaults off.
 
 This is not a sandbox for remote tool execution: no such execution is provided. Both proposal and execute-labelled work require local review and a supplied result.

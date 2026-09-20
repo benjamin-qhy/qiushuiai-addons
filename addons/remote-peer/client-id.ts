@@ -15,7 +15,7 @@ export function endpointId(value: string): string {
 }
 function checksum(id: string) {
   return createHash("sha256")
-    .update("piclaw-iroh-client/1:" + id)
+    .update("qiushuiai-iroh-client/1:" + id)
     .digest("hex")
     .slice(0, 8);
 }

@@ -1,21 +1,47 @@
 {
-  "name": "@rcarmo/piclaw-addon-mindmap",
-  "version": "0.1.3",
-  "description": "D3-based mindmap editor pane for .mindmap.yaml files in Piclaw",
+  "name": "@qiushuiai/qiushuiai-addon-mindmap",
+  "version": "0.1.4",
+  "description": "为 .mindmap.yaml 文件提供基于 D3 的思维导图编辑面板",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": ["mindmap", "editor", "yaml", "diagrams"]
-  },
   "license": "MIT",
-  "keywords": ["pi-package"],
+  "keywords": [
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
+  ],
   "pi": {
-    "extensions": ["index.ts"],
+    "extensions": [
+      "index.ts"
+    ],
     "web": {
-      "entries": ["web/index.ts"]
+      "entries": [
+        "web/index.ts"
+      ]
     }
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/mindmap/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/mindmap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/mindmap"
+  },
+  "qiushuiai": {
+    "displayName": "思维导图",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "mindmap",
+      "editor",
+      "yaml",
+      "diagrams"
+    ],
+    "displayTags": [
+      "思维导图",
+      "编辑器",
+      "YAML 文件",
+      "图表"
+    ],
+    "featured": false
+  }
 }

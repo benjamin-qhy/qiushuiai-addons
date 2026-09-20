@@ -1,5 +1,5 @@
 Feature: Cheapskate zero-cost catalogue settings
-  As a Piclaw user
+  As a QiushuiAI user
   I want Cheapskate settings to expose only exact-zero catalogue models
   So paid and unknown-cost models cannot be selected through cheapskate/auto
 

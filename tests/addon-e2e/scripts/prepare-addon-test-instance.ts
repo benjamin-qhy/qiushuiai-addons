@@ -67,7 +67,7 @@ export function assertNoSymlinkAncestors(target: string, boundary: string, inclu
 }
 
 export function createIsolationPaths(): IsolationPaths {
-  const prepRoot = mkdtempSync(join(CANONICAL_TMP, 'piclaw-addon-e2e-'));
+  const prepRoot = mkdtempSync(join(CANONICAL_TMP, 'qiushuiai-addon-e2e-'));
   if (!prepRoot || !pathIsInside(CANONICAL_TMP, prepRoot)) {
     throw new Error(`Failed to create isolated preparation root under ${CANONICAL_TMP}`);
   }
@@ -84,14 +84,14 @@ export function createIsolationPaths(): IsolationPaths {
     tmp: join(prepRoot, 'tmp'),
   };
   for (const path of Object.values(paths)) mkdirSync(path, { recursive: true });
-  writeFileSync(join(prepRoot, '.piclaw-addon-e2e-owner'), 'piclaw disposable addon fixture\n', { flag: 'wx' });
+  writeFileSync(join(prepRoot, '.qiushuiai-addon-e2e-owner'), 'qiushuiai disposable addon fixture\n', { flag: 'wx' });
   return paths;
 }
 
 export function selectedAddonFrom(argv: string[], env: Env = process.env): string {
   const addonFlag = argv.indexOf('--addon');
   const selectedArg = addonFlag >= 0 ? argv[addonFlag + 1] || '' : '';
-  return env.PICLAW_ADDON || selectedArg || 'all';
+  return env.QIUSHUIAI_ADDON || selectedArg || 'all';
 }
 
 export function walkHasFeature(dir: string): boolean {
@@ -181,12 +181,12 @@ export function prepareAddonTestInstance(options: PrepareOptions = {}): PrepareR
   const argv = options.argv || process.argv;
   const repoRoot = resolve(options.repoRoot || defaultRepoRoot);
   const addonsDir = join(repoRoot, 'addons');
-  const runtimeRoot = resolve(options.runtimeRoot || env.PICLAW_RUNTIME_ROOT || join(repoRoot, '..', 'piclaw'));
+  const runtimeRoot = resolve(options.runtimeRoot || env.QIUSHUIAI_RUNTIME_ROOT || join(repoRoot, '..', 'qiushuiai'));
   const paths = createIsolationPaths();
   const workspace = paths.workspace;
 
-  mkdirSync(join(workspace, '.piclaw'), { recursive: true });
-  writeFileSync(join(workspace, '.piclaw', 'config.json'), JSON.stringify({ sessionAutoRotate: true }, null, 2));
+  mkdirSync(join(workspace, '.qiushuiai'), { recursive: true });
+  writeFileSync(join(workspace, '.qiushuiai', 'config.json'), JSON.stringify({ sessionAutoRotate: true }, null, 2));
 
   const extensionsDir = join(workspace, '.pi', 'extensions');
   const nodeModulesDir = join(extensionsDir, 'node_modules');
@@ -194,7 +194,7 @@ export function prepareAddonTestInstance(options: PrepareOptions = {}): PrepareR
   assertNoSymlinkAncestors(nodeModulesDir, workspace, true);
 
   const pkgPath = join(extensionsDir, 'package.json');
-  const localPkg = existsSync(pkgPath) ? JSON.parse(readFileSync(pkgPath, 'utf8')) : { name: 'piclaw-addon-e2e-local-addons', private: true, dependencies: {} };
+  const localPkg = existsSync(pkgPath) ? JSON.parse(readFileSync(pkgPath, 'utf8')) : { name: 'qiushuiai-addon-e2e-local-addons', private: true, dependencies: {} };
   localPkg.private = true;
   localPkg.dependencies ||= {};
 
@@ -235,12 +235,12 @@ export function prepareAddonTestInstance(options: PrepareOptions = {}): PrepareR
 
 export function formatPreparedEnvironment(result: PrepareResult): string[] {
   return [
-    `PICLAW_PREP_ROOT=${result.paths.root}`,
-    `PICLAW_WORKSPACE=${result.paths.workspace}`,
+    `QIUSHUIAI_PREP_ROOT=${result.paths.root}`,
+    `QIUSHUIAI_WORKSPACE=${result.paths.workspace}`,
     `HOME=${result.paths.home}`,
-    `PICLAW_STORE=${result.paths.store}`,
-    `PICLAW_DATA=${result.paths.data}`,
-    `PICLAW_PI_AGENT_DIR=${result.paths.profile}`,
+    `QIUSHUIAI_STORE=${result.paths.store}`,
+    `QIUSHUIAI_DATA=${result.paths.data}`,
+    `QIUSHUIAI_PI_AGENT_DIR=${result.paths.profile}`,
     `PI_CODING_AGENT_DIR=${result.paths.profile}`,
     `XDG_CONFIG_HOME=${result.paths.xdgConfig}`,
     `XDG_CACHE_HOME=${result.paths.xdgCache}`,

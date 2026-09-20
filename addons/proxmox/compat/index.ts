@@ -1,5 +1,5 @@
 /**
- * compat/index.ts — Shared compatibility layer for standalone piclaw addons.
+ * compat/index.ts — Shared compatibility layer for standalone qiushuiai addons.
  *
  * Re-exports all shims so addon code can import from one place:
  *   import { getChatJid, createLogger, ... } from "../compat/index.js";

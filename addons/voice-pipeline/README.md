@@ -1,81 +1,34 @@
-# piclaw-addon-voice-pipeline
+# 语音流水线
 
-ESPHome-only voice assistant extension for `piclaw`.
+为 ThinkSmart 和 ESP32-Audio 设备提供基于 Azure STT/TTS 的 ESPHome 语音助手流水线
 
-Requires Piclaw `>=1.8.0`.
+## 功能定位
 
-## What it does
+这是 QiushuiAI 的扩展插件，技术标识为 `voice-pipeline`。
 
-- Connects to an ESPHome/Linux Voice Assistant node (Pi Zero 2 W + ReSpeaker 2-Mic / ThinkSmart style devices)
-- Runs wake-word audio through Azure STT
-- Sends transcriptions to the active Piclaw chat runtime
-- Synthesizes responses with Azure TTS
-- Plays announcements back through the AV device
-- Exposes an `ava` tool for direct device control (play/pause/scene/sensors/snapshot/announce)
-- Persists conversation turns into `tts:default` in the local piclaw message DB
+- 软件包：`@qiushuiai/qiushuiai-addon-voice-pipeline`
+- 当前版本：`0.2.3`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`语音`、`家庭自动化`、`嵌入式设备`、`智能家居`、`音频`
 
-## Install
+## 安装
 
-Open **Settings → Add-Ons** and install **voice-pipeline** from the catalog.
+在 QiushuiAI 中打开**设置 → 插件**，搜索“语音流水线”并安装。也可以直接使用无需登录的公开安装包：
 
-Then configure it via environment variables and reload piclaw.
-
-### Secrets (keychain-backed)
-
-This add-on reads secrets from environment variables. In the piclaw container,
-keychain entries are automatically injected as env vars (names sanitised:
-`/`, `-`, `.` → `_`, uppercased), so **prefer storing secrets in the keychain**
-rather than in a plaintext `.env` file:
-
-| Keychain entry | Injected env var | Purpose |
-|---|---|---|
-| `azure/speech-key` | `AZURE_SPEECH_KEY` | Azure Speech subscription key (**required**) |
-| `esphome/password` | `ESPHOME_PASSWORD` | ESPHome API password (optional) |
-
-### Configuration
-
-| Env var | Default | Notes |
-|---|---|---|
-| `AZURE_SPEECH_KEY` | — | **required** (keychain: `azure/speech-key`) |
-| `AZURE_SPEECH_REGION` | `westeurope` | |
-| `AZURE_SPEECH_STT_LANG` | `pt-PT` | |
-| `AZURE_SPEECH_TTS_VOICE` | `pt-PT-RaquelNeural` | |
-| `AZURE_SPEECH_TTS_LANG` | `pt-PT` | |
-| `AZURE_SPEECH_STT_TIMEOUT_MS` | `15000` | STT fetch timeout |
-| `AZURE_SPEECH_TTS_TIMEOUT_MS` | `15000` | TTS fetch timeout |
-| `ESPHOME_HOST` | — | required for device control |
-| `ESPHOME_PORT` | `6053` | |
-| `ESPHOME_PASSWORD` | — | see security note below |
-| `ESPHOME_SERVER_HOST` | *auto-detected LAN IP* | address the device uses to fetch TTS audio |
-| `ESPHOME_TTS_PORT` | `11080` | local TTS HTTP server port |
-| `ESPHOME_TTS_TTL_MS` | `60000` | evict unfetched TTS clips after this long |
-| `ESPHOME_TTS_MAX_ENTRIES` | `32` | hard cap on cached TTS clips |
-| `VOICE_LLM_TIMEOUT_MS` | `120000` | LLM turn timeout |
-| `VOICE_TURN_TIMEOUT_MS` | `180000` | overall turn watchdog |
-| `VOICE_STORE_TURNS` | `1` | parsed and shown in diagnostics; current ESPHome turn handling still persists turns |
-| `VOICE_DEBUG` | `0` | set `1` for verbose transcript/response logging |
-| `PICLAW_DB` | `/workspace/.piclaw/store/messages.db` | |
-
-`ESPHOME_SERVER_HOST` now **auto-detects the first non-internal LAN IPv4** when
-unset. If detection is wrong (multi-homed host, VLANs), set it explicitly — the
-detected/used value is shown in `/voice-status`.
-
-## Security notes
-
-- **Plaintext ESPHome API only.** This add-on speaks the *unencrypted* ESPHome
-  native API and does **not** support the encrypted (Noise) transport. Set
-  `ESPHOME_PASSWORD` and keep the device on a trusted LAN. A warning is logged
-  and surfaced in `/voice-status` when no password is set.
-- **TTS HTTP server** uses `ESPHOME_SERVER_HOST` as its explicit bind address when that value is not `127.0.0.1`; otherwise Bun uses its default listener binding. The server is `GET`-only, requires a per-process bearer
-  token in the URL, evicts clips on a TTL, and is capped in size.
-
-## Commands
-
-- `/voice-status` — current status and configuration diagnostics
-- `/voice-setup` — setup instructions and config diagnostics (always available)
-
-## Development
-
-```sh
-bun test addons/voice-pipeline/
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-voice-pipeline-0.2.3.tgz
 ```
+
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
+
+## 提供的能力
+
+- 入口：`index.ts`
+
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/voice-pipeline/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -1,84 +1,35 @@
-# diagram-tools
+# 图表工具
 
-Architecture diagram workflow for the portfolio site — JSON graph definitions → SVG rendering → colour palette management.
+提供 JSON 图定义、SVG 渲染器和颜色选择器组件的架构图工作流
 
-Requires Piclaw `>=1.8.0`.
+## 功能定位
 
-## How it works
+这是 QiushuiAI 的技能插件，技术标识为 `diagram-tools`。
 
-![diagram-tools workflow](assets/workflow.svg)
+- 软件包：`@qiushuiai/qiushuiai-addon-diagram-tools`
+- 当前版本：`0.1.1`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`图表`、`矢量图`、`作品集`、`架构`
 
-Define a graph in JSON (nodes, edges, semantic tags), render it to SVG with automatic left-to-right layout and orthogonal arrow routing, inject it into project markdown, and rebuild the site. An interactive colour picker widget lets you adjust the 11-tag palette visually.
+## 安装
 
-## What's included
+在 QiushuiAI 中打开**设置 → 插件**，搜索“图表工具”并安装。也可以直接使用无需登录的公开安装包：
 
-| Component | Description |
-|---|---|
-| **diagram-workflow** skill | End-to-end: define JSON → render SVG → inject into markdown → rebuild |
-| **diagram-colour-picker** skill | Interactive widget for adjusting the colour palette |
-| `diagram-render.ts` | Build-time SVG layout engine (importable module + CLI) |
-| `convert-diagrams.ts` | Batch-convert hand-crafted SVG diagrams to JSON definitions |
-| `colour-picker-widget.html` | Self-contained HTML widget with live swatch preview |
-
-## Graph JSON spec
-
-```json
-{
-  "title": "Caption text below the diagram",
-  "nodes": [
-    {
-      "id": "unique-id",
-      "label": "Display name",
-      "sub": "Subtitle line",
-      "tag": "web",
-      "column": 0, "row": 0,
-      "children": [
-        { "id": "child-id", "label": "Child", "sub": "detail", "tag": "scripting" }
-      ]
-    }
-  ],
-  "edges": [
-    { "from": "source-id", "to": "target-id", "label": "optional", "accent": true }
-  ]
-}
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-diagram-tools-0.1.1.tgz
 ```
 
-## Semantic tags
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-| Tag | Colour | Use for |
-|---|---|---|
-| `web` | blue | frontends, browsers, UIs |
-| `backend` | blue | servers, APIs, runtimes |
-| `state` | grey | databases, stores, config |
-| `artifacts` | amber | builds, files, models |
-| `processing` | dark grey | engines, pipelines, transforms |
-| `scripting` | light grey | scripting, plugins, extensions |
-| `infra` | blue | containers, VMs, infrastructure |
-| `external` | green | external services, APIs |
-| `input` | green | user input, sources, triggers |
-| `output` | orange | results, exports, destinations |
-| `monitor` | purple | monitoring, logging, observability |
+## 提供的能力
 
-## Layout features
+- 本插件不注册独立扩展入口。
+- 技能：`skills`
 
-- **Left-to-right columns** with automatic spacing based on content width
-- **Children/sub-steps** rendered as smaller boxes in a dashed group below the parent
-- **Orthogonal arrow routing** with r=14 rounded corners
-- **Arrows connect to inner parent rect**, not group bounding box
-- **Dark/light theme** via `prefers-color-scheme` (light as default for rsvg-convert)
-- **Edge labels** positioned on the horizontal segment, just above the line
+## 配置与安全
 
-## Quick start
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-```bash
-# Render a single diagram
-bun scripts/diagram-render.ts _diagrams/my-project.json _diagrams/my-project.svg
+## 技术资料
 
-# Batch-convert existing hand-crafted SVGs to JSON
-bun scripts/convert-diagrams.ts
-
-# Regenerate all after palette change
-for f in _diagrams/*.json; do
-  bun scripts/diagram-render.ts "$f" "_diagrams/$(basename $f .json).svg"
-done
-```
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/diagram-tools/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -1,202 +1,39 @@
-# @rcarmo/piclaw-addon-goal
+# 目标管理
 
-Codex-style persisted thread goals for Piclaw.
+提供持久化线程目标、加固的自主续行循环和清晰的完成或停止摘要
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-This add-on replaces the older prompt-template goal loop with a high-fidelity port of Codex CLI's goal model: a per-chat/thread goal record, Codex-compatible model tools, `/goal` user controls, budget accounting, and continuation/budget-limit prompts derived from Codex's upstream logic.
+这是 QiushuiAI 的扩展插件，技术标识为 `goal`。
 
-## Install
+- 软件包：`@qiushuiai/qiushuiai-addon-goal`
+- 当前版本：`0.1.49`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`自动化`、`目标驱动`、`自动续行`、`效率`、`会话`、`核心推荐`
+- 推荐级别：核心推荐
 
-Open **Settings → Add-Ons** and install **goal** from the catalog.
+## 安装
 
-## What it does
+在 QiushuiAI 中打开**设置 → 插件**，搜索“目标管理”并安装。也可以直接使用无需登录的公开安装包：
 
-- stores one persisted thread goal per `chat_jid`
-- exposes Codex-style tools:
-  - `get_goal`
-  - `create_goal`
-  - `goal_complete`
-  - `goal_stop`
-  - `update_goal`
-- adds `/goal` user controls for summary, create/replace, pause, resume, clear, and status
-- tracks goal status, objective, token budget, tokens used, elapsed wall-clock time, created/updated timestamps, and goal id
-- auto-continues active goals when the agent is idle and no user input is pending
-- binds pre-deadline checkpoints to a durable Goal lifecycle generation so pause, terminal transitions, replacement, and reactivation cannot revive obsolete work
-- bounds in-memory checkpoint latches, exact-turn suppressions, and assistant outcomes while preserving live duplicate-prevention state
-- marks goals `budget_limited` when the configured token budget is exhausted and emits a Codex-style wrap-up prompt
-- uses Codex's strict completion and blocked-audit prompt language
-- injects a compact active-goal context block into ordinary user turns so agents know the current goal and terminal actions, not only during auto-continuation turns
-- keeps Codex-compatible `update_goal({ status: "complete" })` as a first-class completion path while also offering evidence-rich `goal_complete`
-- integrates with Plan Sidebar's `plan action=update` when available, so multi-step goal turns can keep a live plan current
-- detects all-completed Plan Sidebar checklists and switches from normal continuation to a final completion audit
-- auto-stops repeated completed-plan loops when completion is not verified
-- auto-stops repeated unchanged incomplete-plan loops as `no_progress`
-- provides a **Goal** settings pane for inspecting and editing the current thread goal
-
-## `/goal` command
-
-- `/goal` or `/goal help` — print the command list as a visible table plus the current goal status (also `?`, `commands`)
-- `/goal status` — show the current goal state
-- `/goal <objective>` — create a new active goal or immediately replace the current objective
-- `/goal pause`, `/goal off`, or `/goal stop` — pause the current goal
-- `/goal resume` or `/goal on` — resume a paused/blocked/usage-limited/budget-limited goal as active and queue continuation
-- `/goal reset` or `/goal clear` — clear the saved thread goal (`clear` is an exact synonym for `reset`)
-- `/goal edit` — points to the Settings pane or replacement flow
-
-## Tool contract
-
-### `get_goal`
-
-Read the current thread goal and usage state.
-
-```json
-{}
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-goal-0.1.49.tgz
 ```
 
-Returns:
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-```json
-{
-  "goal": {
-    "threadId": "web:default",
-    "goalId": "...",
-    "objective": "Ship the feature",
-    "status": "active",
-    "tokenBudget": 100000,
-    "tokensUsed": 1234,
-    "timeUsedSeconds": 42,
-    "createdAt": "2026-05-27T...Z",
-    "updatedAt": "2026-05-27T...Z"
-  },
-  "remainingTokens": 98766,
-  "completionBudgetReport": null,
-  "terminalGuidance": [
-    "If the full objective is verified complete, finish the goal by calling goal_complete({ summary, evidence }) when available.",
-    "Codex-compatible completion path: update_goal({ status: \"complete\", summary, evidence }) also marks the goal complete and should be used if goal_complete is unavailable or not selected."
-  ]
-}
-```
+## 提供的能力
 
-### `create_goal`
+- 入口：`index.ts`
+- 入口：`runtime.ts`
+- 入口：`web/index.ts`
 
-Create a new active goal only when explicitly requested. It fails if a goal already exists.
+目标生命周期通过 `get_goal`、`create_goal` 和 `update_goal` 等工具管理。状态包括正常进行、`blocked`（等待外部条件）和 `budget_limited`（达到预算上限）等明确结果。
 
-```json
-{
-  "objective": "Ship the feature",
-  "token_budget": 100000
-}
-```
+## 配置与安全
 
-### `goal_complete`
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-Preferred completion tool. Use only as the final action when the full objective is verified complete:
+## 技术资料
 
-```json
-{
-  "summary": "Feature shipped and verified.",
-  "evidence": ["bun test passed", "commit abc123 pushed", "microVM UI check passed"]
-}
-```
-
-`goal_complete` records evidence and marks the goal `complete`. After it succeeds, the agent should send a concise final answer to the user instead of ending the turn with only the tool call.
-
-### `goal_stop`
-
-Stop the autonomous loop without marking the goal complete:
-
-```json
-{
-  "reason": "plan_complete_unverified",
-  "summary": "Plan is checked off but completion evidence is insufficient.",
-  "evidence": ["all plan items completed", "missing deployment verification"]
-}
-```
-
-Use this when completion is unverified, progress is stuck, user input is required, or external state blocks progress. It marks the goal `stopped`; after it succeeds, the agent should explain the stop to the user instead of ending the turn with only the tool call.
-
-### `update_goal`
-
-Codex-compatible terminal tool. Use this when following upstream Codex goal policy or when `goal_complete` is unavailable/not selected:
-
-```json
-{
-  "status": "complete",
-  "summary": "Verified against tests and PR state.",
-  "evidence": ["bun test passed", "commit abc123 pushed"]
-}
-```
-
-```json
-{ "status": "blocked", "summary": "The same external service outage blocked three consecutive goal turns." }
-```
-
-Prefer `goal_complete` for verified completion when it is available because it requires evidence explicitly, but `update_goal({ "status": "complete" })` is intentionally kept as the Codex-compatible completion fallback. Both completion paths record terminal metadata and end the autonomous goal loop, but they deliberately do **not** early-terminate the Piclaw turn; the agent still needs to produce a user-facing final answer. `update_goal` intentionally cannot pause, resume, clear, budget-limit, stop, or usage-limit a goal. Those status transitions are controlled by the user, runtime, or `goal_stop`.
-
-## Status model
-
-The add-on uses Codex's status vocabulary:
-
-| Status | Meaning |
-|---|---|
-| `active` | goal is live and auto-continuation can proceed |
-| `paused` | user paused the goal |
-| `blocked` | model verified the strict repeated-blocker audit |
-| `usage_limited` | reserved for runtime usage-limit integration |
-| `budget_limited` | token budget was exhausted |
-| `complete` | model verified the objective is achieved |
-| `stopped` | autonomous loop was stopped without verified completion |
-
-## Settings pane
-
-Open **Settings → Goal** to:
-
-- inspect the current chat's thread goal
-- edit/replace the objective
-- set or clear the token budget
-- pause, resume, mark blocked, mark complete, clear, or refresh the goal
-
-The pane uses `/agent/addons/api/goal/goal?chat_jid=...`. The add-on stores no secrets and does not use the keychain.
-
-The prompt templates are intentionally no longer editable. The add-on embeds Codex's goal prompt policy so behaviour stays faithful to the upstream goal logic.
-
-## Storage model
-
-| What | Where |
-|---|---|
-| Current thread goal | Extension KV (`goal`, chat scope, key `thread-goal`) |
-| Settings pane state | Browser state only |
-
-Each goal has a durable `lifecycle_generation`. Every status transition advances it and clears any prior deadline checkpoint; replacement creates a new goal identity, while ordinary accounting and bookkeeping saves preserve both the current lifecycle identity and checkpoint. This invalidates checkpoints across pause/resume, complete/stop/reactivation, blocked, usage-limited, and budget-limited transitions without preventing an idempotent retry of the same already-claimed successor.
-
-Deadline checkpoint expiry is fail-closed. A checkpoint is valid only while `expires_at` is strictly later than the current clock; equality is expired. Generated leases live for at least one minute and at most five minutes. Malformed timestamps, deadline values more than five minutes ahead of or behind the current clock, and expiry values more than five minutes ahead are treated as invalid clock skew and suppressed. Persisted checkpoint IDs and ownership counters must also be non-empty bounded IDs and safe integers; malformed evidence is cleared only at an invalidation boundary.
-
-Scheduled and claimed checkpoint evidence survives process restart. The same exact claimed successor may retry within its lifecycle and expiry window, including after a crash. A matching scheduling retry is idempotent and cannot change `claimed` evidence back to `scheduled`. Claimed evidence is consumed only after the successor reaches a successful `agent_end`; hard-error outcomes retain it for retry. Pause, terminal transitions, replacement, expiry, or malformed ownership invalidate it.
-
-Runtime checkpoint state is bounded to 1,024 live leases and exact-turn suppressions. Expired entries are pruned and suppressions also have expiry timers. At capacity, Goal rejects a new checkpoint latch rather than evicting live duplicate-prevention state.
-
-## Notes
-
-- Goal state is scoped to the current Piclaw chat/session (`chat_jid`).
-- Deadline checkpoint provider registration is optional and globally idempotent, so duplicate startup imports cannot install competing providers. Older Piclaw cores continue using the legacy Goal loop; non-Goal sessions are unaffected.
-- Token accounting uses assistant message usage from Piclaw events, then applies Codex-style budget-limit behavior.
-- The continuation prompt and active-goal system prompt treat the objective as untrusted user-provided task context and XML-escape it before embedding.
-- Ordinary user turns receive a compact `## Active Goal` system-prompt block with current status/budget and explicit terminal action guidance. This closes the gap where an agent could achieve a goal on a user-triggered turn but lack the goal context or completion instructions needed to stop.
-- Goal completion/stop tools update persisted goal state but do not set Piclaw's early `terminate` hint. This prevents tool-only turns from completing without user-visible assistant output.
-- Autonomous continuation, finalization, and budget-limit prompts are all dispatched through a single guarded path that re-checks the goal is still active and swallows transport failures, so a stale or failed dispatch cannot turn into an output-less turn or silently kill the loop.
-- Assistant outcomes are one-shot continuation evidence scoped to active Goal lifecycles. They expire after ten minutes, are capped at 1,024 chats, and are removed on lifecycle transitions or Goal clear, so stale or non-Goal outcomes cannot start a later loop.
-- A turn that ends on a tool call (`stopReason` `toolUse`) is not treated as a failed turn. Only a **hard error** (`stopReason` `error` or an `errorMessage`) suppresses autonomous continuation.
-- A turn aborted to trigger compaction (Piclaw's mid-turn tool-execution ceiling or context-pressure auto-compaction) is treated as a continuation boundary, not a failure. The assistant turn ends with `stopReason` `aborted` and the compaction is usually **deferred to the next prompt**, so no `session_compact` event fires that turn. Earlier versions tried to detect this via the `session_compact` event (0.1.34) and then a per-turn tool-activity signal (0.1.35), but **both proved unreliable in production**: tool-heavy goal turns kept dying on the bare `aborted` after a turn or a nudge — the main reason long unattended goals appeared to "stop soon after I leave the web UI". As of 0.1.37 the loop continues on **any non-errored outcome** (clean finish, tool-use finish, or bare `aborted`); only a hard error stops it. A user stop is rare for an autonomous goal and `/goal pause` is the intended stop control, and any spurious continuation is bounded by the `no_progress` auto-stop. An `agent_end` decision that skips continuation is logged to stderr with a `[goal-debug]` tag for diagnosis.
-- The `no_progress` auto-stop keys on real tool activity, not just the Plan Sidebar text: substantive tool work (edits, bash, web, etc.) in a turn counts as progress even when the plan checklist is unchanged. Goal-internal tools (`get_goal`, `create_goal`, `goal_complete`, `goal_stop`, `update_goal`) do not count as progress.
-- Plan storage is not bundled in this add-on; it is supplied by the Plan Sidebar add-on. The goal prompt is written to use `plan action=update` when available.
-- When Plan Sidebar is installed, Goal reads its runtime API at `agent_end`. If every structured plan item is `completed`, Goal queues a finalization prompt instead of ordinary continuation. If the same completed plan remains unresolved after two probes, Goal marks the loop `stopped` with reason `plan_complete_unverified`.
-- If Plan Sidebar is installed and an incomplete plan remains unchanged across three autonomous continuations, Goal marks the loop `stopped` with reason `no_progress` instead of continuing forever.
-
-## Settings field appearance (0.1.48)
-
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/goal/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

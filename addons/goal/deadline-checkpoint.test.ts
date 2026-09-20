@@ -53,8 +53,8 @@ function latch(overrides: Partial<Parameters<typeof provider.tryLatch>[0]> = {})
 beforeEach(() => {
   values.clear();
   resetGoalDeadlineCheckpointForTests();
-  (globalThis as any).__piclawRuntimeInterop = { getExtensionKvStore: () => store };
-  (globalThis as any).__piclaw_planSidebarApi = {
+  (globalThis as any).__qiushuiaiRuntimeInterop = { getExtensionKvStore: () => store };
+  (globalThis as any).__qiushuiai_planSidebarApi = {
     getPlan: () => ({ plan: [
       { step: "Implement", status: "completed" },
       { step: "Test", status: "in_progress" },
@@ -64,8 +64,8 @@ beforeEach(() => {
 
 afterEach(() => {
   resetGoalDeadlineCheckpointForTests();
-  delete (globalThis as any).__piclawRuntimeInterop;
-  delete (globalThis as any).__piclaw_planSidebarApi;
+  delete (globalThis as any).__qiushuiaiRuntimeInterop;
+  delete (globalThis as any).__qiushuiai_planSidebarApi;
 });
 
 test("deadline checkpoint latches only an active persisted Goal with a current Plan", () => {
@@ -191,7 +191,7 @@ test("continuation is suppressed after cancellation, Plan clear, or Goal replace
   saveGoal({ status: "paused" });
   expect(resolve()).toEqual({ status: "suppress" });
   saveGoal();
-  (globalThis as any).__piclaw_planSidebarApi = { getPlan: () => ({ plan: [] }) };
+  (globalThis as any).__qiushuiai_planSidebarApi = { getPlan: () => ({ plan: [] }) };
   expect(resolve()).toEqual({ status: "suppress" });
   saveGoal({ goal_id: "goal-new" });
   expect(resolve()).toEqual({ status: "suppress" });
@@ -286,7 +286,7 @@ test("invalid latch identities and unsafe numeric ownership fields fail closed",
 
 test("malformed Plan runtime APIs fail closed instead of escaping the provider", () => {
   saveGoal();
-  (globalThis as any).__piclaw_planSidebarApi = { getPlan: () => { throw new Error("plan unavailable"); } };
+  (globalThis as any).__qiushuiai_planSidebarApi = { getPlan: () => { throw new Error("plan unavailable"); } };
   expect(() => latch()).not.toThrow();
   expect(latch()).toBeNull();
 });

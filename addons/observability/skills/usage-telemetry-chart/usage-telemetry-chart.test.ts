@@ -14,9 +14,9 @@ test("queries and groups instance-first usage metrics", async () => {
     requestedTarget = url.searchParams.get("target") || "";
     response.writeHead(200, { "content-type": "application/json" });
     response.end(JSON.stringify([
-      { target: "piclaw.smith.usage.github-copilot.gpt_5_6_sol.tokens.total", datapoints: [[42, 1_788_192_000]] },
-      { target: "piclaw.redshirt.usage.github-copilot.gpt_5_6_sol.tokens.total", datapoints: [[24, 1_788_192_000]] },
-      { target: "piclaw.usage.legacy.github-copilot.gpt_5_6_sol.tokens.total", datapoints: [[999, 1_788_192_000]] },
+      { target: "qiushuiai.smith.usage.github-copilot.gpt_5_6_sol.tokens.total", datapoints: [[42, 1_788_192_000]] },
+      { target: "qiushuiai.redshirt.usage.github-copilot.gpt_5_6_sol.tokens.total", datapoints: [[24, 1_788_192_000]] },
+      { target: "qiushuiai.usage.legacy.github-copilot.gpt_5_6_sol.tokens.total", datapoints: [[999, 1_788_192_000]] },
     ]));
   });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
@@ -33,7 +33,7 @@ test("queries and groups instance-first usage metrics", async () => {
       "--output", output,
     ], { stdout: "pipe", stderr: "pipe" });
     expect(await child.exited).toBe(0);
-    expect(requestedTarget).toBe("piclaw.*.usage.*.*.tokens.total");
+    expect(requestedTarget).toBe("qiushuiai.*.usage.*.*.tokens.total");
     const svg = readFileSync(output, "utf8");
     expect(svg).toContain("smith");
     expect(svg).toContain("redshirt");

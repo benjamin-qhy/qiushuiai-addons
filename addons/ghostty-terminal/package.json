@@ -1,24 +1,54 @@
 {
-  "name": "@rcarmo/piclaw-addon-ghostty-terminal",
-  "version": "0.1.0",
-  "description": "Modern, more functional Ghostty-web terminal pane renderer for high-end Piclaw browsers",
+  "name": "@qiushuiai/qiushuiai-addon-ghostty-terminal",
+  "version": "0.1.1",
+  "description": "为高性能浏览器提供基于 Ghostty Web 的现代终端面板",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.5.5",
-    "tags": ["terminal", "ghostty", "wasm", "desktop", "experimental"]
-  },
   "license": "MIT",
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
-  "keywords": ["pi-package", "piclaw", "piclaw-addon", "terminal", "ghostty"],
+  "keywords": [
+    "ghostty",
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
+    "terminal"
+  ],
   "pi": {
-    "extensions": ["index.ts"],
+    "extensions": [
+      "index.ts"
+    ],
     "web": {
-      "entries": ["web/index.js"]
+      "entries": [
+        "web/index.js"
+      ]
     }
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/ghostty-terminal/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/ghostty-terminal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/ghostty-terminal"
+  },
+  "qiushuiai": {
+    "displayName": "Ghostty 终端",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "terminal",
+      "ghostty",
+      "wasm",
+      "desktop",
+      "experimental"
+    ],
+    "displayTags": [
+      "终端",
+      "Ghostty 终端",
+      "WebAssembly 技术",
+      "桌面自动化",
+      "实验功能"
+    ],
+    "featured": false
+  }
 }

@@ -50,7 +50,7 @@ export function getProgressiveCompactionBudget(model: unknown): ProgressiveCompa
   const effectiveWindow = Math.max(4_000, contextWindow - SYSTEM_PROMPT_OVERHEAD_TOKENS);
   const envBudget = parseFirstPositiveEnvInt([
     "PI_SMART_COMPACTION_PROGRESSIVE_PROMPT_CHARS",
-    "PICLAW_PROGRESSIVE_COMPACTION_PROMPT_CHARS",
+    "QIUSHUIAI_PROGRESSIVE_COMPACTION_PROMPT_CHARS",
   ]);
   const rawPromptBudget = envBudget ?? Math.max(10_000, Math.min(MAX_PROMPT_CHARS, Math.floor(effectiveWindow * 4 * PROGRESSIVE_INPUT_CONTEXT_FRACTION)));
   // Apply safety margin: leave room for estimation inaccuracy
@@ -62,7 +62,7 @@ export function getProgressiveCompactionBudget(model: unknown): ProgressiveCompa
     promptBudgetChars,
     chunkBudgetChars,
     mergeBudgetChars,
-    forceProgressive: process.env.PI_SMART_COMPACTION_PROGRESSIVE === "1" || process.env.PICLAW_PROGRESSIVE_COMPACTION === "1",
+    forceProgressive: process.env.PI_SMART_COMPACTION_PROGRESSIVE === "1" || process.env.QIUSHUIAI_PROGRESSIVE_COMPACTION === "1",
   };
 }
 

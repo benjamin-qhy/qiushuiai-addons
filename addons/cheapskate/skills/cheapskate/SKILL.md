@@ -6,7 +6,7 @@ distribution: public
 
 # Cheapskate
 
-Select `cheapskate/auto` from the model picker to route through explicitly enabled models whose effective Piclaw/Pi catalogue costs are all exactly zero.
+Select `cheapskate/auto` from the model picker to route through explicitly enabled models whose effective QiushuiAI/Pi catalogue costs are all exactly zero.
 
 ## Eligibility
 
@@ -44,7 +44,7 @@ Open **Settings → Cheapskate** to:
 - view active route, health, cooldown and last error;
 - see why the virtual model is unavailable.
 
-Configure provider credentials through Piclaw's normal login/keychain flow. The pane does not maintain its own credential catalogue.
+Configure provider credentials through QiushuiAI's normal login/keychain flow. The pane does not maintain its own credential catalogue.
 
 ## Failover
 

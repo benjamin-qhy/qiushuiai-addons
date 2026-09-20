@@ -10,9 +10,9 @@ type GoalRuntimeRegistration = {
   unregister: () => void;
 };
 
-const REGISTRATION_KEY = Symbol.for("@rcarmo/piclaw-addon-goal/deadline-checkpoint-registration");
-const runtimeGlobal = globalThis as typeof globalThis & { __piclaw_runtime?: RuntimeApi } & Record<symbol, unknown>;
-const runtime = runtimeGlobal.__piclaw_runtime;
+const REGISTRATION_KEY = Symbol.for("@qiushuiai/qiushuiai-addon-goal/deadline-checkpoint-registration");
+const runtimeGlobal = globalThis as typeof globalThis & { __qiushuiai_runtime?: RuntimeApi } & Record<symbol, unknown>;
+const runtime = runtimeGlobal.__qiushuiai_runtime;
 const register = runtime?.registerGoalDeadlineCheckpointProvider;
 
 if (runtime && typeof register === "function") {

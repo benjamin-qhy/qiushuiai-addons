@@ -1,20 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-plan-sidebar",
-  "version": "0.1.25",
-  "description": "Right-side session plan sidebar with canonical plan action=update and Markdown storage",
+  "name": "@qiushuiai/qiushuiai-addon-plan-sidebar",
+  "version": "0.1.26",
+  "description": "提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "planning",
-      "ui",
-      "markdown",
-      "session",
-      "core"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -30,13 +19,38 @@
     "typebox": "*"
   },
   "keywords": [
+    "markdown",
     "pi-package",
-    "piclaw",
-    "piclaw-addon",
     "planning",
-    "sidebar",
-    "markdown"
+    "qiushuiai",
+    "qiushuiai-addon",
+    "sidebar"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/plan-sidebar/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/plan-sidebar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/plan-sidebar"
+  },
+  "qiushuiai": {
+    "displayName": "计划侧边栏",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "planning",
+      "ui",
+      "markdown",
+      "session",
+      "core"
+    ],
+    "displayTags": [
+      "计划",
+      "界面",
+      "Markdown 编辑",
+      "会话",
+      "核心推荐"
+    ],
+    "featured": true
+  }
 }

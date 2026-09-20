@@ -1,11 +1,11 @@
 /**
  * compat/chat-context.ts — Chat context shim for standalone addons.
  *
- * In Piclaw, addon modules are loaded outside the runtime source tree, so they
- * cannot import the runtime's AsyncLocalStorage singleton directly. When Piclaw
- * exposes __piclawRuntimeInterop.getChatJid/getChatChannel, prefer that active
+ * In QiushuiAI, addon modules are loaded outside the runtime source tree, so they
+ * cannot import the runtime's AsyncLocalStorage singleton directly. When QiushuiAI
+ * exposes __qiushuiaiRuntimeInterop.getChatJid/getChatChannel, prefer that active
  * runtime context; fall back to this local AsyncLocalStorage for standalone
- * tests and non-Piclaw hosts.
+ * tests and non-QiushuiAI hosts.
  */
 
 import { AsyncLocalStorage } from "async_hooks";
@@ -25,7 +25,7 @@ interface RuntimeInteropBridge {
 const storage = new AsyncLocalStorage<ChatContext>();
 
 function runtimeInterop(): RuntimeInteropBridge | undefined {
-  return (globalThis as { __piclawRuntimeInterop?: RuntimeInteropBridge }).__piclawRuntimeInterop;
+  return (globalThis as { __qiushuiaiRuntimeInterop?: RuntimeInteropBridge }).__qiushuiaiRuntimeInterop;
 }
 
 function nonEmptyString(value: unknown): string | null {

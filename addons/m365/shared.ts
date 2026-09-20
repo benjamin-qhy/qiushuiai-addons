@@ -55,12 +55,12 @@ async function closeCdpTargetBestEffort(port: number, targetId: string | null | 
 }
 
 const PROFILE_DIR = process.env["M365_EDGE_PROFILE_DIR"]
-	?? path.join(process.env["PICLAW_WORKSPACE"] ?? process.env["HOME"] ?? "/tmp", ".piclaw", "data", "m365-edge-profile");
+	?? path.join(process.env["QIUSHUIAI_WORKSPACE"] ?? process.env["HOME"] ?? "/tmp", ".qiushuiai", "data", "m365-edge-profile");
 export const USE_TEMP_EDGE_PROFILE = (process.env["M365_USE_TEMP_EDGE_PROFILE"] ?? (process.platform === "linux" ? "true" : "")).toLowerCase() === "true";
 export function isM365YoloEnabled(value: string | undefined): boolean {
 	return /^(1|true|yes|on)$/i.test((value ?? "").trim());
 }
-const M365_YOLO = isM365YoloEnabled(process.env["PICLAW_M365_YOLO"]);
+const M365_YOLO = isM365YoloEnabled(process.env["QIUSHUIAI_M365_YOLO"]);
 export const CDP_PORT_START = 9224;
 const TEAMS_CLIENT_ID = "5e3ce6c0-2b1f-4285-8d4b-75ee78787346";
 const TEAMS_START_URL = "https://teams.cloud.microsoft/";
@@ -96,10 +96,10 @@ export type M365CredentialProvider = (
 ) => Promise<M365CredentialProviderResult | null>;
 
 declare global {
-	var __piclaw_m365CredentialProviderV1: M365CredentialProvider | undefined;
+	var __qiushuiai_m365CredentialProviderV1: M365CredentialProvider | undefined;
 }
 
-export const M365_CREDENTIAL_PROVIDER_GLOBAL = "__piclaw_m365CredentialProviderV1";
+export const M365_CREDENTIAL_PROVIDER_GLOBAL = "__qiushuiai_m365CredentialProviderV1";
 export const M365_CREDENTIAL_MIN_REMAINING_SECONDS = 300;
 const M365_CREDENTIAL_PROVIDER_TIMEOUT_MS = 5_000;
 
@@ -1405,7 +1405,7 @@ async function waitForConsentTabNavigation(ws: WebSocket, port: number, tabId: s
 /**
  * Fresh-auth consent gate for M365.
  *
- * If `PICLAW_M365_YOLO` is set, auth navigation happens immediately.
+ * If `QIUSHUIAI_M365_YOLO` is set, auth navigation happens immediately.
  * Otherwise we first show a self-contained consent page in `about:blank`, wait for the
  * user to click through, and only then navigate that same tab to the real auth target.
  *

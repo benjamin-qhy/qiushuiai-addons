@@ -1,5 +1,5 @@
 /**
- * IMAP extension for piclaw.
+ * IMAP extension for qiushuiai.
  *
  * Tool actions:
  * - list_folders, search, fetch, move, copy, flag
@@ -242,7 +242,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("imap", "accounts", {
     get: async () => await listAccounts(),
@@ -251,7 +251,7 @@ if (typeof registerAddonConfigApi === "function") {
 }
 
 export default function imapExtension(pi: ExtensionAPI) {
-  const registerRoute = (globalThis as any).__piclaw_registerRoute as
+  const registerRoute = (globalThis as any).__qiushuiai_registerRoute as
     | ((prefix: string, handler: (req: Request, pathname: string) => Response | Promise<Response> | null, extensionPath?: string) => "created" | "updated")
     | undefined;
 

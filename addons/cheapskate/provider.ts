@@ -45,7 +45,7 @@ function providerConfig(registry: RuntimeModelRegistry, eligible: readonly Model
         scopedModels: () => scopedModels,
         streamSimple: (physicalModel, physicalContext, physicalOptions) => {
           const stream = runtimeStreamSimple(physicalModel, physicalContext, physicalOptions);
-          if (!stream) throw new Error("Piclaw ModelRuntime stream interop is unavailable.");
+          if (!stream) throw new Error("QiushuiAI ModelRuntime stream interop is unavailable.");
           return stream;
         },
       });

@@ -77,7 +77,7 @@ for (const skin of ["classic", "visual", "legacy"]) for (const width of [1366, 8
       await files.check();
       await card.getByLabel("Confirm wider incoming access").fill("ALLOW REMOTE ACCESS");
       expect(await card.locator(".remote-peer-permissions").evaluate((el: HTMLElement) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
-      const evidence = process.env.PICLAW_REMOTE_PEER_SCREENSHOT_DIR;
+      const evidence = process.env.QIUSHUIAI_REMOTE_PEER_SCREENSHOT_DIR;
       if (evidence && skin !== "legacy" && [1366, 390].includes(width)) {
         if (!isAbsolute(evidence)) throw Error("Screenshot output must be an explicit absolute directory");
         mkdirSync(evidence, { recursive: true });

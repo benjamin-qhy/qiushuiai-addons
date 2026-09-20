@@ -1,34 +1,34 @@
-# Dev Tools
+# 开发工具
 
-Structured Git-history and JSON-query tools for Piclaw. Requires Piclaw `>=1.8.0`, `git`, and `jq` on `PATH`.
+提供工作区诊断和运行环境检查工具
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **dev-tools** from the catalog.
+这是 QiushuiAI 的扩展插件，技术标识为 `dev-tools`。
 
-## Tools
+- 软件包：`@qiushuiai/qiushuiai-addon-dev-tools`
+- 当前版本：`0.1.5`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`开发工具`、`诊断`、`运行环境`
 
-### `git_history`
+## 安装
 
-Modes:
+在 QiushuiAI 中打开**设置 → 插件**，搜索“开发工具”并安装。也可以直接使用无需登录的公开安装包：
 
-- `log` — recent commits
-- `content_search` — find a string in commit diffs
-- `message_search` — search commit messages
-- `blame` — attribute file lines
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-dev-tools-0.1.5.tgz
+```
 
-Filters include file, author, date, ref, all branches, patch output, maximum count, and blame line range.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-### `json_query`
+## 提供的能力
 
-Runs a jq expression against exactly one source: a workspace file or inline JSON input. The tool validates paths and blocks risky jq built-ins and patterns.
+- 入口：`index.ts`
 
-## Limits
+## 配置与安全
 
-- file paths must remain under `/workspace`
-- Git queries time out after 30 seconds
-- jq queries time out after 10 seconds
-- returned output is capped at 200 lines and 50 KiB
-- subprocess capture is capped at 10 MiB
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-Both tools return structured JSON envelopes and show progress in interactive sessions.
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/dev-tools/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

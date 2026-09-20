@@ -1,21 +1,49 @@
 {
-  "name": "@rcarmo/piclaw-addon-web-viewer",
-  "version": "0.1.1",
-  "description": "HTML, image, and video viewer panes and routes for Piclaw",
+  "name": "@qiushuiai/qiushuiai-addon-web-viewer",
+  "version": "0.1.2",
+  "description": "为 QiushuiAI 提供 HTML、图像和视频查看面板及路由",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": ["viewer", "html", "image", "video", "media"]
-  },
   "license": "MIT",
-  "keywords": ["pi-package"],
+  "keywords": [
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
+  ],
   "pi": {
-    "extensions": ["index.ts"],
+    "extensions": [
+      "index.ts"
+    ],
     "web": {
-      "entries": ["web/index.ts"]
+      "entries": [
+        "web/index.ts"
+      ]
     }
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/web-viewer/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/web-viewer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/web-viewer"
+  },
+  "qiushuiai": {
+    "displayName": "网页与媒体查看器",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "viewer",
+      "html",
+      "image",
+      "video",
+      "media"
+    ],
+    "displayTags": [
+      "查看器",
+      "网页",
+      "图像",
+      "视频",
+      "媒体"
+    ],
+    "featured": false
+  }
 }

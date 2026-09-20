@@ -16,7 +16,7 @@ import {
   type UsageTelemetryConfig,
 } from "./usage-telemetry.js";
 
-const CONFIG: UsageTelemetryConfig = { graphite_host: "", graphite_port: 2003, graphite_prefix: "piclaw", instance_name: "" };
+const CONFIG: UsageTelemetryConfig = { graphite_host: "", graphite_port: 2003, graphite_prefix: "qiushuiai", instance_name: "" };
 
 const dirs: string[] = [];
 afterEach(() => dirs.splice(0).forEach(dir => rmSync(dir, { recursive: true, force: true })));
@@ -28,32 +28,32 @@ function fixture() {
 test("sanitizes Graphite path segments and builds instance-first prefixes", () => {
   expect(graphiteSegment("OpenAI/Codex 5.4")).toBe("openai_codex_5_4");
   expect(graphiteSegment("...")).toBe("unknown");
-  expect(instanceFirstMetricPrefix("piclaw.prod", "Smith Main", "usage")).toBe("piclaw.prod.smith_main.usage");
+  expect(instanceFirstMetricPrefix("qiushuiai.prod", "Smith Main", "usage")).toBe("qiushuiai.prod.smith_main.usage");
 });
 
 test("rewrites only legacy category-first paths", () => {
-  expect(migrateLegacyCategoryMetricPath("piclaw.usage.smith.openai.gpt.tokens.total", "piclaw", "usage"))
-    .toBe("piclaw.smith.usage.openai.gpt.tokens.total");
-  expect(migrateLegacyCategoryMetricPath("piclaw.prod.usage.smith.openai.gpt.tokens.total", "piclaw.prod", "usage"))
-    .toBe("piclaw.prod.smith.usage.openai.gpt.tokens.total");
-  expect(migrateLegacyCategoryMetricPath("piclaw.smith.usage.openai.gpt.tokens.total", "piclaw", "usage"))
-    .toBe("piclaw.smith.usage.openai.gpt.tokens.total");
-  expect(migrateLegacyCategoryMetricPath("piclaw.compaction.smith.local.model.attempt.count", "piclaw", "usage"))
-    .toBe("piclaw.compaction.smith.local.model.attempt.count");
+  expect(migrateLegacyCategoryMetricPath("qiushuiai.usage.smith.openai.gpt.tokens.total", "qiushuiai", "usage"))
+    .toBe("qiushuiai.smith.usage.openai.gpt.tokens.total");
+  expect(migrateLegacyCategoryMetricPath("qiushuiai.prod.usage.smith.openai.gpt.tokens.total", "qiushuiai.prod", "usage"))
+    .toBe("qiushuiai.prod.smith.usage.openai.gpt.tokens.total");
+  expect(migrateLegacyCategoryMetricPath("qiushuiai.smith.usage.openai.gpt.tokens.total", "qiushuiai", "usage"))
+    .toBe("qiushuiai.smith.usage.openai.gpt.tokens.total");
+  expect(migrateLegacyCategoryMetricPath("qiushuiai.compaction.smith.local.model.attempt.count", "qiushuiai", "usage"))
+    .toBe("qiushuiai.compaction.smith.local.model.attempt.count");
 });
 test("collects local usage into provider/model points and tracks checkpoint", () => {
   const path = fixture(); const batch = collectUsage({ ...CONFIG, instance_name: "Smith Main" }, loadCheckpoint(path), new Date("2026-08-01T01:00:00Z"), path)!;
   expect(batch.points.find(point => point.path.endsWith("tokens.total"))?.value).toBe(35);
   expect(batch.points.find(point => point.path.endsWith("cost.estimated_usd"))?.value).toBeCloseTo(.2);
-  expect(batch.points[0].path).toContain("piclaw.smith_main.usage.openai_codex.gpt_5_4");
+  expect(batch.points[0].path).toContain("qiushuiai.smith_main.usage.openai_codex.gpt_5_4");
   saveCheckpoint(batch.checkpoint, path); expect(collectUsage(CONFIG, loadCheckpoint(path), new Date(), path)).toBeNull();
 });
 test("flushes the durable spool to Carbon", async () => {
   const path = fixture(); const received: string[] = []; const server = createServer(socket => socket.on("data", data => received.push(data.toString()))); await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
-  const port = (server.address() as any).port; enqueue({ createdAt: new Date().toISOString(), checkpoint: { runAt: "x", id: 1 }, points: [{ path: "piclaw.usage.smith.openai.gpt.tokens.total", value: 42, timestamp: 1 }] }, path);
+  const port = (server.address() as any).port; enqueue({ createdAt: new Date().toISOString(), checkpoint: { runAt: "x", id: 1 }, points: [{ path: "qiushuiai.usage.smith.openai.gpt.tokens.total", value: 42, timestamp: 1 }] }, path);
   expect(await flushSpool({ ...CONFIG, graphite_host: "127.0.0.1", graphite_port: port }, path)).toBe(1);
   await new Promise(resolve => setTimeout(resolve, 20));
-  expect(received.join("")).toContain("piclaw.smith.usage.openai.gpt.tokens.total 42 1");
-  expect(received.join("")).not.toContain("piclaw.usage.smith");
+  expect(received.join("")).toContain("qiushuiai.smith.usage.openai.gpt.tokens.total 42 1");
+  expect(received.join("")).not.toContain("qiushuiai.usage.smith");
   server.close();
 });

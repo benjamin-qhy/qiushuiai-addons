@@ -293,8 +293,8 @@ export async function dispatch(p: Params, owner: string, signal?: AbortSignal) {
           "No semantic BIOS detector. Tap burst ends without waiting for model interpretation.",
       });
     const root = join(
-      process.env.PICLAW_WORKSPACE || process.cwd(),
-      ".piclaw",
+      process.env.QIUSHUIAI_WORKSPACE || process.cwd(),
+      ".qiushuiai",
       "data",
       "addons",
       "linkr",

@@ -33,7 +33,7 @@ The follow-up judge confirmed the reported auth-race and type-handling blockers 
 - `push-receiver.test.ts`: credential checks, expected remote-task correlation, duplicate/conflicting replay, endpoint replacement, stalled-body cancellation and persistence across reopen. No notification is sent to a model or used as authoritative task state.
 - `push-lifecycle.test.ts`: real stalled HTTP callback cancellation, same-ID retry on restart, real service enable/disable/shutdown with no continuing sends.
 - `python-push-peer.test.ts` / `python-push-peer.py`: independently maintained Python A2A SDK 1.1.2 creates/gets/lists/deletes a config over HTTP; a raw webhook confirms Bearer authentication, `application/a2a+json`, task identity and terminal StreamResponse without task polling.
-- `host-integration.test.ts`: actual Piclaw external route registry, operation service and durable event API in an explicitly isolated companion process. Push arrives before GetTask is called; fake executor only, no provider costs.
+- `host-integration.test.ts`: actual QiushuiAI external route registry, operation service and durable event API in an explicitly isolated companion process. Push arrives before GetTask is called; fake executor only, no provider costs.
 - `settings-browser.test.ts`: actual side-effect registration and component contract, both skins at desktop/mobile sizes, reviewed enablement and immediate disable. The settings pane includes a separate push JSON policy field.
 
 ## Reproduce
@@ -48,9 +48,9 @@ bun test standalone-import.test.ts --test-name-pattern a2a
 Explicit complete suite (companion core source must implement the merged generic operations API):
 
 ```sh
-PICLAW_E2E_DISPOSABLE=1 \
-PICLAW_A2A_CORE_SOURCE=/absolute/path/to/piclaw \
-PICLAW_A2A_PYTHON=/absolute/path/to/python-with-a2a-sdk \
+QIUSHUIAI_E2E_DISPOSABLE=1 \
+QIUSHUIAI_A2A_CORE_SOURCE=/absolute/path/to/qiushuiai \
+QIUSHUIAI_A2A_PYTHON=/absolute/path/to/python-with-a2a-sdk \
 PLAYWRIGHT_BROWSERS_PATH=/absolute/path/to/ms-playwright \
   bun test --timeout 15000 addons/a2a
 ```

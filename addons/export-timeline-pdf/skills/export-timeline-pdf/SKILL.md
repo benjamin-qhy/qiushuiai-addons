@@ -6,7 +6,7 @@ distribution: public
 
 # Export timeline PDF
 
-Export chat history through piclaw's internal localhost HTML export endpoint and render it with `wkhtmltopdf`.
+Export chat history through qiushuiai's internal localhost HTML export endpoint and render it with `wkhtmltopdf`.
 
 ## Steps
 
@@ -44,7 +44,7 @@ Export chat history through piclaw's internal localhost HTML export endpoint and
 | `--last` | Export only the last N messages | (all) |
 | `--theme` | `light` or `dark` | `light` |
 | `--out` | Output PDF path | `/workspace/exports/timeline-<chat>.pdf` |
-| `--port` | Piclaw web port | auto-detect / `8080` |
+| `--port` | QiushuiAI web port | auto-detect / `8080` |
 | `--auth-key` | Internal export auth key | env/config lookup |
 | `--html-only` | Save HTML sidecar without rendering PDF | off |
 
@@ -54,15 +54,15 @@ The internal endpoint is only available on localhost and requires an internal au
 The script resolves it in this order:
 
 1. `--auth-key`
-2. `PICLAW_EXPORT_AUTH_KEY`
-3. `PICLAW_INTERNAL_SECRET`
-4. `PICLAW_WEB_INTERNAL_SECRET`
-5. `web.internalSecret` from `/workspace/.piclaw/config.json`
+2. `QIUSHUIAI_EXPORT_AUTH_KEY`
+3. `QIUSHUIAI_INTERNAL_SECRET`
+4. `QIUSHUIAI_WEB_INTERNAL_SECRET`
+5. `web.internalSecret` from `/workspace/.qiushuiai/config.json`
 
 ## Prerequisites
 
 - `wkhtmltopdf` must be installed and available on `PATH`
-- piclaw web server must be running locally
+- qiushuiai web server must be running locally
 
 ## Notes
 

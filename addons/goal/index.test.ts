@@ -24,13 +24,13 @@ const addonDir = import.meta.dir;
 afterEach(async () => {
   await flushGoalPromptDispatchesForTests();
   resetGoalAddonForTests();
-  delete process.env.PICLAW_INTERNAL_SECRET;
-  delete process.env.PICLAW_WEB_INTERNAL_SECRET;
-  delete (globalThis as { __piclawRuntimeInterop?: unknown }).__piclawRuntimeInterop;
-  delete (globalThis as { __piclaw_runtime?: unknown }).__piclaw_runtime;
-  delete (globalThis as { __PICLAW_BROADCAST_EVENT__?: unknown }).__PICLAW_BROADCAST_EVENT__;
-  delete (globalThis as { __piclaw_planSidebarApi?: unknown }).__piclaw_planSidebarApi;
-  delete (globalThis as { __piclaw_registerAddonConfigApi?: unknown }).__piclaw_registerAddonConfigApi;
+  delete process.env.QIUSHUIAI_INTERNAL_SECRET;
+  delete process.env.QIUSHUIAI_WEB_INTERNAL_SECRET;
+  delete (globalThis as { __qiushuiaiRuntimeInterop?: unknown }).__qiushuiaiRuntimeInterop;
+  delete (globalThis as { __qiushuiai_runtime?: unknown }).__qiushuiai_runtime;
+  delete (globalThis as { __QIUSHUIAI_BROADCAST_EVENT__?: unknown }).__QIUSHUIAI_BROADCAST_EVENT__;
+  delete (globalThis as { __qiushuiai_planSidebarApi?: unknown }).__qiushuiai_planSidebarApi;
+  delete (globalThis as { __qiushuiai_registerAddonConfigApi?: unknown }).__qiushuiai_registerAddonConfigApi;
 });
 
 function createHarness(options: { confirm?: boolean; pending?: boolean; idle?: boolean; mockPromptSender?: boolean } = {}) {
@@ -73,7 +73,7 @@ function createHarness(options: { confirm?: boolean; pending?: boolean; idle?: b
 function installRuntimeKvStore(): void {
   const values = new Map<string, unknown>();
   const storageKey = (extensionId: string, name: string, scope = "chat", scopeKey = "") => `${extensionId}:${scope}:${scopeKey}:${name}`;
-  (globalThis as any).__piclawRuntimeInterop = { getExtensionKvStore: () => ({
+  (globalThis as any).__qiushuiaiRuntimeInterop = { getExtensionKvStore: () => ({
     get: (extensionId: string, name: string, scope?: string, scopeKey?: string) => values.get(storageKey(extensionId, name, scope, scopeKey)) ?? null,
     set: (extensionId: string, name: string, value: unknown, scope?: string, scopeKey?: string) => { values.set(storageKey(extensionId, name, scope, scopeKey), structuredClone(value)); },
     delete: (extensionId: string, name: string, scope?: string, scopeKey?: string) => values.delete(storageKey(extensionId, name, scope, scopeKey)),
@@ -99,7 +99,7 @@ test("goal addon exports an extension entrypoint", () => {
 
 test("goal manifest declares the web entry", () => {
   const manifest = JSON.parse(readFileSync(resolve(addonDir, "package.json"), "utf8")) as any;
-  expect(manifest.name).toBe("@rcarmo/piclaw-addon-goal");
+  expect(manifest.name).toBe("@qiushuiai/qiushuiai-addon-goal");
   expect(manifest.pi?.web?.entries).toEqual(["web/index.ts"]);
   expect(manifest.pi?.runtime).toEqual({ entries: ["runtime.ts"], load: "startup" });
 });
@@ -107,7 +107,7 @@ test("goal manifest declares the web entry", () => {
 test("goal compat storage avoids runtime source imports", () => {
   const source = readFileSync(resolve(addonDir, "compat", "extension-kv.ts"), "utf8");
   expect(source).not.toContain("require(");
-  expect(source).not.toContain("piclaw/runtime/src");
+  expect(source).not.toContain("qiushuiai/runtime/src");
 });
 
 test("goal status and stop-reason schemas use string enums", () => {
@@ -146,7 +146,7 @@ test("goal web pane targets the thread-goal addon API", () => {
 test("partial config saves preserve status and do not duplicate resume continuations", async () => {
   installRuntimeKvStore();
   let configSet: ((payload: unknown, req: Request) => Promise<any>) | undefined;
-  (globalThis as any).__piclaw_registerAddonConfigApi = (_addonId: string, _action: string, handlers: any) => {
+  (globalThis as any).__qiushuiai_registerAddonConfigApi = (_addonId: string, _action: string, handlers: any) => {
     configSet = handlers.set;
     return "created";
   };
@@ -167,13 +167,13 @@ test("partial config saves preserve status and do not duplicate resume continuat
 });
 
 test("goal continuation requests include internal auth only for loopback agent URLs", () => {
-  process.env.PICLAW_INTERNAL_SECRET = "test-secret";
+  process.env.QIUSHUIAI_INTERNAL_SECRET = "test-secret";
   expect(buildLocalAgentMessageHeaders("http://127.0.0.1:3000")).toMatchObject({
     "Content-Type": "application/json",
-    "X-Piclaw-Internal-Secret": "test-secret",
+    "X-QiushuiAI-Internal-Secret": "test-secret",
     Authorization: "Bearer test-secret",
   });
-  expect(buildLocalAgentMessageHeaders("http://localhost:3000")["X-Piclaw-Internal-Secret"]).toBe("test-secret");
+  expect(buildLocalAgentMessageHeaders("http://localhost:3000")["X-QiushuiAI-Internal-Secret"]).toBe("test-secret");
   expect(buildLocalAgentMessageHeaders("https://example.invalid")).toEqual({ "Content-Type": "application/json" });
 });
 
@@ -184,7 +184,7 @@ test("goal continuations fall back deterministically when an older core has no e
     requests.push({ url: String(input), init });
     return new Response(null, { status: 202 });
   }) as typeof fetch;
-  (globalThis as { __piclaw_runtime?: unknown }).__piclaw_runtime = {};
+  (globalThis as { __qiushuiai_runtime?: unknown }).__qiushuiai_runtime = {};
   try {
     const { commands, sentUserMessages, ctx } = createHarness({ mockPromptSender: false });
     await withChatContext("web:goal", "web", async () => {
@@ -199,14 +199,14 @@ test("goal continuations fall back deterministically when an older core has no e
   }
 });
 
-test("goal continuations fail closed when the Piclaw runtime enqueue API throws", async () => {
+test("goal continuations fail closed when the QiushuiAI runtime enqueue API throws", async () => {
   const originalFetch = globalThis.fetch;
   const requests: string[] = [];
   globalThis.fetch = (async (input: string | URL | Request) => {
     requests.push(String(input));
     return new Response(null, { status: 202 });
   }) as typeof fetch;
-  (globalThis as { __piclaw_runtime?: unknown }).__piclaw_runtime = {
+  (globalThis as { __qiushuiai_runtime?: unknown }).__qiushuiai_runtime = {
     enqueueAgentMessage: async () => { throw new Error("runtime queue unavailable"); },
   };
   try {
@@ -221,9 +221,9 @@ test("goal continuations fail closed when the Piclaw runtime enqueue API throws"
   }
 });
 
-test("goal continuations prefer the first-class Piclaw runtime enqueue API over localhost HTTP", async () => {
+test("goal continuations prefer the first-class QiushuiAI runtime enqueue API over localhost HTTP", async () => {
   const enqueued: unknown[] = [];
-  (globalThis as { __piclaw_runtime?: unknown }).__piclaw_runtime = {
+  (globalThis as { __qiushuiai_runtime?: unknown }).__qiushuiai_runtime = {
     enqueueAgentMessage: async (request: unknown) => {
       enqueued.push(request);
       return { status: "ok", chat_jid: "web:goal", queued: "followup", thread_id: null };
@@ -448,7 +448,7 @@ describe("/goal command and runtime loop", () => {
   test("/goal pause and resume advance lifecycle identity, invalidate checkpoints, and queue only once", async () => {
     installRuntimeKvStore();
     const { commands, sentUserMessages, ctx } = createHarness();
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ plan: [{ step: "Finish docs", status: "in_progress" }] }),
     };
     await withChatContext("web:goal", "web", async () => {
@@ -486,7 +486,7 @@ describe("/goal command and runtime loop", () => {
       resetGoalAddonForTests();
       installRuntimeKvStore();
       const { commands, tools, ctx } = createHarness();
-      (globalThis as any).__piclaw_planSidebarApi = {
+      (globalThis as any).__qiushuiai_planSidebarApi = {
         getPlan: () => ({ plan: [{ step: "Finish docs", status: "in_progress" }] }),
       };
       await withChatContext("web:goal", "web", async () => {
@@ -539,7 +539,7 @@ describe("/goal command and runtime loop", () => {
     await withChatContext("web:goal", "web", async () => {
       await commands.get("goal").handler("Finish docs", ctx);
       expect(String(sentUserMessages[0]?.content)).toBe("🎯 Continue goal: Finish docs");
-      expect(String(sentUserMessages[0]?.content)).not.toContain("piclaw-goal");
+      expect(String(sentUserMessages[0]?.content)).not.toContain("qiushuiai-goal");
       await commands.get("goal").handler("stop", ctx);
       expect(loadThreadGoal("web:goal")?.status).toBe("paused");
       const result = await input({ type: "input", text: sentUserMessages[0]?.content, source: "extension" }, ctx);
@@ -557,7 +557,7 @@ describe("/goal command and runtime loop", () => {
       expect(result.action).toBe("transform");
       expect(result.text).toContain("Continue working toward the active thread goal");
       expect(String(sentUserMessages[0]?.content)).toBe("🎯 Continue goal: Finish docs");
-      expect(String(sentUserMessages[0]?.content)).not.toContain("piclaw-goal");
+      expect(String(sentUserMessages[0]?.content)).not.toContain("qiushuiai-goal");
     });
   });
 
@@ -578,7 +578,7 @@ describe("/goal command and runtime loop", () => {
   test("released checkpoint suppresses only the exact late agent_end turn", async () => {
     const values = new Map<string, unknown>();
     const storageKey = (extensionId: string, name: string, scope = "chat", scopeKey = "") => `${extensionId}:${scope}:${scopeKey}:${name}`;
-    (globalThis as any).__piclawRuntimeInterop = { getExtensionKvStore: () => ({
+    (globalThis as any).__qiushuiaiRuntimeInterop = { getExtensionKvStore: () => ({
       get: (extensionId: string, name: string, scope?: string, scopeKey?: string) => values.get(storageKey(extensionId, name, scope, scopeKey)) ?? null,
       set: (extensionId: string, name: string, value: unknown, scope?: string, scopeKey?: string) => { values.set(storageKey(extensionId, name, scope, scopeKey), structuredClone(value)); },
       delete: (extensionId: string, name: string, scope?: string, scopeKey?: string) => values.delete(storageKey(extensionId, name, scope, scopeKey)),
@@ -588,7 +588,7 @@ describe("/goal command and runtime loop", () => {
     const { commands, handlers, sentUserMessages, ctx } = createHarness();
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ plan: [{ step: "Finish docs", status: "in_progress" }] }),
     };
     await withChatContext("web:goal", "web", async () => {
@@ -658,7 +658,7 @@ describe("/goal command and runtime loop", () => {
     const { commands, handlers, sentUserMessages, ctx } = createHarness();
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ plan: [{ step: "Finish docs", status: "in_progress" }] }),
     };
     let goalId = "";
@@ -706,7 +706,7 @@ describe("/goal command and runtime loop", () => {
     await withChatContext("web:goal", "web", async () => {
       await commands.get("goal").handler("Finish docs", ctx);
     });
-    const runtimeStore = (globalThis as any).__piclawRuntimeInterop.getExtensionKvStore();
+    const runtimeStore = (globalThis as any).__qiushuiaiRuntimeInterop.getExtensionKvStore();
     const checkpoint = {
       checkpoint_id: "checkpoint-malformed",
       operation_id: "op-malformed",
@@ -767,7 +767,7 @@ describe("/goal command and runtime loop", () => {
     const { commands, handlers, sentUserMessages, ctx } = createHarness();
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({
         markdown: "- [x] Inspect\n- [x] Test",
         explanation: null,
@@ -790,7 +790,7 @@ describe("/goal command and runtime loop", () => {
   test("queued finalization prompts expand to completion-or-stop instructions", async () => {
     const { commands, handlers, sentUserMessages, ctx } = createHarness();
     const input = handlers.find((entry) => entry.event === "input")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ markdown: "- [x] done", explanation: null, plan: [{ step: "done", status: "completed" }] }),
     };
     await withChatContext("web:goal", "web", async () => {
@@ -811,7 +811,7 @@ describe("/goal command and runtime loop", () => {
     const { commands, handlers, sentUserMessages, ctx } = createHarness();
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ markdown: "- [x] Inspect", explanation: null, plan: [{ step: "Inspect", status: "completed" }] }),
     };
     await withChatContext("web:goal", "web", async () => {
@@ -835,7 +835,7 @@ describe("/goal command and runtime loop", () => {
     const { commands, handlers, sentUserMessages, ctx } = createHarness();
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ markdown: "- [-] Implement\n- [ ] Test", explanation: null, plan: [
         { step: "Implement", status: "in_progress" },
         { step: "Test", status: "pending" },
@@ -949,7 +949,7 @@ describe("/goal command and runtime loop", () => {
     const toolEnd = handlers.find((entry) => entry.event === "tool_execution_end")?.handler;
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ markdown: "- [-] Implement\n- [ ] Test", explanation: null, plan: [
         { step: "Implement", status: "in_progress" },
         { step: "Test", status: "pending" },
@@ -975,7 +975,7 @@ describe("/goal command and runtime loop", () => {
     const toolEnd = handlers.find((entry) => entry.event === "tool_execution_end")?.handler;
     const messageEnd = handlers.find((entry) => entry.event === "message_end")?.handler;
     const agentEnd = handlers.find((entry) => entry.event === "agent_end")?.handler;
-    (globalThis as any).__piclaw_planSidebarApi = {
+    (globalThis as any).__qiushuiai_planSidebarApi = {
       getPlan: () => ({ markdown: "- [-] Implement", explanation: null, plan: [{ step: "Implement", status: "in_progress" }] }),
     };
     await withChatContext("web:goal", "web", async () => {

@@ -1,6 +1,6 @@
 # Linkr tool contract
 
-Status: implemented v0.1 contract for the native Piclaw `linkr` tool in this add-on.
+Status: implemented v0.1 contract for the native QiushuiAI `linkr` tool in this add-on.
 
 This document reflects the current code in `extension.ts`, `jobs.ts`, `config.ts`, `client.ts`, and `input.ts`.
 
@@ -344,7 +344,7 @@ Leases are keyed by device origin and held in in-process global state. This prev
 
 Implemented behaviour:
 
-- job directories are created under `.piclaw/data/addons/linkr/jobs/<job_id>`;
+- job directories are created under `.qiushuiai/data/addons/linkr/jobs/<job_id>`;
 - directories use mode `0700`;
 - `job.json` and saved frames use mode `0600`;
 - evidence is capped at 32 MiB per job;

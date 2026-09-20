@@ -12,15 +12,15 @@ test("addon detail pages include a direct tarball download pill", () => {
   expect(buildSource).toContain("${downloadPill(addon)}");
 });
 
-test("core-tagged cards render an accessible top-right bookmark", () => {
+test("featured cards render an accessible top-right bookmark", () => {
   expect(buildSource).toContain("function coreBookmark(addon: Addon)");
-  expect(buildSource).toContain('if (!addon.tags.includes("core")) return ""');
-  expect(buildSource).toContain('class="core-bookmark" role="img" aria-label="Core add-on"');
-  expect(buildSource).toContain("Core add-on — recommended for most Piclaw installations");
-  expect(buildSource).toContain('class="card${a.tags.includes("core") ? " card-core" : ""}"');
+  expect(buildSource).toContain('if (!addon.featured) return ""');
+  expect(buildSource).toContain('class="core-bookmark" role="img" aria-label="核心推荐插件"');
+  expect(buildSource).toContain("核心推荐插件，适合大多数 QiushuiAI 用户");
+  expect(buildSource).toContain('class="card${a.featured ? " card-core" : ""}"');
   expect(buildSource).toContain("${coreBookmark(a)}");
   expect(buildSource).toContain(".core-bookmark{position:absolute");
-  expect(buildSource).toContain(">CORE</text>");
+  expect(buildSource).toContain(">推荐</text>");
 });
 
 test("public tarball builder excludes local dependency and temporary trees", () => {
@@ -30,23 +30,23 @@ test("public tarball builder excludes local dependency and temporary trees", () 
 });
 
 test("site links adapt to the repository that runs the Pages build", () => {
-  expect(buildSource).toContain('const REPOSITORY = process.env.GITHUB_REPOSITORY?.trim() || "rcarmo/piclaw-addons"');
+  expect(buildSource).toContain('const REPOSITORY = process.env.GITHUB_REPOSITORY?.trim() || "benjamin-qhy/qiushuiai-addons"');
   expect(buildSource).toContain('`https://${REPOSITORY_OWNER}.github.io/${REPOSITORY_NAME}`');
   expect(buildSource).toContain('function sitePath(path: string): string');
-  expect(buildSource).not.toContain('href="/piclaw-addons/');
-  expect(buildSource).not.toContain("from '/piclaw-addons/");
+  expect(buildSource).not.toContain('href="/qiushuiai-addons/');
+  expect(buildSource).not.toContain("from '/qiushuiai-addons/");
 });
 
-test("only the selected foundational add-ons carry the core tag", () => {
+test("only the selected foundational add-ons are featured", () => {
   const packageFiles = Array.from(new Bun.Glob("addons/*/package.json").scanSync({ cwd: repoRoot })).sort();
   const coreSlugs = packageFiles.flatMap((path) => {
     const manifest = JSON.parse(readFileSync(join(repoRoot, path), "utf8"));
-    return manifest.piclaw?.tags?.includes("core") ? [path.split("/")[1]] : [];
+    return manifest.qiushuiai?.featured === true ? [path.split("/")[1]] : [];
   });
   expect(coreSlugs).toEqual(["delegate", "goal", "observability", "plan-sidebar", "session-dashboard"]);
 
   const catalog = JSON.parse(readFileSync(join(repoRoot, "catalog.json"), "utf8"));
-  const catalogCoreSlugs = catalog.addons.filter((addon: any) => addon.tags?.includes("core")).map((addon: any) => addon.slug).sort();
+  const catalogCoreSlugs = catalog.addons.filter((addon: any) => addon.featured === true).map((addon: any) => addon.slug).sort();
   expect(catalogCoreSlugs).toEqual(coreSlugs);
   const manifestVersions = Object.fromEntries(coreSlugs.map((slug) => [slug, JSON.parse(readFileSync(join(repoRoot, "addons", slug!, "package.json"), "utf8")).version]));
   expect(Object.fromEntries(catalog.addons.filter((addon: any) => catalogCoreSlugs.includes(addon.slug)).map((addon: any) => [addon.slug, addon.version]))).toEqual(manifestVersions);

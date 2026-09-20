@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { endpointId, clientId } from "./client-id.js";
 import type { RemotePeerConfig } from "./config.js";
 const require = createRequire(import.meta.url);
-export const ALPN = "piclaw-remote-peer/iroh/1";
+export const ALPN = "qiushuiai-remote-peer/iroh/1";
 export const MAX_BYTES = 32 * 1024 * 1024;
 const CLOSE_DRAIN_TIMEOUT_MS = 3500;
 const HEADER_LIMIT = 192 * 1024;
@@ -55,7 +55,7 @@ function hash(bytes: Uint8Array) {
 export async function resolveRelayConfigs(
   config: RemotePeerConfig,
   env: Record<string, string | undefined> = process.env,
-  interop: any = (globalThis as any).__piclawRuntimeInterop,
+  interop: any = (globalThis as any).__qiushuiaiRuntimeInterop,
 ): Promise<Array<{ url: string; authToken?: string }>> {
   if (config.relayMode !== "custom") return [];
   const output: Array<{ url: string; authToken?: string }> = [];

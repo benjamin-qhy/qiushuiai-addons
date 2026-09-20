@@ -1,18 +1,42 @@
 {
-  "name": "@rcarmo/piclaw-addon-session-tree",
-  "version": "0.2.0",
-  "description": "Snapshot-driven interactive session tree renderer for Piclaw's /tree command",
+  "name": "@qiushuiai/qiushuiai-addon-session-tree",
+  "version": "0.2.1",
+  "description": "为 QiushuiAI 的 /tree 命令提供基于快照的可交互会话树",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.15.0",
-    "tags": ["session", "tree", "navigation", "widget"]
-  },
   "license": "MIT",
-  "keywords": ["pi-package"],
+  "keywords": [
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
+  ],
   "pi": {
-    "extensions": ["index.ts"]
+    "extensions": [
+      "index.ts"
+    ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/session-tree/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/session-tree",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/session-tree"
+  },
+  "qiushuiai": {
+    "displayName": "会话树",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "session",
+      "tree",
+      "navigation",
+      "widget"
+    ],
+    "displayTags": [
+      "会话",
+      "树状视图",
+      "导航",
+      "组件"
+    ],
+    "featured": false
+  }
 }

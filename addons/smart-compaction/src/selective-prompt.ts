@@ -115,7 +115,7 @@ function findRecentUserTurns(
 
 // A1 requirement: pre-prompt compaction must stop biasing the next turn toward
 // an older topic when the user has clearly pivoted. We keep this heuristic local
-// to piclaw rather than changing upstream compaction because:
+// to qiushuiai rather than changing upstream compaction because:
 //   1. the stale-topic failure is product-specific and evidence-driven here,
 //   2. we already own the `session_before_compact` override point, and
 //   3. we want deterministic guardrails before the summary ever reaches the next run.

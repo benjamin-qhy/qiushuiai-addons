@@ -1,13 +1,13 @@
 /**
  * compat.ts — Compatibility shims for standalone addon.
- * Replaces piclaw internal imports with self-contained alternatives.
+ * Replaces qiushuiai internal imports with self-contained alternatives.
  */
 import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, basename } from "node:path";
 
-const WORKSPACE_DIR = process.env.PICLAW_WORKSPACE || "/workspace";
+const WORKSPACE_DIR = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
 
-type PiclawRuntimeAddonApi = {
+type QiushuiAIRuntimeAddonApi = {
   createMedia?: (
     filename: string,
     contentType: string,
@@ -19,16 +19,16 @@ type PiclawRuntimeAddonApi = {
 };
 
 type RuntimeGlobal = typeof globalThis & {
-  __piclaw_runtime?: PiclawRuntimeAddonApi;
+  __qiushuiai_runtime?: QiushuiAIRuntimeAddonApi;
 };
 
-function getRuntimeApi(): PiclawRuntimeAddonApi | null {
+function getRuntimeApi(): QiushuiAIRuntimeAddonApi | null {
   const runtimeGlobal = globalThis as RuntimeGlobal;
-  return runtimeGlobal.__piclaw_runtime || null;
+  return runtimeGlobal.__qiushuiai_runtime || null;
 }
 
 /**
- * Lightweight replacement for piclaw's createMedia.
+ * Lightweight replacement for qiushuiai's createMedia.
  * Writes the file to a known export directory and returns a pseudo media ID.
  * The addon should use attach_file tool to deliver the report to the user.
  */
@@ -46,7 +46,7 @@ export function createMedia(
     return runtimeApi.createMedia(filename, contentType, data, null, meta || null);
   }
 
-  const exportDir = join(WORKSPACE_DIR, ".piclaw", "tmp");
+  const exportDir = join(WORKSPACE_DIR, ".qiushuiai", "tmp");
   if (!existsSync(exportDir)) mkdirSync(exportDir, { recursive: true });
   const outPath = join(exportDir, `${nextMediaId}-${basename(filename)}`);
   writeFileSync(outPath, data);

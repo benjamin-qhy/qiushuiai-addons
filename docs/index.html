@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>piclaw-addons</title>
-<meta name="description" content="Community extensions, tools and add-ons for piclaw.">
-<meta property="og:title" content="piclaw-addons">
-<meta property="og:description" content="Community extensions, tools and add-ons for piclaw.">
-<meta property="og:url" content="https://rcarmo.github.io/piclaw-addons/">
-<meta property="og:image" content="https://rcarmo.github.io/piclaw-addons/assets/og/index.png">
+<title>QiushuiAI 插件中心</title>
+<meta name="description" content="QiushuiAI 官方插件、技能和组件目录。">
+<meta property="og:title" content="QiushuiAI 插件中心">
+<meta property="og:description" content="QiushuiAI 官方插件、技能和组件目录。">
+<meta property="og:url" content="https://benjamin-qhy.github.io/qiushuiai-addons/">
+<meta property="og:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/index.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="piclaw-addons">
-<meta name="twitter:description" content="Community extensions, tools and add-ons for piclaw.">
-<meta name="twitter:image" content="https://rcarmo.github.io/piclaw-addons/assets/og/index.png">
-<link rel="canonical" href="https://rcarmo.github.io/piclaw-addons/">
+<meta name="twitter:title" content="QiushuiAI 插件中心">
+<meta name="twitter:description" content="QiushuiAI 官方插件、技能和组件目录。">
+<meta name="twitter:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/index.png">
+<link rel="canonical" href="https://benjamin-qhy.github.io/qiushuiai-addons/">
 <script type="text/javascript">
 (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "wipi60y9s3");
 </script>
 <style>
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Inter';src:url('/piclaw-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter';src:url('/qiushuiai-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f0f4ff;--ink:#0f1c2e;--ink-dim:rgba(15,28,46,.6);
@@ -77,13 +77,20 @@ html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:var(
 /* ── Grid ─── */
 .grid{max-width:var(--max-w);margin:0 auto 3rem;padding:0 1.25rem;display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem}
-.card{display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
+.card{position:relative;display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s}
+  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s;overflow:hidden}
 .card:hover{box-shadow:var(--shadow);border-color:var(--accent)}
+.card-core .card-header{padding-right:3.65rem}
 .card-header{display:flex;align-items:center;gap:.85rem}
+.core-bookmark{position:absolute;z-index:1;top:-1px;right:16px;width:48px;height:66px;color:#c81e3a;filter:drop-shadow(0 3px 3px rgba(95,11,21,.3));pointer-events:none}
+.core-bookmark svg{display:block;width:48px;height:66px}
+.core-bookmark-highlight{fill:#ef4764;opacity:.9}
+@media(prefers-color-scheme:dark){.core-bookmark{color:#d52645}}
 .card-icon{width:48px;height:48px;object-fit:contain;flex-shrink:0}
 .card-name{font-family:var(--font-head);font-weight:700;font-size:1.05rem;letter-spacing:-.025em}
+.card-slug,.detail-slug{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);margin-top:.12rem}
+.detail-slug{color:rgba(255,255,255,.72);margin:0}
 .card-sub-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:.18rem}
 .card-version{font-size:.72rem;color:var(--ink-dim);font-family:var(--font-mono)}
 .card-sub-row .owner-row{margin:0}
@@ -210,621 +217,840 @@ footer a{color:var(--accent);text-decoration:none}
 
 <header class="hero">
   <div class="hero-inner">
-    <img class="hero-logo" src="/piclaw-addons/assets/icons/piclaw.png" alt="piclaw">
+    <img class="hero-logo" src="/qiushuiai-addons/assets/icons/qiushuiai.png" alt="QiushuiAI">
     <div class="hero-text">
-      <div class="hero-title">piclaw-addons</div>
-      <div class="hero-sub">Community extensions, tools and add-ons for <a href="https://github.com/rcarmo/piclaw" style="color:rgba(255,255,255,.85)">piclaw</a>.</div>
-      <div class="hero-meta">42 add-ons &nbsp;·&nbsp; catalog v2</div>
+      <div class="hero-title">QiushuiAI 插件中心</div>
+      <div class="hero-sub">适用于 <a href="https://github.com/benjamin-qhy/qiushuiai" style="color:rgba(255,255,255,.85)">QiushuiAI</a> 的官方插件、技能和组件。</div>
+      <div class="hero-meta">48 个插件 &nbsp;·&nbsp; 目录 v3</div>
       <div class="hero-actions">
-        <a class="hero-source" href="https://github.com/rcarmo/piclaw-addons" target="_blank" rel="noopener">
+        <a class="hero-source" href="https://github.com/benjamin-qhy/qiushuiai-addons" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-          View on GitHub
+          在 GitHub 查看
         </a>
-        <a class="hero-source" href="/piclaw-addons/packages/">↓ Packages</a>
+        <a class="hero-source" href="/qiushuiai-addons/packages/">↓ 安装包</a>
       </div>
     </div>
   </div>
 </header>
 
 <div class="search-bar">
-  <input id="search" type="search" placeholder="Search add-ons…" autocomplete="off">
+  <input id="search" type="search" placeholder="搜索插件名称、功能或标签…" aria-label="搜索插件" autocomplete="off">
 </div>
 
 <main class="grid" id="grid">
-  <a href="/piclaw-addons/addons/ast-grep-tool/" class="card" data-name="ast-grep-tool Structural code search and rewrite using ast-grep as a native LLM tool ast code-search refactoring">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">ast-grep-tool</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.4</span>
+  <a href="/qiushuiai-addons/addons/a2a/" class="card" data-name="A2A 智能体互联 a2a @qiushuiai/qiushuiai-addon-a2a 提供需主动启用的 A2A v1 智能体互联、认证 JSON-RPC、持久任务和受控端点 a2a agents interoperability 互操作 智能体 智能体互联">
 
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">A2A 智能体互联</div>
+        <div class="card-slug">a2a</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.4.2</span>
+          <div class="owner-row"><span class="person-chip">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    rcarmo</span></div>
         </div>
       </div>
     </div>
-    <div class="card-desc">Structural code search and rewrite using ast-grep as a native LLM tool</div>
-    <div class="card-tags"><span class="badge">ast</span><span class="badge">code-search</span><span class="badge">refactoring</span></div>
+    <div class="card-desc">提供需主动启用的 A2A v1 智能体互联、认证 JSON-RPC、持久任务和受控端点</div>
+    <div class="card-tags"><span class="badge">互操作</span><span class="badge">智能体</span><span class="badge">智能体互联</span></div>
   </a>
-  <a href="/piclaw-addons/addons/autoresearch/" class="card" data-name="autoresearch Autonomous experiment loop sub-agent (start/stop/status tools via tmux) automation experiments research">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">autoresearch</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.2</span>
+  <a href="/qiushuiai-addons/addons/ast-grep-tool/" class="card" data-name="AST 代码检索 ast-grep-tool @qiushuiai/qiushuiai-addon-ast-grep-tool 将 ast-grep 作为原生智能体工具，用于结构化代码搜索和重写 ast code-search refactoring 代码检索 语法树 重构">
 
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Autonomous experiment loop sub-agent (start/stop/status tools via tmux)</div>
-    <div class="card-tags"><span class="badge">automation</span><span class="badge">experiments</span><span class="badge">research</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/cheapskate/" class="card" data-name="cheapskate Free-tier provider auto-rotation — select cheapskate/auto as your model and it transparently routes across configured free-tier backends (Gemini, Cerebras, Groq, SambaNova, OpenRouter, OpenCode Zen, NVIDIA, Cloudflare) cost-optimization free-tier models providers rotation">
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">cheapskate</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.4.4</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Free-tier provider auto-rotation — select cheapskate/auto as your model and it transparently routes across configured free-tier backends (Gemini, Cerebras, Groq, SambaNova, OpenRouter, OpenCode Zen, NVIDIA, Cloudflare)</div>
-    <div class="card-tags"><span class="badge">cost-optimization</span><span class="badge">free-tier</span><span class="badge">models</span><span class="badge">providers</span><span class="badge">rotation</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/code-validator/" class="card" data-name="code-validator Diagnostics tool for code validation (Python, JS/TS, JSON, extensible via validators.json) diagnostics linting validation">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">code-validator</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Diagnostics tool for code validation (Python, JS/TS, JSON, extensible via validators.json)</div>
-    <div class="card-tags"><span class="badge">diagnostics</span><span class="badge">linting</span><span class="badge">validation</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/codex-conversion/" class="card" data-name="codex-conversion Codex-style prompt and tool adapter for OpenAI/Codex-like models in Piclaw adapter codex openai prompting tools">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">codex-conversion</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Codex-style prompt and tool adapter for OpenAI/Codex-like models in Piclaw</div>
-    <div class="card-tags"><span class="badge">adapter</span><span class="badge">codex</span><span class="badge">openai</span><span class="badge">prompting</span><span class="badge">tools</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/delegate/" class="card" data-name="delegate Delegate tasks to cheaper/faster models with auto model selection, tool access, and MCP support cost-optimization delegation multi-model">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-00.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">delegate</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.9</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Delegate tasks to cheaper/faster models with auto model selection, tool access, and MCP support</div>
-    <div class="card-tags"><span class="badge">cost-optimization</span><span class="badge">delegation</span><span class="badge">multi-model</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/dev-tools/" class="card" data-name="dev-tools Developer tools for workspace diagnostics and environment inspection developer diagnostics environment">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">dev-tools</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Developer tools for workspace diagnostics and environment inspection</div>
-    <div class="card-tags"><span class="badge">developer</span><span class="badge">diagnostics</span><span class="badge">environment</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/diagram-tools/" class="card" data-name="diagram-tools Architecture diagram workflow — JSON graph definitions, SVG renderer, colour picker widget architecture diagrams portfolio svg">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">diagram-tools</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Architecture diagram workflow — JSON graph definitions, SVG renderer, colour picker widget</div>
-    <div class="card-tags"><span class="badge">architecture</span><span class="badge">diagrams</span><span class="badge">portfolio</span><span class="badge">svg</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/drawio-editor/" class="card" data-name="drawio-editor Self-hosted draw.io diagram editor with workspace file integration diagrams drawio editor">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">drawio-editor</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Self-hosted draw.io diagram editor with workspace file integration</div>
-    <div class="card-tags"><span class="badge">diagrams</span><span class="badge">drawio</span><span class="badge">editor</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/editable-table/" class="card" data-name="editable-table Editable Markdown table widget for the web UI — opens a themed spreadsheet-style grid and inserts the edited Markdown table back into chat editor markdown table web-ui widget">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">editable-table</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.3</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Editable Markdown table widget for the web UI — opens a themed spreadsheet-style grid and inserts the edited Markdown table back into chat</div>
-    <div class="card-tags"><span class="badge">editor</span><span class="badge">markdown</span><span class="badge">table</span><span class="badge">web-ui</span><span class="badge">widget</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/eml-viewer/" class="card" data-name="eml-viewer Attachment preview route for email message (.eml) files in the web timeline email eml viewer">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">eml-viewer</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.2.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Attachment preview route for email message (.eml) files in the web timeline</div>
-    <div class="card-tags"><span class="badge">email</span><span class="badge">eml</span><span class="badge">viewer</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/export-timeline-pdf/" class="card" data-name="export-timeline-pdf Export chat timelines to PDF with inline avatars and referenced message pills export pdf timeline">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">export-timeline-pdf</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Export chat timelines to PDF with inline avatars and referenced message pills</div>
-    <div class="card-tags"><span class="badge">export</span><span class="badge">pdf</span><span class="badge">timeline</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/ghostty-terminal/" class="card" data-name="ghostty-terminal Modern, more functional Ghostty-web terminal pane renderer for high-end Piclaw browsers desktop experimental ghostty terminal wasm">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-02.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">ghostty-terminal</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Modern, more functional Ghostty-web terminal pane renderer for high-end Piclaw browsers</div>
-    <div class="card-tags"><span class="badge">desktop</span><span class="badge">experimental</span><span class="badge">ghostty</span><span class="badge">terminal</span><span class="badge">wasm</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/git-query-tools/" class="card" data-name="git-query-tools Git history and JSON query tools for piclaw agents git json query">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">git-query-tools</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.2</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Git history and JSON query tools for piclaw agents</div>
-    <div class="card-tags"><span class="badge">git</span><span class="badge">json</span><span class="badge">query</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/goal/" class="card" data-name="goal Codex-style persisted thread goals with a hardened autonomous continuation loop and visible completion/stop summaries automation goal-seeking loop productivity session">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-00.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">goal</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.33</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Codex-style persisted thread goals with a hardened autonomous continuation loop and visible completion/stop summaries</div>
-    <div class="card-tags"><span class="badge">automation</span><span class="badge">goal-seeking</span><span class="badge">loop</span><span class="badge">productivity</span><span class="badge">session</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/image-processing/" class="card" data-name="image-processing Image manipulation tool (image_process) for Piclaw — resize, crop, convert, composite and more via sharp image processing sharp tools">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">image-processing</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.2</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Image manipulation tool (image_process) for Piclaw — resize, crop, convert, composite and more via sharp</div>
-    <div class="card-tags"><span class="badge">image</span><span class="badge">processing</span><span class="badge">sharp</span><span class="badge">tools</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/imap/" class="card" data-name="imap IMAP email management tool — search/fetch, move/copy, flag, create drafts, file messages, and STARTTLS support email imap mail productivity">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">imap</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.7</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">IMAP email management tool — search/fetch, move/copy, flag, create drafts, file messages, and STARTTLS support</div>
-    <div class="card-tags"><span class="badge">email</span><span class="badge">imap</span><span class="badge">mail</span><span class="badge">productivity</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/kanban-board-widget/" class="card" data-name="kanban-board-widget Interactive kanban board dashboard widget for the web timeline dashboard kanban ui widget">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">kanban-board-widget</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Interactive kanban board dashboard widget for the web timeline</div>
-    <div class="card-tags"><span class="badge">dashboard</span><span class="badge">kanban</span><span class="badge">ui</span><span class="badge">widget</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/kanban-editor/" class="card" data-name="kanban-editor Workspace .kanban.md editor add-on with Obsidian-style [[links]] between boards editor kanban markdown wiki-links workspace">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">kanban-editor</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.2</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Workspace .kanban.md editor add-on with Obsidian-style [[links]] between boards</div>
-    <div class="card-tags"><span class="badge">editor</span><span class="badge">kanban</span><span class="badge">markdown</span><span class="badge">wiki-links</span><span class="badge">workspace</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/late-night-regrets/" class="card" data-name="late-night-regrets Nightly Bayesian interaction-quality classifier — trains on chat history, flags behavioral patterns, and writes self-improvement reflections bayesian classifier nightly quality reflection self-improvement">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">late-night-regrets</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Nightly Bayesian interaction-quality classifier — trains on chat history, flags behavioral patterns, and writes self-improvement reflections</div>
-    <div class="card-tags"><span class="badge">bayesian</span><span class="badge">classifier</span><span class="badge">nightly</span><span class="badge">quality</span><span class="badge">reflection</span><span class="badge">self-improvement</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/lite-term/" class="card" data-name="lite-term xterm.js terminal pane identical to Piclaw's bundled default terminal and a good starting point for terminal customizations lite low-spec nerd-font terminal xterm">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-02.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">lite-term</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.2</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">xterm.js terminal pane identical to Piclaw's bundled default terminal and a good starting point for terminal customizations</div>
-    <div class="card-tags"><span class="badge">lite</span><span class="badge">low-spec</span><span class="badge">nerd-font</span><span class="badge">terminal</span><span class="badge">xterm</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/mindmap/" class="card" data-name="mindmap D3-based mindmap editor pane for .mindmap.yaml files in Piclaw diagrams editor mindmap yaml">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">mindmap</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">D3-based mindmap editor pane for .mindmap.yaml files in Piclaw</div>
-    <div class="card-tags"><span class="badge">diagrams</span><span class="badge">editor</span><span class="badge">mindmap</span><span class="badge">yaml</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/observability/" class="card" data-name="observability OpenTelemetry observability — trace errors and agent turns across piclaw instances to Azure Application Insights (with Live Metrics) and local Graphite application-insights graphite live-metrics metrics observability opentelemetry otel tracing">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">observability</div>
+        <div class="card-name">AST 代码检索</div>
+        <div class="card-slug">ast-grep-tool</div>
         <div class="card-sub-row">
           <span class="card-version">v0.1.8</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">OpenTelemetry observability — trace errors and agent turns across piclaw instances to Azure Application Insights (with Live Metrics) and local Graphite</div>
-    <div class="card-tags"><span class="badge">application-insights</span><span class="badge">graphite</span><span class="badge">live-metrics</span><span class="badge">metrics</span><span class="badge">observability</span><span class="badge">opentelemetry</span><span class="badge">otel</span><span class="badge">tracing</span></div>
+    <div class="card-desc">将 ast-grep 作为原生智能体工具，用于结构化代码搜索和重写</div>
+    <div class="card-tags"><span class="badge">代码检索</span><span class="badge">语法树</span><span class="badge">重构</span></div>
   </a>
-  <a href="/piclaw-addons/addons/office-tools/" class="card" data-name="office-tools Office document read/write tools for Piclaw (docx, xlsx, pptx, odt, md→pdf) documents docx office pdf pptx xlsx">
+  <a href="/qiushuiai-addons/addons/autoresearch/" class="card" data-name="自主研究 autoresearch @qiushuiai/qiushuiai-addon-autoresearch 通过 tmux 运行可启动、停止和查看状态的自主实验循环子智能体 automation experiments research 实验 研究 自动化">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">office-tools</div>
+        <div class="card-name">自主研究</div>
+        <div class="card-slug">autoresearch</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">通过 tmux 运行可启动、停止和查看状态的自主实验循环子智能体</div>
+    <div class="card-tags"><span class="badge">实验</span><span class="badge">研究</span><span class="badge">自动化</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/cheapskate/" class="card" data-name="零成本模型路由 cheapskate @qiushuiai/qiushuiai-addon-cheapskate 基于目录将请求路由到零成本模型，支持单次请求故障转移和仅免费模型设置面板 cost-optimization free-tier models providers rotation 免费模型 成本优化 模型 模型供应商 自动轮换">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">零成本模型路由</div>
+        <div class="card-slug">cheapskate</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.5.3</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">基于目录将请求路由到零成本模型，支持单次请求故障转移和仅免费模型设置面板</div>
+    <div class="card-tags"><span class="badge">免费模型</span><span class="badge">成本优化</span><span class="badge">模型</span><span class="badge">模型供应商</span><span class="badge">自动轮换</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/code-validator/" class="card" data-name="代码校验 code-validator @qiushuiai/qiushuiai-addon-code-validator 提供 Python、JavaScript、TypeScript 和 JSON 诊断，并支持通过 validators.json 扩展 diagnostics linting validation 代码检查 校验 诊断">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">代码校验</div>
+        <div class="card-slug">code-validator</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.4</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供 Python、JavaScript、TypeScript 和 JSON 诊断，并支持通过 validators.json 扩展</div>
+    <div class="card-tags"><span class="badge">代码检查</span><span class="badge">校验</span><span class="badge">诊断</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/codex-conversion/" class="card" data-name="Codex 转换 codex-conversion @qiushuiai/qiushuiai-addon-codex-conversion 为 QiushuiAI 提供感知供应商的 Codex 与 Copilot 提示词和工具配置 adapter codex openai prompting tools Codex 适配 OpenAI 集成 工具 提示词 适配器">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">Codex 转换</div>
+        <div class="card-slug">codex-conversion</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.2</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">为 QiushuiAI 提供感知供应商的 Codex 与 Copilot 提示词和工具配置</div>
+    <div class="card-tags"><span class="badge">Codex 适配</span><span class="badge">OpenAI 集成</span><span class="badge">工具</span><span class="badge">提示词</span><span class="badge">适配器</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/delegate/" class="card card-core" data-name="任务委派 delegate @qiushuiai/qiushuiai-addon-delegate 将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略 core cost-optimization delegation multi-model 任务委派 多模型 成本优化 核心推荐">
+    <span class="core-bookmark" role="img" aria-label="核心推荐插件" title="核心推荐插件，适合大多数 QiushuiAI 用户">
+    <svg viewBox="0 0 48 66" width="48" height="66" aria-hidden="true" focusable="false">
+      <path d="M0 0H48V66L24 51 0 66Z" fill="currentColor"/>
+      <path d="M0 0H48V5H0Z" class="core-bookmark-highlight"/>
+      <path d="m24 11.7 2.84 5.75 6.36.93-4.6 4.48 1.09 6.32L24 26.19l-5.69 2.99 1.09-6.32-4.6-4.48 6.36-.93Z" fill="#fff"/>
+      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800">推荐</text>
+    </svg>
+  </span>
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">任务委派</div>
+        <div class="card-slug">delegate</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.11</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略</div>
+    <div class="card-tags"><span class="badge">任务委派</span><span class="badge">多模型</span><span class="badge">成本优化</span><span class="badge">核心推荐</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/dev-tools/" class="card" data-name="开发工具 dev-tools @qiushuiai/qiushuiai-addon-dev-tools 提供工作区诊断和运行环境检查工具 developer diagnostics environment 开发工具 诊断 运行环境">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">开发工具</div>
+        <div class="card-slug">dev-tools</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供工作区诊断和运行环境检查工具</div>
+    <div class="card-tags"><span class="badge">开发工具</span><span class="badge">诊断</span><span class="badge">运行环境</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/diagram-tools/" class="card" data-name="图表工具 diagram-tools @qiushuiai/qiushuiai-addon-diagram-tools 提供 JSON 图定义、SVG 渲染器和颜色选择器组件的架构图工作流 architecture diagrams portfolio svg 作品集 图表 架构 矢量图">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">图表工具</div>
+        <div class="card-slug">diagram-tools</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.1</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供 JSON 图定义、SVG 渲染器和颜色选择器组件的架构图工作流</div>
+    <div class="card-tags"><span class="badge">作品集</span><span class="badge">图表</span><span class="badge">架构</span><span class="badge">矢量图</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/drawio-editor/" class="card" data-name="draw.io 编辑器 drawio-editor @qiushuiai/qiushuiai-addon-drawio-editor 提供自托管的 draw.io 图表编辑器，并与工作区文件集成 diagrams drawio editor draw.io 图表 图表 编辑器">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">draw.io 编辑器</div>
+        <div class="card-slug">drawio-editor</div>
+        <div class="card-sub-row">
+          <span class="card-version">v31.4.4</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供自托管的 draw.io 图表编辑器，并与工作区文件集成</div>
+    <div class="card-tags"><span class="badge">draw.io 图表</span><span class="badge">图表</span><span class="badge">编辑器</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/editable-table/" class="card" data-name="可编辑表格 editable-table @qiushuiai/qiushuiai-addon-editable-table 在 Web 界面中编辑 Markdown 表格，并将修改后的内容插回对话 editor markdown table web-ui widget Markdown 编辑 组件 编辑器 网页界面 表格">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">可编辑表格</div>
+        <div class="card-slug">editable-table</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">在 Web 界面中编辑 Markdown 表格，并将修改后的内容插回对话</div>
+    <div class="card-tags"><span class="badge">Markdown 编辑</span><span class="badge">组件</span><span class="badge">编辑器</span><span class="badge">网页界面</span><span class="badge">表格</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/eml-viewer/" class="card" data-name="邮件文件查看器 eml-viewer @qiushuiai/qiushuiai-addon-eml-viewer 在 Web 时间线中预览电子邮件 .eml 附件 email eml viewer 查看器 电子邮件 邮件文件">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">邮件文件查看器</div>
+        <div class="card-slug">eml-viewer</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.2</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">在 Web 时间线中预览电子邮件 .eml 附件</div>
+    <div class="card-tags"><span class="badge">查看器</span><span class="badge">电子邮件</span><span class="badge">邮件文件</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/export-timeline-pdf/" class="card" data-name="导出时间线 PDF export-timeline-pdf @qiushuiai/qiushuiai-addon-export-timeline-pdf 将聊天时间线导出为 PDF，并保留头像和引用消息标记 export pdf timeline PDF 文档 导出 时间线">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">导出时间线 PDF</div>
+        <div class="card-slug">export-timeline-pdf</div>
         <div class="card-sub-row">
           <span class="card-version">v0.1.2</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Office document read/write tools for Piclaw (docx, xlsx, pptx, odt, md→pdf)</div>
-    <div class="card-tags"><span class="badge">documents</span><span class="badge">docx</span><span class="badge">office</span><span class="badge">pdf</span><span class="badge">pptx</span><span class="badge">xlsx</span></div>
+    <div class="card-desc">将聊天时间线导出为 PDF，并保留头像和引用消息标记</div>
+    <div class="card-tags"><span class="badge">PDF 文档</span><span class="badge">导出</span><span class="badge">时间线</span></div>
   </a>
-  <a href="/piclaw-addons/addons/office-viewer/" class="card" data-name="office-viewer Office document viewer (.docx, .xlsx, .pptx, .odt, .ods, .odp) for Piclaw documents docx office pptx viewer xlsx">
+  <a href="/qiushuiai-addons/addons/ghostty-terminal/" class="card" data-name="Ghostty 终端 ghostty-terminal @qiushuiai/qiushuiai-addon-ghostty-terminal 为高性能浏览器提供基于 Ghostty Web 的现代终端面板 desktop experimental ghostty terminal wasm Ghostty 终端 WebAssembly 技术 实验功能 桌面自动化 终端">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">office-viewer</div>
+        <div class="card-name">Ghostty 终端</div>
+        <div class="card-slug">ghostty-terminal</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.2</span>
+          <span class="card-version">v0.1.1</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Office document viewer (.docx, .xlsx, .pptx, .odt, .ods, .odp) for Piclaw</div>
-    <div class="card-tags"><span class="badge">documents</span><span class="badge">docx</span><span class="badge">office</span><span class="badge">pptx</span><span class="badge">viewer</span><span class="badge">xlsx</span></div>
+    <div class="card-desc">为高性能浏览器提供基于 Ghostty Web 的现代终端面板</div>
+    <div class="card-tags"><span class="badge">Ghostty 终端</span><span class="badge">WebAssembly 技术</span><span class="badge">实验功能</span><span class="badge">桌面自动化</span><span class="badge">终端</span></div>
   </a>
-  <a href="/piclaw-addons/addons/plan-sidebar/" class="card" data-name="plan-sidebar Right-side session plan sidebar with canonical plan action=update and Markdown storage markdown planning session ui">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-02.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">plan-sidebar</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.20</span>
+  <a href="/qiushuiai-addons/addons/git-query-tools/" class="card" data-name="Git 查询工具 git-query-tools @qiushuiai/qiushuiai-addon-git-query-tools 为 QiushuiAI 智能体提供 Git 历史和 JSON 查询工具 git json query Git 工具 JSON 查询 查询">
 
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Right-side session plan sidebar with canonical plan action=update and Markdown storage</div>
-    <div class="card-tags"><span class="badge">markdown</span><span class="badge">planning</span><span class="badge">session</span><span class="badge">ui</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/portainer/" class="card" data-name="portainer Portainer management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for endpoints, stacks, containers, images, networks, and volumes containers docker infrastructure portainer">
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">portainer</div>
+        <div class="card-name">Git 查询工具</div>
+        <div class="card-slug">git-query-tools</div>
         <div class="card-sub-row">
           <span class="card-version">v0.1.6</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Portainer management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for endpoints, stacks, containers, images, networks, and volumes</div>
-    <div class="card-tags"><span class="badge">containers</span><span class="badge">docker</span><span class="badge">infrastructure</span><span class="badge">portainer</span></div>
+    <div class="card-desc">为 QiushuiAI 智能体提供 Git 历史和 JSON 查询工具</div>
+    <div class="card-tags"><span class="badge">Git 工具</span><span class="badge">JSON 查询</span><span class="badge">查询</span></div>
   </a>
-  <a href="/piclaw-addons/addons/proxmox/" class="card" data-name="proxmox Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics homelab infrastructure proxmox virtualization">
+  <a href="/qiushuiai-addons/addons/goal/" class="card card-core" data-name="目标管理 goal @qiushuiai/qiushuiai-addon-goal 提供持久化线程目标、加固的自主续行循环和清晰的完成或停止摘要 automation core goal-seeking loop productivity session 会话 效率 核心推荐 目标驱动 自动化 自动续行">
+    <span class="core-bookmark" role="img" aria-label="核心推荐插件" title="核心推荐插件，适合大多数 QiushuiAI 用户">
+    <svg viewBox="0 0 48 66" width="48" height="66" aria-hidden="true" focusable="false">
+      <path d="M0 0H48V66L24 51 0 66Z" fill="currentColor"/>
+      <path d="M0 0H48V5H0Z" class="core-bookmark-highlight"/>
+      <path d="m24 11.7 2.84 5.75 6.36.93-4.6 4.48 1.09 6.32L24 26.19l-5.69 2.99 1.09-6.32-4.6-4.48 6.36-.93Z" fill="#fff"/>
+      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800">推荐</text>
+    </svg>
+  </span>
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">proxmox</div>
+        <div class="card-name">目标管理</div>
+        <div class="card-slug">goal</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.7</span>
+          <span class="card-version">v0.1.49</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics</div>
-    <div class="card-tags"><span class="badge">homelab</span><span class="badge">infrastructure</span><span class="badge">proxmox</span><span class="badge">virtualization</span></div>
+    <div class="card-desc">提供持久化线程目标、加固的自主续行循环和清晰的完成或停止摘要</div>
+    <div class="card-tags"><span class="badge">会话</span><span class="badge">效率</span><span class="badge">核心推荐</span><span class="badge">目标驱动</span><span class="badge">自动化</span><span class="badge">自动续行</span></div>
   </a>
-  <a href="/piclaw-addons/addons/sample-addon/" class="card" data-name="sample-addon Sample add-on — starter template showing a settings pane, keychain secret, SQLite KV config, and a test endpoint developer sample template">
+  <a href="/qiushuiai-addons/addons/image-processing/" class="card" data-name="图像处理 image-processing @qiushuiai/qiushuiai-addon-image-processing 通过 sharp 提供缩放、裁剪、转换、合成等图像处理能力 image processing sharp tools 图像 图像引擎 工具 数据处理">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">sample-addon</div>
+        <div class="card-name">图像处理</div>
+        <div class="card-slug">image-processing</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.9</span>
+          <span class="card-version">v0.1.5</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Sample add-on — starter template showing a settings pane, keychain secret, SQLite KV config, and a test endpoint</div>
-    <div class="card-tags"><span class="badge">developer</span><span class="badge">sample</span><span class="badge">template</span></div>
+    <div class="card-desc">通过 sharp 提供缩放、裁剪、转换、合成等图像处理能力</div>
+    <div class="card-tags"><span class="badge">图像</span><span class="badge">图像引擎</span><span class="badge">工具</span><span class="badge">数据处理</span></div>
   </a>
-  <a href="/piclaw-addons/addons/session-tree/" class="card" data-name="session-tree Interactive session tree timeline widget for Piclaw's /tree command navigation session tree widget">
+  <a href="/qiushuiai-addons/addons/imap/" class="card" data-name="IMAP 邮件管理 imap @qiushuiai/qiushuiai-addon-imap 提供邮件搜索、读取、移动、复制、标记、草稿和 STARTTLS 支持 email imap mail productivity 效率 电子邮件 邮件 邮件协议">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">session-tree</div>
+        <div class="card-name">IMAP 邮件管理</div>
+        <div class="card-slug">imap</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.12</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Interactive session tree timeline widget for Piclaw's /tree command</div>
-    <div class="card-tags"><span class="badge">navigation</span><span class="badge">session</span><span class="badge">tree</span><span class="badge">widget</span></div>
+    <div class="card-desc">提供邮件搜索、读取、移动、复制、标记、草稿和 STARTTLS 支持</div>
+    <div class="card-tags"><span class="badge">效率</span><span class="badge">电子邮件</span><span class="badge">邮件</span><span class="badge">邮件协议</span></div>
   </a>
-  <a href="/piclaw-addons/addons/settings-dialog-screenshot/" class="card" data-name="settings-dialog-screenshot Developer skill for capturing tightly cropped screenshots of the Pi web settings dialog only developer documentation screenshots ui">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">settings-dialog-screenshot</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+  <a href="/qiushuiai-addons/addons/kanban-board-widget/" class="card" data-name="看板组件 kanban-board-widget @qiushuiai/qiushuiai-addon-kanban-board-widget 在 Web 时间线中显示可交互的看板仪表盘 dashboard kanban ui widget 仪表盘 界面 看板 组件">
 
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Developer skill for capturing tightly cropped screenshots of the Pi web settings dialog only</div>
-    <div class="card-tags"><span class="badge">developer</span><span class="badge">documentation</span><span class="badge">screenshots</span><span class="badge">ui</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/skill-model-effort/" class="card" data-name="skill-model-effort Honor model, effort, and thinking frontmatter on Piclaw skills models runtime skills thinking">
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">skill-model-effort</div>
-        <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
-
-        </div>
-      </div>
-    </div>
-    <div class="card-desc">Honor model, effort, and thinking frontmatter on Piclaw skills</div>
-    <div class="card-tags"><span class="badge">models</span><span class="badge">runtime</span><span class="badge">skills</span><span class="badge">thinking</span></div>
-  </a>
-  <a href="/piclaw-addons/addons/smart-compaction/" class="card" data-name="smart-compaction Standalone Pi-compatible smart compaction extension for vanilla pi users; Piclaw already includes this behavior natively. compaction context pi vanilla-pi">
-    <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
-      <div>
-        <div class="card-name">smart-compaction</div>
+        <div class="card-name">看板组件</div>
+        <div class="card-slug">kanban-board-widget</div>
         <div class="card-sub-row">
           <span class="card-version">v0.1.2</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Standalone Pi-compatible smart compaction extension for vanilla pi users; Piclaw already includes this behavior natively.</div>
-    <div class="card-tags"><span class="badge">compaction</span><span class="badge">context</span><span class="badge">pi</span><span class="badge">vanilla-pi</span></div>
+    <div class="card-desc">在 Web 时间线中显示可交互的看板仪表盘</div>
+    <div class="card-tags"><span class="badge">仪表盘</span><span class="badge">界面</span><span class="badge">看板</span><span class="badge">组件</span></div>
   </a>
-  <a href="/piclaw-addons/addons/stealth-browser/" class="card" data-name="stealth-browser Stealth browser automation via mochi.js — human-like interactions, fingerprint consistency, anti-detection bypass automation browser stealth web">
+  <a href="/qiushuiai-addons/addons/kanban-editor/" class="card" data-name="看板编辑器 kanban-editor @qiushuiai/qiushuiai-addon-kanban-editor 编辑工作区 .kanban.md 文件，并支持 Obsidian 风格的看板双向链接 editor kanban markdown wiki-links workspace Markdown 编辑 双向链接 工作区 看板 编辑器">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">stealth-browser</div>
+        <div class="card-name">看板编辑器</div>
+        <div class="card-slug">kanban-editor</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.3</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Stealth browser automation via mochi.js — human-like interactions, fingerprint consistency, anti-detection bypass</div>
-    <div class="card-tags"><span class="badge">automation</span><span class="badge">browser</span><span class="badge">stealth</span><span class="badge">web</span></div>
+    <div class="card-desc">编辑工作区 .kanban.md 文件，并支持 Obsidian 风格的看板双向链接</div>
+    <div class="card-tags"><span class="badge">Markdown 编辑</span><span class="badge">双向链接</span><span class="badge">工作区</span><span class="badge">看板</span><span class="badge">编辑器</span></div>
   </a>
-  <a href="/piclaw-addons/addons/telegram/" class="card" data-name="telegram Telegram Bot channel for PiClaw. Connects via Bot API long polling, receives/sends messages, and routes them through the agent. channel messaging telegram">
+  <a href="/qiushuiai-addons/addons/late-night-regrets/" class="card" data-name="夜间反思 late-night-regrets @qiushuiai/qiushuiai-addon-late-night-regrets 夜间训练贝叶斯交互质量分类器，识别行为模式并生成自我改进反思 bayesian classifier nightly quality reflection self-improvement 分类器 反思 夜间任务 自我改进 贝叶斯 质量">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">telegram</div>
+        <div class="card-name">夜间反思</div>
+        <div class="card-slug">late-night-regrets</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.5</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Telegram Bot channel for PiClaw. Connects via Bot API long polling, receives/sends messages, and routes them through the agent.</div>
-    <div class="card-tags"><span class="badge">channel</span><span class="badge">messaging</span><span class="badge">telegram</span></div>
+    <div class="card-desc">夜间训练贝叶斯交互质量分类器，识别行为模式并生成自我改进反思</div>
+    <div class="card-tags"><span class="badge">分类器</span><span class="badge">反思</span><span class="badge">夜间任务</span><span class="badge">自我改进</span><span class="badge">贝叶斯</span><span class="badge">质量</span></div>
   </a>
-  <a href="/piclaw-addons/addons/vent/" class="card" data-name="vent Workspace vent log add-on, adapted from pi-vent by Igor Warzocha, with a configurable output file feedback postmortem quality vent workspace">
+  <a href="/qiushuiai-addons/addons/linkr/" class="card" data-name="Linkr 远程控制 linkr @qiushuiai/qiushuiai-addon-linkr 提供 Radxa Linkr KVM 截图、受限 HID 操作、固件入口任务及 BIOS、启动和系统安装技能 automation bios hardware kvm 固件 硬件 自动化 远程控制">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">vent</div>
+        <div class="card-name">Linkr 远程控制</div>
+        <div class="card-slug">linkr</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
+          <span class="card-version">v0.1.2</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Workspace vent log add-on, adapted from pi-vent by Igor Warzocha, with a configurable output file</div>
-    <div class="card-tags"><span class="badge">feedback</span><span class="badge">postmortem</span><span class="badge">quality</span><span class="badge">vent</span><span class="badge">workspace</span></div>
+    <div class="card-desc">提供 Radxa Linkr KVM 截图、受限 HID 操作、固件入口任务及 BIOS、启动和系统安装技能</div>
+    <div class="card-tags"><span class="badge">固件</span><span class="badge">硬件</span><span class="badge">自动化</span><span class="badge">远程控制</span></div>
   </a>
-  <a href="/piclaw-addons/addons/voice-pipeline/" class="card" data-name="voice-pipeline ESPHome-only voice assistant pipeline for ThinkSmart/ESP32-Audio devices using Azure STT/TTS and the Flint chat runtime audio esp32 home-automation smart-home voice">
+  <a href="/qiushuiai-addons/addons/lite-term/" class="card" data-name="轻量终端 lite-term @qiushuiai/qiushuiai-addon-lite-term 提供基于 xterm.js 的轻量终端面板，适合作为终端定制起点 lite low-spec nerd-font terminal xterm Web 终端 低配置 图标字体 终端 轻量">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">voice-pipeline</div>
+        <div class="card-name">轻量终端</div>
+        <div class="card-slug">lite-term</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.1</span>
+          <span class="card-version">v0.1.3</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">ESPHome-only voice assistant pipeline for ThinkSmart/ESP32-Audio devices using Azure STT/TTS and the Flint chat runtime</div>
-    <div class="card-tags"><span class="badge">audio</span><span class="badge">esp32</span><span class="badge">home-automation</span><span class="badge">smart-home</span><span class="badge">voice</span></div>
+    <div class="card-desc">提供基于 xterm.js 的轻量终端面板，适合作为终端定制起点</div>
+    <div class="card-tags"><span class="badge">Web 终端</span><span class="badge">低配置</span><span class="badge">图标字体</span><span class="badge">终端</span><span class="badge">轻量</span></div>
   </a>
-  <a href="/piclaw-addons/addons/web-viewer/" class="card" data-name="web-viewer HTML, image, and video viewer panes and routes for Piclaw html image media video viewer">
+  <a href="/qiushuiai-addons/addons/m365/" class="card" data-name="Microsoft 365 工具 m365 @qiushuiai/qiushuiai-addon-m365 提供 Teams、Graph、Outlook、OneDrive、SharePoint、日历和待办事项实验工具 graph m365 microsoft-365 onedrive outlook productivity sharepoint teams Microsoft 365 集成 OneDrive 集成 Outlook 集成 SharePoint 集成 Teams 集成 图查询 微软办公 效率">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">web-viewer</div>
+        <div class="card-name">Microsoft 365 工具</div>
+        <div class="card-slug">m365</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.3</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">HTML, image, and video viewer panes and routes for Piclaw</div>
-    <div class="card-tags"><span class="badge">html</span><span class="badge">image</span><span class="badge">media</span><span class="badge">video</span><span class="badge">viewer</span></div>
+    <div class="card-desc">提供 Teams、Graph、Outlook、OneDrive、SharePoint、日历和待办事项实验工具</div>
+    <div class="card-tags"><span class="badge">Microsoft 365 集成</span><span class="badge">OneDrive 集成</span><span class="badge">Outlook 集成</span><span class="badge">SharePoint 集成</span><span class="badge">Teams 集成</span><span class="badge">图查询</span><span class="badge">微软办公</span><span class="badge">效率</span></div>
   </a>
-  <a href="/piclaw-addons/addons/whatsapp/" class="card" data-name="whatsapp WhatsApp channel for PiClaw via Baileys. Connects to WhatsApp Web, receives/sends messages, and routes them through the agent. channel messaging whatsapp">
+  <a href="/qiushuiai-addons/addons/mindmap/" class="card" data-name="思维导图 mindmap @qiushuiai/qiushuiai-addon-mindmap 为 .mindmap.yaml 文件提供基于 D3 的思维导图编辑面板 diagrams editor mindmap yaml YAML 文件 图表 思维导图 编辑器">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">whatsapp</div>
+        <div class="card-name">思维导图</div>
+        <div class="card-slug">mindmap</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.4</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">WhatsApp channel for PiClaw via Baileys. Connects to WhatsApp Web, receives/sends messages, and routes them through the agent.</div>
-    <div class="card-tags"><span class="badge">channel</span><span class="badge">messaging</span><span class="badge">whatsapp</span></div>
+    <div class="card-desc">为 .mindmap.yaml 文件提供基于 D3 的思维导图编辑面板</div>
+    <div class="card-tags"><span class="badge">YAML 文件</span><span class="badge">图表</span><span class="badge">思维导图</span><span class="badge">编辑器</span></div>
   </a>
-  <a href="/piclaw-addons/addons/win-ui/" class="card" data-name="win-ui Windows desktop automation tools via Win32 UI Automation and screenshots automation desktop screenshots windows">
+  <a href="/qiushuiai-addons/addons/observability/" class="card card-core" data-name="可观测性 observability @qiushuiai/qiushuiai-addon-observability 通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite application-insights core graphite live-metrics metrics observability opentelemetry otel tracing Graphite 指标 可观测性 实时指标 应用洞察 开放遥测 指标 核心推荐 遥测 链路追踪">
+    <span class="core-bookmark" role="img" aria-label="核心推荐插件" title="核心推荐插件，适合大多数 QiushuiAI 用户">
+    <svg viewBox="0 0 48 66" width="48" height="66" aria-hidden="true" focusable="false">
+      <path d="M0 0H48V66L24 51 0 66Z" fill="currentColor"/>
+      <path d="M0 0H48V5H0Z" class="core-bookmark-highlight"/>
+      <path d="m24 11.7 2.84 5.75 6.36.93-4.6 4.48 1.09 6.32L24 26.19l-5.69 2.99 1.09-6.32-4.6-4.48 6.36-.93Z" fill="#fff"/>
+      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800">推荐</text>
+    </svg>
+  </span>
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-03.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">win-ui</div>
+        <div class="card-name">可观测性</div>
+        <div class="card-slug">observability</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.18</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Windows desktop automation tools via Win32 UI Automation and screenshots</div>
-    <div class="card-tags"><span class="badge">automation</span><span class="badge">desktop</span><span class="badge">screenshots</span><span class="badge">windows</span></div>
+    <div class="card-desc">通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite</div>
+    <div class="card-tags"><span class="badge">Graphite 指标</span><span class="badge">可观测性</span><span class="badge">实时指标</span><span class="badge">应用洞察</span><span class="badge">开放遥测</span><span class="badge">指标</span><span class="badge">核心推荐</span><span class="badge">遥测</span><span class="badge">链路追踪</span></div>
   </a>
-  <a href="/piclaw-addons/addons/yolo-vibe/" class="card" data-name="yolo-vibe Compose-box YOLO buttons (Continue, Audit, Docs) mounted in the bottom action bar, subtle until hover compose quick-actions web-ui workflow">
+  <a href="/qiushuiai-addons/addons/office-tools/" class="card" data-name="Office 文档工具 office-tools @qiushuiai/qiushuiai-addon-office-tools 为 QiushuiAI 提供 DOCX、XLSX、PPTX、ODT 和 Markdown 转 PDF 的读写能力 documents docx office pdf pptx xlsx PDF 文档 Word 文档 办公文档 文档处理 演示文稿 电子表格">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">yolo-vibe</div>
+        <div class="card-name">Office 文档工具</div>
+        <div class="card-slug">office-tools</div>
         <div class="card-sub-row">
           <span class="card-version">v0.1.7</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Compose-box YOLO buttons (Continue, Audit, Docs) mounted in the bottom action bar, subtle until hover</div>
-    <div class="card-tags"><span class="badge">compose</span><span class="badge">quick-actions</span><span class="badge">web-ui</span><span class="badge">workflow</span></div>
+    <div class="card-desc">为 QiushuiAI 提供 DOCX、XLSX、PPTX、ODT 和 Markdown 转 PDF 的读写能力</div>
+    <div class="card-tags"><span class="badge">PDF 文档</span><span class="badge">Word 文档</span><span class="badge">办公文档</span><span class="badge">文档处理</span><span class="badge">演示文稿</span><span class="badge">电子表格</span></div>
   </a>
-  <a href="/piclaw-addons/addons/yolochat/" class="card" data-name="yolochat Zero-guardrail inter-instance messaging — lets Pi instances post and reply to each other over HTTP chat experimental multi-agent networking">
+  <a href="/qiushuiai-addons/addons/office-viewer/" class="card" data-name="Office 文档查看器 office-viewer @qiushuiai/qiushuiai-addon-office-viewer 在 QiushuiAI 中查看 DOCX、XLSX、PPTX、ODT、ODS 和 ODP 文档 documents docx office pptx viewer xlsx Word 文档 办公文档 文档处理 查看器 演示文稿 电子表格">
+
     <div class="card-header">
-      <img class="card-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
       <div>
-        <div class="card-name">yolochat</div>
+        <div class="card-name">Office 文档查看器</div>
+        <div class="card-slug">office-viewer</div>
         <div class="card-sub-row">
-          <span class="card-version">v0.1.0</span>
+          <span class="card-version">v0.1.4</span>
 
         </div>
       </div>
     </div>
-    <div class="card-desc">Zero-guardrail inter-instance messaging — lets Pi instances post and reply to each other over HTTP</div>
-    <div class="card-tags"><span class="badge">chat</span><span class="badge">experimental</span><span class="badge">multi-agent</span><span class="badge">networking</span></div>
+    <div class="card-desc">在 QiushuiAI 中查看 DOCX、XLSX、PPTX、ODT、ODS 和 ODP 文档</div>
+    <div class="card-tags"><span class="badge">Word 文档</span><span class="badge">办公文档</span><span class="badge">文档处理</span><span class="badge">查看器</span><span class="badge">演示文稿</span><span class="badge">电子表格</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/plan-sidebar/" class="card card-core" data-name="计划侧边栏 plan-sidebar @qiushuiai/qiushuiai-addon-plan-sidebar 提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储 core markdown planning session ui Markdown 编辑 会话 核心推荐 界面 计划">
+    <span class="core-bookmark" role="img" aria-label="核心推荐插件" title="核心推荐插件，适合大多数 QiushuiAI 用户">
+    <svg viewBox="0 0 48 66" width="48" height="66" aria-hidden="true" focusable="false">
+      <path d="M0 0H48V66L24 51 0 66Z" fill="currentColor"/>
+      <path d="M0 0H48V5H0Z" class="core-bookmark-highlight"/>
+      <path d="m24 11.7 2.84 5.75 6.36.93-4.6 4.48 1.09 6.32L24 26.19l-5.69 2.99 1.09-6.32-4.6-4.48 6.36-.93Z" fill="#fff"/>
+      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800">推荐</text>
+    </svg>
+  </span>
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">计划侧边栏</div>
+        <div class="card-slug">plan-sidebar</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.26</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储</div>
+    <div class="card-tags"><span class="badge">Markdown 编辑</span><span class="badge">会话</span><span class="badge">核心推荐</span><span class="badge">界面</span><span class="badge">计划</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/portainer/" class="card" data-name="Portainer 管理 portainer @qiushuiai/qiushuiai-addon-portainer 提供会话级 API 配置和端点、堆栈、容器、镜像、网络及存储卷编排工作流 containers docker infrastructure portainer Portainer 管理 基础设施 容器 容器管理">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">Portainer 管理</div>
+        <div class="card-slug">portainer</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.10</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供会话级 API 配置和端点、堆栈、容器、镜像、网络及存储卷编排工作流</div>
+    <div class="card-tags"><span class="badge">Portainer 管理</span><span class="badge">基础设施</span><span class="badge">容器</span><span class="badge">容器管理</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/proxmox/" class="card" data-name="Proxmox 管理 proxmox @qiushuiai/qiushuiai-addon-proxmox 提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流 homelab infrastructure proxmox virtualization Proxmox 管理 基础设施 家庭实验室 虚拟化">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">Proxmox 管理</div>
+        <div class="card-slug">proxmox</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.11</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流</div>
+    <div class="card-tags"><span class="badge">Proxmox 管理</span><span class="badge">基础设施</span><span class="badge">家庭实验室</span><span class="badge">虚拟化</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/remote-peer/" class="card" data-name="远程节点 remote-peer @qiushuiai/qiushuiai-addon-remote-peer 通过 Iroh 提供基于客户端 ID 的节点聊天、显式配对、可靠投递和文件传输 agents interop messaging remote 互操作 智能体 消息通信 远程协作">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">远程节点</div>
+        <div class="card-slug">remote-peer</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.3.5</span>
+          <div class="owner-row"><span class="person-chip">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    rcarmo</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">通过 Iroh 提供基于客户端 ID 的节点聊天、显式配对、可靠投递和文件传输</div>
+    <div class="card-tags"><span class="badge">互操作</span><span class="badge">智能体</span><span class="badge">消息通信</span><span class="badge">远程协作</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/sample-addon/" class="card" data-name="插件示例 sample-addon @qiushuiai/qiushuiai-addon-sample-addon 展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板 developer sample template 开发工具 模板 示例">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">插件示例</div>
+        <div class="card-slug">sample-addon</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.12</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板</div>
+    <div class="card-tags"><span class="badge">开发工具</span><span class="badge">模板</span><span class="badge">示例</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/session-dashboard/" class="card card-core" data-name="会话仪表盘 session-dashboard @qiushuiai/qiushuiai-addon-session-dashboard 提供可下拉的活动会话仪表盘、近期工作摘要和上下文状态 core dashboard navigation session ui 仪表盘 会话 导航 核心推荐 界面">
+    <span class="core-bookmark" role="img" aria-label="核心推荐插件" title="核心推荐插件，适合大多数 QiushuiAI 用户">
+    <svg viewBox="0 0 48 66" width="48" height="66" aria-hidden="true" focusable="false">
+      <path d="M0 0H48V66L24 51 0 66Z" fill="currentColor"/>
+      <path d="M0 0H48V5H0Z" class="core-bookmark-highlight"/>
+      <path d="m24 11.7 2.84 5.75 6.36.93-4.6 4.48 1.09 6.32L24 26.19l-5.69 2.99 1.09-6.32-4.6-4.48 6.36-.93Z" fill="#fff"/>
+      <text x="24" y="43" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="8" font-weight="800">推荐</text>
+    </svg>
+  </span>
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">会话仪表盘</div>
+        <div class="card-slug">session-dashboard</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">提供可下拉的活动会话仪表盘、近期工作摘要和上下文状态</div>
+    <div class="card-tags"><span class="badge">仪表盘</span><span class="badge">会话</span><span class="badge">导航</span><span class="badge">核心推荐</span><span class="badge">界面</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/session-tree/" class="card" data-name="会话树 session-tree @qiushuiai/qiushuiai-addon-session-tree 为 QiushuiAI 的 /tree 命令提供基于快照的可交互会话树 navigation session tree widget 会话 导航 树状视图 组件">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">会话树</div>
+        <div class="card-slug">session-tree</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.1</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">为 QiushuiAI 的 /tree 命令提供基于快照的可交互会话树</div>
+    <div class="card-tags"><span class="badge">会话</span><span class="badge">导航</span><span class="badge">树状视图</span><span class="badge">组件</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/settings-dialog-screenshot/" class="card" data-name="设置截图 settings-dialog-screenshot @qiushuiai/qiushuiai-addon-settings-dialog-screenshot 用于截取 Pi Web 设置对话框紧凑画面的开发技能 developer documentation screenshots ui 开发工具 截图 文档 界面">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">设置截图</div>
+        <div class="card-slug">settings-dialog-screenshot</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.1</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">用于截取 Pi Web 设置对话框紧凑画面的开发技能</div>
+    <div class="card-tags"><span class="badge">开发工具</span><span class="badge">截图</span><span class="badge">文档</span><span class="badge">界面</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/skill-model-effort/" class="card" data-name="技能模型参数 skill-model-effort @qiushuiai/qiushuiai-addon-skill-model-effort 让 QiushuiAI 技能支持模型、推理强度和思考参数前置元数据 models runtime skills thinking 技能 推理设置 模型 运行时">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">技能模型参数</div>
+        <div class="card-slug">skill-model-effort</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.4</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">让 QiushuiAI 技能支持模型、推理强度和思考参数前置元数据</div>
+    <div class="card-tags"><span class="badge">技能</span><span class="badge">推理设置</span><span class="badge">模型</span><span class="badge">运行时</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/smart-compaction/" class="card" data-name="智能上下文压缩 smart-compaction @qiushuiai/qiushuiai-addon-smart-compaction 为原生 Pi 用户提供独立的智能上下文压缩扩展 compaction context pi vanilla-pi Pi 兼容 上下文 上下文压缩 原生 Pi">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">智能上下文压缩</div>
+        <div class="card-slug">smart-compaction</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">为原生 Pi 用户提供独立的智能上下文压缩扩展</div>
+    <div class="card-tags"><span class="badge">Pi 兼容</span><span class="badge">上下文</span><span class="badge">上下文压缩</span><span class="badge">原生 Pi</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/stealth-browser/" class="card" data-name="隐身浏览器 stealth-browser @qiushuiai/qiushuiai-addon-stealth-browser 通过 mochi.js 提供拟人交互、指纹一致性和反检测浏览器自动化 automation browser stealth web 浏览器 网页 自动化 隐身访问">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">隐身浏览器</div>
+        <div class="card-slug">stealth-browser</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.2</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">通过 mochi.js 提供拟人交互、指纹一致性和反检测浏览器自动化</div>
+    <div class="card-tags"><span class="badge">浏览器</span><span class="badge">网页</span><span class="badge">自动化</span><span class="badge">隐身访问</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/telegram/" class="card" data-name="Telegram 频道 telegram @qiushuiai/qiushuiai-addon-telegram 通过 Bot API 长轮询连接 Telegram，收发消息并转交智能体处理 channel messaging telegram Telegram 集成 消息通信 频道">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">Telegram 频道</div>
+        <div class="card-slug">telegram</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.4</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">通过 Bot API 长轮询连接 Telegram，收发消息并转交智能体处理</div>
+    <div class="card-tags"><span class="badge">Telegram 集成</span><span class="badge">消息通信</span><span class="badge">频道</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/vent/" class="card" data-name="工作区反馈日志 vent @qiushuiai/qiushuiai-addon-vent 将可配置的工作区反馈日志能力集成到 QiushuiAI feedback postmortem quality vent workspace 反馈 反馈日志 复盘 工作区 质量">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">工作区反馈日志</div>
+        <div class="card-slug">vent</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">将可配置的工作区反馈日志能力集成到 QiushuiAI</div>
+    <div class="card-tags"><span class="badge">反馈</span><span class="badge">反馈日志</span><span class="badge">复盘</span><span class="badge">工作区</span><span class="badge">质量</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/voice-pipeline/" class="card" data-name="语音流水线 voice-pipeline @qiushuiai/qiushuiai-addon-voice-pipeline 为 ThinkSmart 和 ESP32-Audio 设备提供基于 Azure STT/TTS 的 ESPHome 语音助手流水线 audio esp32 home-automation smart-home voice 家庭自动化 嵌入式设备 智能家居 语音 音频">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">语音流水线</div>
+        <div class="card-slug">voice-pipeline</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.3</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">为 ThinkSmart 和 ESP32-Audio 设备提供基于 Azure STT/TTS 的 ESPHome 语音助手流水线</div>
+    <div class="card-tags"><span class="badge">家庭自动化</span><span class="badge">嵌入式设备</span><span class="badge">智能家居</span><span class="badge">语音</span><span class="badge">音频</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/web-viewer/" class="card" data-name="网页与媒体查看器 web-viewer @qiushuiai/qiushuiai-addon-web-viewer 为 QiushuiAI 提供 HTML、图像和视频查看面板及路由 html image media video viewer 图像 媒体 查看器 网页 视频">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">网页与媒体查看器</div>
+        <div class="card-slug">web-viewer</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.2</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">为 QiushuiAI 提供 HTML、图像和视频查看面板及路由</div>
+    <div class="card-tags"><span class="badge">图像</span><span class="badge">媒体</span><span class="badge">查看器</span><span class="badge">网页</span><span class="badge">视频</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/whatsapp/" class="card" data-name="WhatsApp 频道 whatsapp @qiushuiai/qiushuiai-addon-whatsapp 通过 Baileys 连接 WhatsApp Web，收发消息并转交智能体处理 channel messaging whatsapp WhatsApp 集成 消息通信 频道">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">WhatsApp 频道</div>
+        <div class="card-slug">whatsapp</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.5</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">通过 Baileys 连接 WhatsApp Web，收发消息并转交智能体处理</div>
+    <div class="card-tags"><span class="badge">WhatsApp 集成</span><span class="badge">消息通信</span><span class="badge">频道</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/win-ui/" class="card" data-name="Windows 界面自动化 win-ui @qiushuiai/qiushuiai-addon-win-ui 通过 Win32 UI Automation 和截图提供 Windows 桌面自动化工具 automation desktop screenshots windows Windows 工具 截图 桌面自动化 自动化">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">Windows 界面自动化</div>
+        <div class="card-slug">win-ui</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.2</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">通过 Win32 UI Automation 和截图提供 Windows 桌面自动化工具</div>
+    <div class="card-tags"><span class="badge">Windows 工具</span><span class="badge">截图</span><span class="badge">桌面自动化</span><span class="badge">自动化</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/writer-fonts/" class="card" data-name="写作字体 writer-fonts @qiushuiai/qiushuiai-addon-writer-fonts 在编辑器底栏切换文档字体，并内置多种中西文字体 editor fonts typography web-ui writing 写作 字体 排版 编辑器 网页界面">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">写作字体</div>
+        <div class="card-slug">writer-fonts</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.2.1</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">在编辑器底栏切换文档字体，并内置多种中西文字体</div>
+    <div class="card-tags"><span class="badge">写作</span><span class="badge">字体</span><span class="badge">排版</span><span class="badge">编辑器</span><span class="badge">网页界面</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/yolo-vibe/" class="card" data-name="快捷操作按钮 yolo-vibe @qiushuiai/qiushuiai-addon-yolo-vibe 在输入框底部操作栏提供继续、审计和文档快捷按钮 compose quick-actions web-ui workflow 工作流 快捷操作 网页界面 输入框">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-02.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">快捷操作按钮</div>
+        <div class="card-slug">yolo-vibe</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.8</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">在输入框底部操作栏提供继续、审计和文档快捷按钮</div>
+    <div class="card-tags"><span class="badge">工作流</span><span class="badge">快捷操作</span><span class="badge">网页界面</span><span class="badge">输入框</span></div>
+  </a>
+  <a href="/qiushuiai-addons/addons/yolochat/" class="card" data-name="实例互聊 yolochat @qiushuiai/qiushuiai-addon-yolochat 让多个 Pi 实例通过 HTTP 相互发帖和回复的无防护通信技能 chat experimental multi-agent networking 多智能体 实验功能 网络 聊天">
+
+    <div class="card-header">
+      <img class="card-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="" loading="lazy">
+      <div>
+        <div class="card-name">实例互聊</div>
+        <div class="card-slug">yolochat</div>
+        <div class="card-sub-row">
+          <span class="card-version">v0.1.1</span>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-desc">让多个 Pi 实例通过 HTTP 相互发帖和回复的无防护通信技能</div>
+    <div class="card-tags"><span class="badge">多智能体</span><span class="badge">实验功能</span><span class="badge">网络</span><span class="badge">聊天</span></div>
   </a>
 </main>
 
 <footer>
-  <div class="footer-links"><a href="https://github.com/rcarmo/piclaw-addons">piclaw-addons</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo/piclaw">piclaw</a></div>
-  <div class="footer-note">PiClaw is not affiliated with <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> — we’re just <em>huge fans</em>.</div>
+  <div class="footer-links"><a href="https://github.com/benjamin-qhy/qiushuiai-addons">QiushuiAI 插件源码</a> &nbsp;·&nbsp;
+  <a href="https://github.com/benjamin-qhy/qiushuiai">QiushuiAI 主项目</a></div>
+  <div class="footer-note">QiushuiAI 与 <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> 无隶属关系；插件保留对 Pi 技术协议的兼容。</div>
 </footer>
 
 <script>
@@ -836,7 +1062,7 @@ search.addEventListener('input', () => {
 });
 </script>
 <script type="module">
-  import { mountIndex } from '/piclaw-addons/assets/js/addon-island.mjs';
+  import { mountIndex } from '/qiushuiai-addons/assets/js/addon-island.mjs';
   mountIndex();
 </script>
 </body>

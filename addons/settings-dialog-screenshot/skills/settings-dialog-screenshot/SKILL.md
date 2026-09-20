@@ -6,7 +6,7 @@ distribution: public
 
 # Settings Dialog Screenshot
 
-Use this skill when documenting Pi or piclaw add-ons and the user wants a screenshot of the **settings dialog only**.
+Use this skill when documenting Pi or qiushuiai add-ons and the user wants a screenshot of the **settings dialog only**.
 
 ## Goal
 

@@ -26,7 +26,7 @@ test('new package-local styling imports use exact browser asset filenames',()=>{
 
 browserTest('Linkr is reachable from General via a visible named Classic phone navigation button',async()=>{
  const f=await open('linkr','classic',390);try{
-  await f.page.evaluate(()=>window.dispatchEvent(new CustomEvent('piclaw:open-settings',{detail:{section:'general'}})));
+  await f.page.evaluate(()=>window.dispatchEvent(new CustomEvent('qiushuiai:open-settings',{detail:{section:'general'}})));
   await f.page.locator('.settings-content input[type=text]').first().waitFor();
   const nav=f.page.locator('.settings-nav').getByRole('button',{name:/Linkr/});
   await nav.scrollIntoViewIfNeeded();expect(await nav.isVisible()).toBe(true);
@@ -97,14 +97,14 @@ for(const slug of panes)for(const skin of ['classic','visual','legacy'])for(cons
     expect(m.border).toBe('1px');expect(m.box).toBe('border-box');expect(m.within,JSON.stringify(m)).toBe(true);
    }
    expect(await f.content.evaluate((el:HTMLElement)=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
-   const out=process.env.PICLAW_SETTINGS_AUDIT_SCREENSHOTS;
+   const out=process.env.QIUSHUIAI_SETTINGS_AUDIT_SCREENSHOTS;
    if(out&&slug==='proxmox'&&skin!=='legacy'&&theme==='light'&&width===390){
     if(!isAbsolute(out))throw Error('Explicit absolute screenshot directory required');mkdirSync(out,{recursive:true});
     await f.content.screenshot({path:join(out,`${slug}-${skin}-${width}.png`)});
    }
    if(skin!=='legacy'){
     // Compare against an unmodified core General input in this actual Settings host.
-    await f.page.evaluate(()=>window.dispatchEvent(new CustomEvent('piclaw:open-settings',{detail:{section:'general'}})));
+    await f.page.evaluate(()=>window.dispatchEvent(new CustomEvent('qiushuiai:open-settings',{detail:{section:'general'}})));
     const ref=f.page.locator(skin==='classic'?'.settings-content input[type=text]':'.settings-panel__content input[type=text]').first();
     await ref.waitFor();
     const reference=await ref.evaluate((el:HTMLElement)=>{const s=getComputedStyle(el);return {padding:s.padding,radius:s.borderRadius,border:s.borderTopWidth,fontSize:s.fontSize,background:s.backgroundColor,color:s.color};});

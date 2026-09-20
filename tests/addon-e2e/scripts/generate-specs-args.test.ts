@@ -21,7 +21,7 @@ describe('resolveRequestedAddon', () => {
     ])).toBe('microsoft-365');
   });
 
-  test('prefers PICLAW_ADDON', () => {
+  test('prefers QIUSHUIAI_ADDON', () => {
     expect(resolveRequestedAddon([
       '/opt/bun/bin/bun',
       '/repo/tests/addon-e2e/scripts/generate-specs.ts',

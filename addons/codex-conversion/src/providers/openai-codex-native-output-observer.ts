@@ -251,11 +251,11 @@ function createCaptureFetch(
 			try {
 				const cloned = response.clone();
 				const task = capture(cloned)
-					.catch((error) => console.warn("[piclaw-addon-codex-conversion] Native output capture failed", error))
+					.catch((error) => console.warn("[qiushuiai-addon-codex-conversion] Native output capture failed", error))
 					.finally(() => captureTasks.delete(task));
 				captureTasks.add(task);
 			} catch (error) {
-				console.warn("[piclaw-addon-codex-conversion] Native output response could not be cloned", error);
+				console.warn("[qiushuiai-addon-codex-conversion] Native output response could not be cloned", error);
 			}
 		}
 		return response;

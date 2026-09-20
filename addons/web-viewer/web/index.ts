@@ -1,7 +1,7 @@
 /**
  * web-viewer/web/index.ts — Combined HTML, image, and video viewer panes.
  *
- * Each pane self-registers via globalThis.__piclaw_web.registerPane on load.
+ * Each pane self-registers via globalThis.__qiushuiai_web.registerPane on load.
  */
 
 import type { PaneCapability, PaneContext, PaneInstance, WebPaneExtension } from './pane-types.js';
@@ -131,7 +131,7 @@ class HtmlViewerInstance implements PaneInstance {
 
 export const htmlViewerPaneExtension: WebPaneExtension = {
     id: 'html-viewer',
-    label: 'HTML Preview',
+    label: 'HTML 预览',
     icon: 'code',
     capabilities: ['readonly', 'preview'] as PaneCapability[],
     placement: 'tabs',
@@ -253,7 +253,7 @@ class ImageViewerInstance implements PaneInstance {
 
 export const imageViewerPaneExtension: WebPaneExtension = {
     id: 'image-viewer',
-    label: 'Image Viewer',
+    label: '图片查看器',
     icon: 'image',
     capabilities: ['readonly', 'preview'] as PaneCapability[],
     placement: 'tabs',
@@ -366,7 +366,7 @@ class VideoViewerInstance implements PaneInstance {
 
 export const videoViewerPaneExtension: WebPaneExtension = {
     id: 'video-viewer',
-    label: 'Video Viewer',
+    label: '视频查看器',
     icon: 'play-circle',
     capabilities: ['readonly', 'preview'] as PaneCapability[],
     placement: 'tabs',
@@ -386,7 +386,7 @@ export const videoViewerPaneExtension: WebPaneExtension = {
 };
 
 // Register all three panes
-const __webApi = (globalThis as any).__piclaw_web;
+const __webApi = (globalThis as any).__qiushuiai_web;
 if (__webApi && typeof __webApi.registerPane === 'function') {
   __webApi.registerPane(htmlViewerPaneExtension);
   __webApi.registerPane(imageViewerPaneExtension);

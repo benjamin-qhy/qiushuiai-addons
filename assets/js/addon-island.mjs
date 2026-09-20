@@ -1,18 +1,18 @@
 /**
- * addon-island.mjs — live GitHub issue counts for piclaw-addons
+ * addon-island.mjs — live GitHub issue counts for qiushuiai-addons
  *
- * Vanilla JS only. Mirrors the caching/fetch pattern from rcarmo.github.io.
- * Fetches open issues for rcarmo/piclaw-addons once per session,
+ * 仅使用原生 JavaScript，并复用站点的缓存与请求模式。
+ * Fetches open issues for benjamin-qhy/qiushuiai-addons once per session,
  * groups them by addon:<slug> labels, then:
  *   - Swaps card/detail icons to default-05.png for addons with open issues
  *   - Shows an issue-count badge on affected cards and detail pages
  */
 
-const REPO        = 'rcarmo/piclaw-addons';
+const REPO        = 'benjamin-qhy/qiushuiai-addons';
 const API_BASE    = 'https://api.github.com';
-const CACHE_KEY   = 'piclaw_addons_issues';
+const CACHE_KEY   = 'qiushuiai_addons_issues';
 const CACHE_TTL   = 15 * 60 * 1000;  // 15 min
-const ICON_PREFIX = '/piclaw-addons/assets/icons/';
+const ICON_PREFIX = '/qiushuiai-addons/assets/icons/';
 const ALERT_ICON  = `${ICON_PREFIX}default-05.png`;
 const CODE_COPY_RESET_MS = 1800;
 const COPY_ICON_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg>';
@@ -73,19 +73,19 @@ function setCodeCopyButtonState(button, state) {
 
   if (nextState === 'success') {
     icon.innerHTML = COPY_SUCCESS_SVG;
-    label.textContent = 'Copied';
-    button.setAttribute('aria-label', 'Copied');
-    button.setAttribute('title', 'Copied');
+    label.textContent = '已复制';
+    button.setAttribute('aria-label', '已复制');
+    button.setAttribute('title', '已复制');
   } else if (nextState === 'error') {
     icon.innerHTML = COPY_ERROR_SVG;
-    label.textContent = 'Failed';
-    button.setAttribute('aria-label', 'Copy failed');
-    button.setAttribute('title', 'Copy failed');
+    label.textContent = '复制失败';
+    button.setAttribute('aria-label', '复制失败');
+    button.setAttribute('title', '复制失败');
   } else {
     icon.innerHTML = COPY_ICON_SVG;
-    label.textContent = 'Copy';
-    button.setAttribute('aria-label', 'Copy code');
-    button.setAttribute('title', 'Copy code');
+    label.textContent = '复制';
+    button.setAttribute('aria-label', '复制代码');
+    button.setAttribute('title', '复制代码');
   }
 }
 
@@ -157,7 +157,7 @@ export function mountIndex() {
       if (!card.querySelector('.issue-badge')) {
         const badge = document.createElement('span');
         badge.className = 'issue-badge';
-        badge.textContent = `${n} open issue${n !== 1 ? 's' : ''}`;
+        badge.textContent = `${n} 个待处理问题`;
         const tags = card.querySelector('.card-tags');
         if (tags) tags.after(badge);
       }
@@ -184,6 +184,6 @@ export function mountDetail(slug) {
       const meta = document.querySelector('.detail-meta');
       if (meta) meta.appendChild(el);
     }
-    el.textContent = `${n} open issue${n !== 1 ? 's' : ''}`;
+    el.textContent = `${n} 个待处理问题`;
   }).catch(() => {});
 }

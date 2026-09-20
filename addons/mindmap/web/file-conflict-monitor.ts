@@ -1,7 +1,7 @@
 /**
- * file-conflict-monitor.ts — Stub for @rcarmo/piclaw-addon-mindmap.
+ * file-conflict-monitor.ts — Stub for @qiushuiai/qiushuiai-addon-mindmap.
  *
- * The full conflict monitor needs piclaw's internal /workspace/stat API.
+ * The full conflict monitor needs qiushuiai's internal /workspace/stat API.
  * This stub provides the same interface but does nothing, keeping the
  * mindmap pane functional without the conflict detection feature.
  */

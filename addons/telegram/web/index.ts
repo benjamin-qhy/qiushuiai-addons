@@ -1,8 +1,8 @@
 import { settingsFieldStyles } from "./settings-fields.ts";
 /**
- * web/index.ts — Browser-side settings pane for @rcarmo/piclaw-addon-telegram.
+ * web/index.ts — Browser-side settings pane for @qiushuiai/qiushuiai-addon-telegram.
  */
-const { html, useState, useEffect, useCallback } = (globalThis as any).__piclawPreactHtm || (globalThis as any).__piclawPreact || {};
+const { html, useState, useEffect, useCallback } = (globalThis as any).__qiushuiaiPreactHtm || (globalThis as any).__qiushuiaiPreact || {};
 const HAS_RUNTIME = Boolean(html && useState && useEffect && useCallback);
 
 const ADDON_ID = "telegram";
@@ -61,7 +61,7 @@ function TelegramSettings() {
     setSaving(true);
     try {
       const nextToken = botToken.trim();
-      if (nextToken && !(await saveKeychainToken(nextToken))) throw new Error("Failed to save Telegram token to keychain");
+      if (nextToken && !(await saveKeychainToken(nextToken))) throw new Error("无法将 Telegram token 保存到密钥链");
       const body: any = { enabled, pollingTimeout };
       const res = await fetch(`/agent/addons/api/${ADDON_ID}/config`, {
         method: "POST",
@@ -85,7 +85,7 @@ function TelegramSettings() {
       </h3>
 
       <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">Enabled</label>
+        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">启用</label>
         <input type="checkbox" checked=${enabled} onChange=${(e: any) => setEnabled(e.target.checked)} />
         <span style="font-size: 12px; color: var(--text-secondary, #71767b);">
           ${config.connected ? "✅ Connected" : "⏸ Disconnected"}
@@ -93,7 +93,7 @@ function TelegramSettings() {
       </div>
 
       <div class="settings-addon-field">
-        <label class="settings-addon-label" for="telegram-token">Bot Token</label>
+        <label class="settings-addon-label" for="telegram-token">机器人 Token</label>
         <input class="settings-addon-control" id="telegram-token"
           type="password"
           value=${botToken}
@@ -103,7 +103,7 @@ function TelegramSettings() {
       </div>
 
       <div class="settings-addon-field">
-        <label class="settings-addon-label" for="telegram-timeout">Poll Timeout</label>
+        <label class="settings-addon-label" for="telegram-timeout">轮询超时</label>
         <input class="settings-addon-control" id="telegram-timeout"
           type="number"
           value=${pollingTimeout}
@@ -111,7 +111,7 @@ function TelegramSettings() {
           max="120"
           onInput=${(e: any) => setPollingTimeout(Number(e.target.value) || 30)}
         />
-        <span style="font-size: 12px; color: var(--text-secondary, #71767b);">seconds</span>
+        <span style="font-size: 12px; color: var(--text-secondary, #71767b);">秒</span>
       </div>
 
       <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
@@ -120,27 +120,27 @@ function TelegramSettings() {
           disabled=${saving}
           style="padding: 6px 16px; border-radius: 4px; border: 1px solid var(--border, #2f3336); background: var(--bg-elevated, #1a1a2e); color: var(--text-primary, #e7e9ea); cursor: pointer; font-size: 13px;"
         >
-          ${saving ? "Saving…" : "Save"}
+          ${saving ? "正在保存…" : "保存"}
         </button>
       </div>
 
       <p style="font-size: 11px; color: var(--text-secondary, #71767b); margin-top: 12px;">
-        Create a bot via <a href="https://t.me/BotFather" target="_blank" style="color: var(--accent, #1d9bf0);">@BotFather</a> on Telegram. The token is stored in keychain entry <code>${BOT_TOKEN_KEYCHAIN}</code>. Restart PiClaw after changing it.
+        请通过 Telegram 中的 <a href="https://t.me/BotFather" target="_blank" style="color: var(--accent, #1d9bf0);">@BotFather</a> 创建机器人。Token 保存在密钥链条目 <code>${BOT_TOKEN_KEYCHAIN}</code> 中，修改后请重启 QiushuiAI。
       </p>
     </section>
   `;
 }
 
 // Register settings pane
-const r = (globalThis as any).__piclawSettingsPaneRegistry;
+const r = (globalThis as any).__qiushuiaiSettingsPaneRegistry;
 let reg: ((def: any) => void) | null = null;
 let notify: (() => void) | null = null;
 if (r) { reg = r.registerSettingsPane; notify = r.notifySettingsPanesChanged; }
-if (!reg && (globalThis as any).__piclaw_web?.registerSettingsPane) {
-  reg = (globalThis as any).__piclaw_web.registerSettingsPane;
-  notify = (globalThis as any).__piclaw_web.notifySettingsPanesChanged;
+if (!reg && (globalThis as any).__qiushuiai_web?.registerSettingsPane) {
+  reg = (globalThis as any).__qiushuiai_web.registerSettingsPane;
+  notify = (globalThis as any).__qiushuiai_web.notifySettingsPanesChanged;
 }
 if (reg) {
-  reg({ id: ADDON_ID, label: "Telegram", icon: ICON, component: TelegramSettings, order: 176 });
+  reg({ id: ADDON_ID, label: "Telegram 消息", icon: ICON, component: TelegramSettings, order: 176 });
   notify?.();
 }

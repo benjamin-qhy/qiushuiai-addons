@@ -33,6 +33,12 @@ jobs:
       - name: Validate catalog and root package metadata
         run: bun run check:catalog
 
+      - name: Audit product-controlled brand identifiers
+        run: bun run audit:brand
+
+      - name: Test catalog v3 identity contract
+        run: bun test scripts/lib/qiushuiai-addon-identity.test.ts
+
       - name: Install Iroh prebuilt test dependency
         working-directory: addons/remote-peer
         run: bun install --frozen-lockfile --omit peer --ignore-scripts

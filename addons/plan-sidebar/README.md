@@ -1,123 +1,36 @@
-# Plan Sidebar add-on
+# 计划侧边栏
 
-Adds a right-side slide-out sidebar for the current chat/session plan.
+提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-- Full-text Markdown checklist editor for normal human selection, paste, deletion, and multi-line edits.
-- Persists the plan per `chat_jid` in Piclaw's extension KV store.
-- Survives browser refreshes and follows the active web chat/session.
-- Provides one canonical model-facing `plan` tool for structured updates and raw Markdown reads/edits.
-- Stores plans as Markdown while exposing consistent structured plan data in tool/API responses and a runtime API for sibling add-ons.
-- Auto-refreshes the visible/sidebar meter on `plan.changes` events from tool or API mutations without clobbering dirty local edits.
-- Includes **Refresh**, **Reset**, **Save**, and **Submit to model** controls; Reset restores the canonical default checklist through the same storage API.
+这是 QiushuiAI 的扩展插件，技术标识为 `plan-sidebar`。
 
-## `plan` tool
+- 软件包：`@qiushuiai/qiushuiai-addon-plan-sidebar`
+- 当前版本：`0.1.26`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`计划`、`界面`、`Markdown 编辑`、`会话`、`核心推荐`
+- 推荐级别：核心推荐
 
-Use `plan action=patch` for the common case: add, edit, or remove multiple checklist items without exact Markdown line replacements or rewriting the entire plan.
+## 安装
 
-```json
-{
-  "action": "patch",
-  "patches": [
-    { "operation": "update", "match": "Inspect current code", "status": "completed" },
-    { "operation": "update", "match": "Patch plan tool", "step": "Patch plan tool batch edits", "status": "in_progress" },
-    { "operation": "add", "after": "Patch plan tool batch edits", "step": "Run targeted tests", "status": "pending" },
-    { "operation": "remove", "match": "Obsolete placeholder" }
-  ]
-}
+在 QiushuiAI 中打开**设置 → 插件**，搜索“计划侧边栏”并安装。也可以直接使用无需登录的公开安装包：
+
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-plan-sidebar-0.1.26.tgz
 ```
 
-Patch operations run in order. `update` and `remove` can target an existing item with a 1-based `index` or a unique `match` against the step text. `add` accepts `position: "start" | "end"`, `before`, or `after`; it defaults to appending.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-Use `plan action=update` for Codex-style structured full-plan replacement when you already know the whole desired checklist. The stored format remains Markdown, but every mutation path is normalized through the same parser/formatter.
+## 提供的能力
 
-```json
-{
-  "action": "update",
-  "explanation": "Reordered after inspecting the code",
-  "plan": [
-    { "step": "Inspect current code", "status": "completed" },
-    { "step": "Port plan action=update contract", "status": "in_progress" },
-    { "step": "Run targeted tests", "status": "pending" }
-  ]
-}
-```
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-Statuses map to canonical Markdown markers:
+## 配置与安全
 
-- `pending` → `- [ ] step`
-- `in_progress` → `- [-] step`
-- `completed` → `- [x] step`
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-At most one step may be `in_progress` / `[-]` at a time, regardless of whether the plan is patched, updated structurally, written as Markdown, edited atomically, reset, or saved through the sidebar API.
+## 技术资料
 
-Use raw Markdown actions only when you need to inspect or precisely edit the underlying document:
-
-```json
-{ "action": "read" }
-```
-
-```json
-{ "action": "write", "markdown": "- [ ] Verify build\n- [ ] Report back" }
-```
-
-```json
-{
-  "action": "edit",
-  "edits": [
-    { "oldText": "- [ ] Verify build", "newText": "- [x] Verify build" }
-  ]
-}
-```
-
-`action=edit` also supports batching multiple exact Markdown operations in one call. Prefer `action=patch` unless you specifically need raw Markdown anchors:
-
-```json
-{
-  "action": "edit",
-  "edits": [
-    { "operation": "replace", "oldText": "- [ ] Inspect current state", "newText": "- [x] Inspect current state" },
-    { "operation": "insert_after", "anchorText": "- [x] Inspect current state", "text": "\n- [-] Patch the plan tool\n- [ ] Run focused tests" },
-    { "operation": "delete", "oldText": "\n- [ ] Obsolete placeholder" },
-    { "operation": "append", "text": "\n- [ ] Report the result" }
-  ]
-}
-```
-
-Supported edit operations:
-
-- `replace` — replace `oldText` with `newText` (legacy default when both fields are present)
-- `delete` — remove `oldText`
-- `insert_after` / `insert_before` — insert `text` around an exact `anchorText`
-- `append` / `prepend` — add `text` at the end or beginning
-
-Anchors and old text must match exactly once. Inserted text may contain multiple checklist lines.
-
-Tool/API details include both the stored Markdown and parsed structured items:
-
-```json
-{
-  "chat_jid": "web:addons",
-  "markdown": "- [x] Inspect\n- [-] Patch\n- [ ] Test",
-  "updated_at": "2026-05-27T16:30:00.000Z",
-  "explanation": null,
-  "plan": [
-    { "step": "Inspect", "status": "completed" },
-    { "step": "Patch", "status": "in_progress" },
-    { "step": "Test", "status": "pending" }
-  ]
-}
-```
-
-By default the tool uses the active chat/session. Pass `chat_jid` only when intentionally reading or writing another session.
-
-## Runtime API
-
-Plan Sidebar exposes a best-effort runtime API for other installed add-ons:
-
-```ts
-globalThis.__piclaw_planSidebarApi?.getPlan(chatJid)
-```
-
-The return value matches the structured tool/API details: stored Markdown, optional explanation, and parsed plan items with `pending`, `in_progress`, or `completed` status. Goal uses this API to detect all-completed plans without importing Plan Sidebar internals.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/plan-sidebar/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -1,5 +1,5 @@
 /**
- * piclaw-addon-proxmox — Proxmox VE management tool.
+ * qiushuiai-addon-proxmox — Proxmox VE management tool.
  *
  * Provides the `proxmox` tool for session-scoped API config, ad-hoc requests,
  * and structured VM/LXC/storage/task/metrics workflows.

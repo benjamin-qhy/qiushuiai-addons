@@ -1,21 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-git-query-tools",
-  "version": "0.1.5",
-  "description": "Git history and JSON query tools for piclaw agents",
+  "name": "@qiushuiai/qiushuiai-addon-git-query-tools",
+  "version": "0.1.6",
+  "description": "为 QiushuiAI 智能体提供 Git 历史和 JSON 查询工具",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "git",
-      "json",
-      "query"
-    ],
-    "skills": [
-      "skills/git-query-tools"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -29,13 +17,34 @@
     "typebox": "*"
   },
   "license": "MIT",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "public"
-  },
   "keywords": [
-    "piclaw",
-    "piclaw-addon"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/git-query-tools/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/git-query-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/git-query-tools"
+  },
+  "qiushuiai": {
+    "displayName": "Git 查询工具",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "git",
+      "json",
+      "query"
+    ],
+    "displayTags": [
+      "Git 工具",
+      "JSON 查询",
+      "查询"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/git-query-tools"
+    ]
+  }
 }

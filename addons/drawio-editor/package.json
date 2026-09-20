@@ -1,20 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-drawio-editor",
-  "version": "31.4.3",
-  "description": "Self-hosted draw.io diagram editor with workspace file integration",
+  "name": "@qiushuiai/qiushuiai-addon-drawio-editor",
+  "version": "31.4.4",
+  "description": "提供自托管的 draw.io 图表编辑器，并与工作区文件集成",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "diagrams",
-      "editor",
-      "drawio"
-    ],
-    "vendorUrl": "https://github.com/jgraph/drawio/releases",
-    "vendorVersion": "31.4.2"
-  },
   "agents": {},
   "scripts": {
     "vendor:update": "bun run scripts/vendor-drawio.ts",
@@ -29,7 +18,9 @@
   ],
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
@@ -41,5 +32,28 @@
       ]
     }
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/drawio-editor/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/drawio-editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/drawio-editor"
+  },
+  "qiushuiai": {
+    "displayName": "draw.io 编辑器",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "diagrams",
+      "editor",
+      "drawio"
+    ],
+    "displayTags": [
+      "图表",
+      "编辑器",
+      "draw.io 图表"
+    ],
+    "featured": false,
+    "vendorUrl": "https://github.com/jgraph/drawio/releases",
+    "vendorVersion": "31.4.2"
+  }
 }

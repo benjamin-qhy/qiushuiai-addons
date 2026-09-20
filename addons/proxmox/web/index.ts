@@ -2,9 +2,9 @@
 import { settingsFieldStyles } from "./settings-fields.ts";
 const ADDON_ID = "proxmox";
 const API = `/agent/addons/api/${ADDON_ID}`;
-const DEFAULT_KEYCHAIN = "proxmox/piclaw-management-token";
+const DEFAULT_KEYCHAIN = "proxmox/qiushuiai-management-token";
 
-const preactHtm = globalThis.__piclawPreactHtm || globalThis.__piclawPreact || null;
+const preactHtm = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact || null;
 const html = preactHtm?.html;
 const useState = preactHtm?.useState;
 const useEffect = preactHtm?.useEffect;
@@ -57,10 +57,10 @@ function ProxmoxSettings() {
         setCfg(data);
         setHasKey(await loadKeychainHas((data?.api_token_keychain || DEFAULT_KEYCHAIN).trim() || DEFAULT_KEYCHAIN));
       } else {
-        setMsg("Failed to load Proxmox settings.");
+        setMsg("加载 Proxmox 设置失败。");
       }
     } catch {
-      setMsg("Failed to load Proxmox settings.");
+      setMsg("加载 Proxmox 设置失败。");
     }
   }, []);
 
@@ -78,14 +78,14 @@ function ProxmoxSettings() {
       const j = await r.json();
       if (j.ok) {
         setCfg(j.config);
-        setMsg("Saved.");
+        setMsg("已保存。");
         setHasKey(await loadKeychainHas((j.config?.api_token_keychain || DEFAULT_KEYCHAIN).trim() || DEFAULT_KEYCHAIN));
         setTimeout(() => setMsg(""), 2500);
       } else {
-        setMsg(j.error || "Save failed.");
+        setMsg(j.error || "保存失败。");
       }
     } catch {
-      setMsg("Save failed.");
+      setMsg("保存失败。");
     } finally {
       setSaving(false);
     }
@@ -102,14 +102,14 @@ function ProxmoxSettings() {
       setHasKey(true);
       setKeyInput("");
       await save({ api_token_keychain: keychainName });
-      setMsg(`Token saved to keychain as ${keychainName}.`);
+      setMsg(`Token 已保存到密钥链条目 ${keychainName}。`);
       setTimeout(() => setMsg(""), 5000);
     } else {
-      setMsg("Failed to save token.");
+      setMsg("保存 token 失败。");
     }
   }, [currentKeychain, keyInput, save]);
 
-  if (!cfg) return html`<div style="padding:1rem;color:var(--text-secondary)">Loading…</div>`;
+  if (!cfg) return html`<div style="padding:1rem;color:var(--text-secondary)">加载中…</div>`;
 
   const S = { display: "flex", alignItems: "center", gap: "0.5rem", margin: "0.4rem 0" };
   const L = { minWidth: "180px", color: "var(--text-secondary)", fontSize: "0.85rem" };
@@ -132,52 +132,52 @@ function ProxmoxSettings() {
   return html`
     <div data-settings-addon="proxmox" style="padding:0.5rem 0;min-width:0">
       <style>${settingsFieldStyles}</style>
-      <h4 style=${H}>Connection</h4>
-      ${textField("Host / IP", "host", "borg.local or 192.168.1.10")}
-      ${hint("You can enter a hostname, IP, or full URL. The addon normalizes it to https://host:8006/api2/json.")}
-      ${textField("Username", "username", "root@pam!piclaw", { fontFamily: "var(--font-mono, monospace)" })}
-      ${hint("Proxmox token ID / username stored in addon KV, not in keychain.")}
-      ${checkbox("Allow insecure TLS", "allow_insecure_tls")}
-      ${hint("Keep this enabled for self-signed lab certificates.")}
+      <h4 style=${H}>连接</h4>
+      ${textField("主机 / IP", "host", "borg.local 或 192.168.1.10")}
+      ${hint("可输入主机名、IP 或完整 URL；插件会整理为 https://host:8006/api2/json。")}
+      ${textField("用户名", "username", "root@pam!qiushuiai", { fontFamily: "var(--font-mono, monospace)" })}
+      ${hint("Proxmox token ID / 用户名保存在插件 KV 中，不保存在密钥链。")}
+      ${checkbox("允许不安全 TLS", "allow_insecure_tls")}
+      ${hint("使用自签名证书时保持启用。")}
 
-      <h4 style=${H}>Token secret</h4>
-      ${textField("Keychain entry", "api_token_keychain", DEFAULT_KEYCHAIN, { fontFamily: "var(--font-mono, monospace)" })}
+      <h4 style=${H}>Token 密钥</h4>
+      ${textField("密钥链条目", "api_token_keychain", DEFAULT_KEYCHAIN, { fontFamily: "var(--font-mono, monospace)" })}
       <div class="settings-addon-field">
         <label class="settings-addon-label" for="proxmox-secret">API token</label>
         <div class="settings-addon-control-group">
         <input id="proxmox-secret" class="settings-addon-control" type="password" value=${keyInput} style="font-family:var(--font-mono, monospace)"
-          placeholder=${hasKey ? "••••••• (stored in keychain)" : "paste Proxmox token secret"}
+          placeholder=${hasKey ? "•••••••（已存入密钥链）" : "粘贴 Proxmox token 密钥"}
           onInput=${(e) => setKeyInput(e.target.value)}
           onKeyDown=${(e) => { if (e.key === "Enter") saveToken(); }}
           disabled=${saving} />
         <button style="padding:4px 10px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;font-size:0.82rem"
-          onClick=${saveToken} disabled=${!keyInput.trim() || saving}>Save</button>
+          onClick=${saveToken} disabled=${!keyInput.trim() || saving}>保存</button>
         ${hasKey
-          ? html`<span style="font-size:0.72rem;color:var(--accent-color,#2563eb);font-weight:600" title="Key in keychain">✓</span>`
-          : html`<span style="font-size:0.72rem;color:var(--danger-color,#dc2626);font-weight:600" title="No key">✗</span>`}
+          ? html`<span style="font-size:0.72rem;color:var(--accent-color,#2563eb);font-weight:600" title="密钥已存入密钥链">✓</span>`
+          : html`<span style="font-size:0.72rem;color:var(--danger-color,#dc2626);font-weight:600" title="未设置密钥">✗</span>`}
         </div>
       </div>
-      ${hint(`Saved to keychain as ${currentKeychain}.`) }
+      ${hint(`已保存到密钥链条目 ${currentKeychain}。`) }
 
       ${cfg.base_url && html`<div style=${{ marginTop: "0.9rem", fontSize: "0.78rem", color: "var(--text-secondary)" }}>
-        Normalized API URL: <code style="font-family:var(--font-mono, monospace)">${cfg.base_url}</code>
+        整理后的 API URL：<code style="font-family:var(--font-mono, monospace)">${cfg.base_url}</code>
       </div>`}
 
-      ${msg && html`<div style=${{ marginTop: "0.75rem", fontSize: "0.8rem", color: msg.includes("failed") || msg.includes("Failed") ? "var(--danger-color)" : "var(--accent-color)" }}>${msg}</div>`}
+      ${msg && html`<div style=${{ marginTop: "0.75rem", fontSize: "0.8rem", color: msg.includes("失败") ? "var(--danger-color)" : "var(--accent-color)" }}>${msg}</div>`}
     </div>`;
 }
 
 try {
   if (HAS_RUNTIME) {
     let reg, notify;
-    const r = globalThis.__piclawSettingsPaneRegistry;
+    const r = globalThis.__qiushuiaiSettingsPaneRegistry;
     if (r) { reg = r.registerSettingsPane; notify = r.notifySettingsPanesChanged; }
-    if (!reg && globalThis.__piclaw_web?.registerSettingsPane) {
-      reg = globalThis.__piclaw_web.registerSettingsPane;
-      notify = () => globalThis.dispatchEvent?.(new CustomEvent("piclaw:settings-panes-changed"));
+    if (!reg && globalThis.__qiushuiai_web?.registerSettingsPane) {
+      reg = globalThis.__qiushuiai_web.registerSettingsPane;
+      notify = () => globalThis.dispatchEvent?.(new CustomEvent("qiushuiai:settings-panes-changed"));
     }
     if (reg) {
-      reg({ id: "proxmox", label: "Proxmox", icon: ICON, component: ProxmoxSettings, order: 176 });
+      reg({ id: "proxmox", label: "Proxmox 管理", icon: ICON, component: ProxmoxSettings, order: 176 });
       notify?.();
     }
   }

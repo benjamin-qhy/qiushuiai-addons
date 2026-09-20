@@ -8,6 +8,7 @@ on:
     paths:
       - 'addons/**'
       - 'scripts/sync-catalog.ts'
+      - 'scripts/lib/**'
       - '.github/workflows/sync-catalog.yml'
 
 permissions:

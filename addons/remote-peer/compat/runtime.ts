@@ -78,7 +78,7 @@ export type ExternalRouteRegistration = {
   ): Response | Promise<Response>;
 };
 
-export type PiclawRuntimeApi = {
+export type QiushuiAIRuntimeApi = {
   lifecycle?: {
     version: number;
     onShutdown(handler: () => void | Promise<void>): () => void;
@@ -155,20 +155,20 @@ export type PiclawRuntimeApi = {
   };
 };
 
-export function getPiclawRuntimeApi(): PiclawRuntimeApi | null {
+export function getQiushuiAIRuntimeApi(): QiushuiAIRuntimeApi | null {
   return (
-    (globalThis as typeof globalThis & { __piclaw_runtime?: PiclawRuntimeApi })
-      .__piclaw_runtime ?? null
+    (globalThis as typeof globalThis & { __qiushuiai_runtime?: QiushuiAIRuntimeApi })
+      .__qiushuiai_runtime ?? null
   );
 }
 
-export function requirePiclawRuntimeApi(): PiclawRuntimeApi &
-  Required<Pick<PiclawRuntimeApi, "messaging" | "lifecycle">> {
-  const api = getPiclawRuntimeApi();
+export function requireQiushuiAIRuntimeApi(): QiushuiAIRuntimeApi &
+  Required<Pick<QiushuiAIRuntimeApi, "messaging" | "lifecycle">> {
+  const api = getQiushuiAIRuntimeApi();
   if (api?.messaging?.version !== 1)
-    throw new Error("Remote Peer requires Piclaw messaging API v1.");
+    throw new Error("Remote Peer requires QiushuiAI messaging API v1.");
   if (api?.lifecycle?.version !== 1)
-    throw new Error("Remote Peer requires Piclaw add-on lifecycle API v1.");
-  return api as PiclawRuntimeApi &
-    Required<Pick<PiclawRuntimeApi, "messaging" | "lifecycle">>;
+    throw new Error("Remote Peer requires QiushuiAI add-on lifecycle API v1.");
+  return api as QiushuiAIRuntimeApi &
+    Required<Pick<QiushuiAIRuntimeApi, "messaging" | "lifecycle">>;
 }

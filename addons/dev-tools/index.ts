@@ -1,5 +1,5 @@
 /**
- * dev-tools.ts — git_history + json_query tools for Piclaw.
+ * dev-tools.ts — git_history + json_query tools for QiushuiAI.
  *
  * Ported from cjnova/oc-tool-in-a-box OpenCode tools.
  * Drop into .pi/extensions/ and /reload.

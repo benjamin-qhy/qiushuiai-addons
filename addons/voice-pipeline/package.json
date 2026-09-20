@@ -1,20 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-voice-pipeline",
-  "version": "0.2.2",
-  "description": "ESPHome-only voice assistant pipeline for ThinkSmart/ESP32-Audio devices using Azure STT/TTS and the Flint chat runtime",
+  "name": "@qiushuiai/qiushuiai-addon-voice-pipeline",
+  "version": "0.2.3",
+  "description": "为 ThinkSmart 和 ESP32-Audio 设备提供基于 Azure STT/TTS 的 ESPHome 语音助手流水线",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "voice",
-      "home-automation",
-      "esp32",
-      "smart-home",
-      "audio"
-    ]
-  },
   "peerDependencies": {
     "@earendil-works/pi-ai": "*",
     "@earendil-works/pi-coding-agent": "*",
@@ -22,12 +11,39 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
       "index.ts"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/voice-pipeline/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/voice-pipeline",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/voice-pipeline"
+  },
+  "qiushuiai": {
+    "displayName": "语音流水线",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "voice",
+      "home-automation",
+      "esp32",
+      "smart-home",
+      "audio"
+    ],
+    "displayTags": [
+      "语音",
+      "家庭自动化",
+      "嵌入式设备",
+      "智能家居",
+      "音频"
+    ],
+    "featured": false
+  }
 }

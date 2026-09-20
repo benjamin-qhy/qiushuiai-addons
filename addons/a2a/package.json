@@ -1,7 +1,7 @@
 {
-  "name": "@rcarmo/piclaw-addon-a2a",
-  "version": "0.4.1",
-  "description": "Opt-in A2A v1 agents with authenticated JSON-RPC, durable tasks and approved endpoints",
+  "name": "@qiushuiai/qiushuiai-addon-a2a",
+  "version": "0.4.2",
+  "description": "提供需主动启用的 A2A v1 智能体互联、认证 JSON-RPC、持久任务和受控端点",
   "type": "module",
   "main": "index.ts",
   "files": [
@@ -18,18 +18,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rcarmo/piclaw-addons",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
     "directory": "addons/a2a"
-  },
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=3.0.1",
-    "tags": [
-      "a2a",
-      "agents",
-      "interoperability"
-    ],
-    "category": "Integrations"
   },
   "pi": {
     "extensions": [
@@ -66,9 +56,10 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "keywords": [
-    "piclaw-addon",
+    "a2a",
     "pi-package",
-    "a2a"
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "agents": {
     "skills": [
@@ -78,5 +69,23 @@
         "description": "Call explicitly approved A2A v1 endpoint aliases and inspect caller-owned tasks; opt-in principal and core grants required."
       }
     ]
+  },
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/a2a",
+  "qiushuiai": {
+    "displayName": "A2A 智能体互联",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "a2a",
+      "agents",
+      "interoperability"
+    ],
+    "displayTags": [
+      "智能体互联",
+      "智能体",
+      "互操作"
+    ],
+    "featured": false,
+    "category": "Integrations"
   }
 }

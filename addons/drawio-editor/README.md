@@ -1,36 +1,35 @@
-# piclaw-addon-drawio-editor
+# draw.io 编辑器
 
-Self-hosted draw.io diagram editor extension for piclaw. The add-on version matches the bundled upstream draw.io version; add-on `31.4.2` contains draw.io `v31.4.2`.
+提供自托管的 draw.io 图表编辑器，并与工作区文件集成
 
-Requires Piclaw `>=1.8.0`.
+## 功能定位
 
-## Install
+这是 QiushuiAI 的扩展插件，技术标识为 `drawio-editor`。
 
-Open **Settings → Add-Ons** and install **drawio-editor** from the catalog.
+- 软件包：`@qiushuiai/qiushuiai-addon-drawio-editor`
+- 当前版本：`31.4.4`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`图表`、`编辑器`、`draw.io 图表`
 
-## What it does
+## 安装
 
-- Registers an HTTP route at `/drawio/*` serving the draw.io webapp in embed mode
-- Provides the `open_drawio_editor` tool for the agent
-- Opens `.drawio`, `.drawio.xml`, `.drawio.svg`, `.drawio.png`, and `.xml` workspace files
-- Auto-creates a missing target file when opened through `open_drawio_editor`
-- Supports PNG, JPG, and SVG export from the reduced export menu
-- Saves through `POST /drawio/save` and supports read-only attachment/media preview
+在 QiushuiAI 中打开**设置 → 插件**，搜索“draw.io 编辑器”并安装。也可以直接使用无需登录的公开安装包：
 
-## Vendor files
-
-The public add-on tarball includes the self-hosted draw.io webapp. It does not download editor code during installation.
-
-Maintainers update the bundle from the official upstream WAR with:
-
-```sh
-bun run --cwd addons/drawio-editor vendor:update
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-drawio-editor-31.4.4.tgz
 ```
 
-The refresh script derives the upstream tag from the add-on version, verifies the pinned WAR SHA-256, copies the browser client subset, checks `EditorUi.VERSION` and `mxClient.VERSION`, and writes `vendor/drawio.meta.json`.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Architecture
+## 提供的能力
 
-Uses piclaw's `globalThis.__piclaw_registerRoute` to serve the draw.io webapp.
-A wrapper page at `/drawio/edit?path=...` (also accepted as `/drawio/edit.html`) embeds the editor in an iframe and handles
-the postMessage protocol for load/save via the piclaw raw file API.
+- 入口：`index.ts`
+- 入口：`web/index.ts`
+
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/drawio-editor/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

@@ -10,7 +10,7 @@ const addonDir = import.meta.dir;
 test("compat storage avoids runtime source imports", () => {
   const source = readFileSync(join(addonDir, "compat", "extension-kv.ts"), "utf8");
   expect(source).not.toContain("require(");
-  expect(source).not.toContain("piclaw/runtime/src");
+  expect(source).not.toContain("qiushuiai/runtime/src");
 });
 
 test("normalizeVentOutputPath keeps simple relative paths", () => {
@@ -26,7 +26,7 @@ test("normalizeVentOutputPath rejects absolute and escaping paths", () => {
 });
 
 test("writeVentEntry creates parent directories and appends markdown entries", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "piclaw-vent-addon-"));
+  const dir = mkdtempSync(join(tmpdir(), "qiushuiai-vent-addon-"));
   const now = new Date(2026, 3, 30, 6, 20, 0);
 
   const result = await writeVentEntry(dir, "notes/VENT.md", "The docs were stale.", "bad_docs", now);

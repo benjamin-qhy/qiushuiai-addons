@@ -2,7 +2,7 @@ import { settingsFieldStyles } from "./settings-fields.ts";
 // Uses each skin's add-on settings controls and the direct authenticated backend API.
 export default function register(api: any) {
   const preact =
-    (globalThis as any).__piclawPreactHtm || (globalThis as any).__piclawPreact;
+    (globalThis as any).__qiushuiaiPreactHtm || (globalThis as any).__qiushuiaiPreact;
   if (!preact) return;
   const { html, useEffect, useState } = preact;
   const base = "/agent/addons/api/a2a/";
@@ -269,7 +269,7 @@ ${tasks ? JSON.stringify(tasks, null, 2) : "Refresh diagnostics to inspect princ
   }
   api?.registerSettingsPane?.({
     id: "a2a",
-    label: "A2A",
+    label: "A2A 智能体互联",
     order: 191,
     icon: "agents",
     component: Panel,
@@ -277,4 +277,4 @@ ${tasks ? JSON.stringify(tasks, null, 2) : "Refresh diagnostics to inspect princ
 }
 
 // Host loads web entries for side effects in both Classic and Visual.
-register((globalThis as any).__piclaw_web);
+register((globalThis as any).__qiushuiai_web);

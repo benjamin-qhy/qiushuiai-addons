@@ -1,7 +1,7 @@
 @initiative-a2a @disposable
 Feature: Opt-in A2A v1 interoperability
   # Acceptance prose mapped to executable Bun tests, not unimplemented step bindings.
-  # core operation foundation: rcarmo/piclaw#1335 and #1336
+  # core operation foundation: benjamin-qhy/qiushuiai#1335 and #1336
 
   @a2a-001
   Scenario: Disabled startup and missing runtime capabilities deny execution

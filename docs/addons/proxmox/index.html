@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>proxmox — piclaw-addons</title>
-<meta name="description" content="Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics">
-<meta property="og:title" content="proxmox — piclaw-addons">
-<meta property="og:description" content="Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics">
-<meta property="og:url" content="https://rcarmo.github.io/piclaw-addons/addons/proxmox/">
-<meta property="og:image" content="https://rcarmo.github.io/piclaw-addons/assets/og/proxmox.png">
+<title>Proxmox 管理 — QiushuiAI 插件中心</title>
+<meta name="description" content="提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流">
+<meta property="og:title" content="Proxmox 管理 — QiushuiAI 插件中心">
+<meta property="og:description" content="提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流">
+<meta property="og:url" content="https://benjamin-qhy.github.io/qiushuiai-addons/addons/proxmox/">
+<meta property="og:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/proxmox.png">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="proxmox — piclaw-addons">
-<meta name="twitter:description" content="Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics">
-<meta name="twitter:image" content="https://rcarmo.github.io/piclaw-addons/assets/og/proxmox.png">
-<link rel="canonical" href="https://rcarmo.github.io/piclaw-addons/addons/proxmox/">
+<meta name="twitter:title" content="Proxmox 管理 — QiushuiAI 插件中心">
+<meta name="twitter:description" content="提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流">
+<meta name="twitter:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/proxmox.png">
+<link rel="canonical" href="https://benjamin-qhy.github.io/qiushuiai-addons/addons/proxmox/">
 <script type="text/javascript">
 (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "wipi60y9s3");
 </script>
 <style>
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Inter';src:url('/piclaw-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter';src:url('/qiushuiai-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f0f4ff;--ink:#0f1c2e;--ink-dim:rgba(15,28,46,.6);
@@ -77,13 +77,20 @@ html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:var(
 /* ── Grid ─── */
 .grid{max-width:var(--max-w);margin:0 auto 3rem;padding:0 1.25rem;display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem}
-.card{display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
+.card{position:relative;display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s}
+  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s;overflow:hidden}
 .card:hover{box-shadow:var(--shadow);border-color:var(--accent)}
+.card-core .card-header{padding-right:3.65rem}
 .card-header{display:flex;align-items:center;gap:.85rem}
+.core-bookmark{position:absolute;z-index:1;top:-1px;right:16px;width:48px;height:66px;color:#c81e3a;filter:drop-shadow(0 3px 3px rgba(95,11,21,.3));pointer-events:none}
+.core-bookmark svg{display:block;width:48px;height:66px}
+.core-bookmark-highlight{fill:#ef4764;opacity:.9}
+@media(prefers-color-scheme:dark){.core-bookmark{color:#d52645}}
 .card-icon{width:48px;height:48px;object-fit:contain;flex-shrink:0}
 .card-name{font-family:var(--font-head);font-weight:700;font-size:1.05rem;letter-spacing:-.025em}
+.card-slug,.detail-slug{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);margin-top:.12rem}
+.detail-slug{color:rgba(255,255,255,.72);margin:0}
 .card-sub-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:.18rem}
 .card-version{font-size:.72rem;color:var(--ink-dim);font-family:var(--font-mono)}
 .card-sub-row .owner-row{margin:0}
@@ -209,23 +216,24 @@ footer a{color:var(--accent);text-decoration:none}
 <body>
 
 <nav class="detail-nav">
-  <a href="/piclaw-addons/" class="back">← all add-ons</a>
+  <a href="/qiushuiai-addons/" class="back">← 返回全部插件</a>
 </nav>
 
 <div class="detail-hero">
   <div class="detail-hero-inner">
-    <img class="detail-icon" src="/piclaw-addons/assets/icons/default-04.png" alt="">
+    <img class="detail-icon" src="/qiushuiai-addons/assets/icons/default-00.png" alt="">
     <div>
       <div class="detail-title-row">
-        <div class="detail-title">proxmox</div>
-        <span class="type-badge">extension</span>
+        <div class="detail-title">Proxmox 管理</div>
+        <span class="detail-slug">proxmox</span>
+        <span class="type-badge">扩展</span>
 
       </div>
-      <div class="detail-sub">Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics</div>
-      <div class="detail-tags"><span class="badge">homelab</span><span class="badge">infrastructure</span><span class="badge">proxmox</span><span class="badge">virtualization</span></div>
+      <div class="detail-sub">提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流</div>
+      <div class="detail-tags"><span class="badge">Proxmox 管理</span><span class="badge">基础设施</span><span class="badge">家庭实验室</span><span class="badge">虚拟化</span></div>
       <div class="detail-meta">
-        <span class="detail-version">v0.1.7</span>
-        <a class="download-pill" href="https://rcarmo.github.io/piclaw-addons/packages/piclaw-addon-proxmox-0.1.7.tgz" download aria-label="Download proxmox 0.1.7 tarball">↓ Download .tgz</a>
+        <span class="detail-version">v0.1.11</span>
+        <a class="download-pill" href="https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-proxmox-0.1.11.tgz" download aria-label="下载 Proxmox 管理 0.1.11 安装包">↓ 下载 .tgz</a>
 
 
       </div>
@@ -236,39 +244,41 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="detail-body">
   <div class="install-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
-    <span class="install-text">Open <strong>Settings → Add-Ons</strong> and pick <strong>proxmox</strong></span>
+    <span class="install-text">打开<strong>设置 → 插件</strong>，选择<strong>Proxmox 管理</strong></span>
   </div>
   <div class="install-block source-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-    <span class="install-text"><strong>Source:</strong> <a href="https://github.com/rcarmo/piclaw-addons/tree/main/addons/proxmox" target="_blank" rel="noopener">addons/proxmox</a></span>
+    <span class="install-text"><strong>源代码：</strong><a href="https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/proxmox" target="_blank" rel="noopener">addons/proxmox</a></span>
   </div>
 
-  <p>Proxmox VE management tool — session-scoped API config, ad-hoc requests, and orchestration workflows for VMs, LXC containers, storage, tasks, and metrics</p>
-<h2>Install</h2><p>Open <strong>Settings → Add-Ons</strong> and install <strong>proxmox</strong> from the catalog.</p>
-<h2>Features</h2><ul>
-<li>Session-scoped <code>proxmox</code> tool for API requests and higher-level workflows</li>
-<li>Add-on settings pane for default connection details (via the direct backend add-on config API)</li>
-<li>Username stored in extension KV</li>
-<li>API token secret stored in the piclaw keychain</li>
-<li>Host/IP field that normalizes to the Proxmox <code>/api2/json</code> base URL</li>
-<li>Agent skills for guided tool usage</li>
-</ul>
-<h2>Settings pane</h2><p>Open <strong>Settings → Proxmox</strong> to configure the default Proxmox host, username, and API token.</p>
-<figure class="md-figure"><img src="./assets/settings-pane-microvm.png" alt="Proxmox settings pane on the microVM test instance" loading="lazy"></figure>
+  <p>提供会话级 API 配置和虚拟机、LXC、存储、任务及指标编排工作流</p>
+<h2>功能定位</h2><p>这是 QiushuiAI 的扩展插件，技术标识为 <code>proxmox</code>。</p>
 <ul>
-<li>Tags: proxmox, infrastructure, virtualization, homelab</li>
+<li>软件包：<code>@qiushuiai/qiushuiai-addon-proxmox</code></li>
+<li>当前版本：<code>0.1.11</code></li>
+<li>兼容版本：QiushuiAI <code>&gt;=3.0.0</code></li>
+<li>展示标签：<code>Proxmox 管理</code>、<code>基础设施</code>、<code>虚拟化</code>、<code>家庭实验室</code></li>
 </ul>
+<h2>安装</h2><p>在 QiushuiAI 中打开<strong>设置 → 插件</strong>，搜索“Proxmox 管理”并安装。也可以直接使用无需登录的公开安装包：</p>
+<div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">text</span><button type="button" class="addon-code-copy-btn" aria-label="复制代码" title="复制代码" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg></span><span class="addon-code-copy-label">复制</span></button></div><pre><code>https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-proxmox-0.1.11.tgz</code></pre></div><p>安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。</p>
+<h2>提供的能力</h2><ul>
+<li>入口：<code>index.ts</code></li>
+<li>入口：<code>web/index.ts</code></li>
+<li>技能：<code>skills</code></li>
+</ul>
+<h2>配置与安全</h2><p>请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。</p>
+<h2>技术资料</h2><p>完整的原始技术说明、配置示例和故障排查资料保存在 <a href="https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/proxmox/README.en.md" target="_blank" rel="noopener">英文技术资料</a>。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。</p>
 
 </div>
 
 
 <footer>
-  <div class="footer-links"><a href="/piclaw-addons/">piclaw-addons</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo/piclaw-addons/tree/main/addons/proxmox">View source</a></div>
-  <div class="footer-note">PiClaw is not affiliated with <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> — we’re just <em>huge fans</em>.</div>
+  <div class="footer-links"><a href="/qiushuiai-addons/">QiushuiAI 插件中心</a> &nbsp;·&nbsp;
+  <a href="https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/proxmox">查看源代码</a></div>
+  <div class="footer-note">QiushuiAI 与 <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> 无隶属关系；插件保留对 Pi 技术协议的兼容。</div>
 </footer>
 <script type="module">
-  import { mountDetail } from '/piclaw-addons/assets/js/addon-island.mjs';
+  import { mountDetail } from '/qiushuiai-addons/assets/js/addon-island.mjs';
   mountDetail('proxmox');
 </script>
 </body>

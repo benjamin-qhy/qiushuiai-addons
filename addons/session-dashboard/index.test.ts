@@ -327,7 +327,7 @@ test("web preview helpers prefer agent output, then show active tool invocations
   expect(__sessionDashboardTest.resolveStatusPreview({
     status: "active",
     data: { type: "tool_call", title: "Searching files", tool_name: "grep" },
-  })).toEqual({ kind: "tool", label: "tool", text: "Searching files", totalLines: 1 });
+  })).toEqual({ kind: "tool", label: "工具", text: "Searching files", totalLines: 1 });
   expect(__sessionDashboardTest.resolveStatusPreview({
     status: "active",
     data: { type: "tool_status", title: "Searching files", tool_name: "grep", status: "Streaming output..." },

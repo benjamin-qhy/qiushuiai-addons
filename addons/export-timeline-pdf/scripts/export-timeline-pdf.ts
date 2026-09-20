@@ -45,7 +45,7 @@ Other options:
   --chat <jid>           Chat JID (default: web:default)
   --theme <light|dark>   Color theme (default: light)
   --out <path>           Output PDF path
-  --port <n>             Piclaw web server port (default: auto-detect or 8080)
+  --port <n>             QiushuiAI web server port (default: auto-detect or 8080)
   --auth-key <key>       Internal export auth key (defaults to env/config lookup)
   --html-only            Write HTML sidecar and exit without PDF generation`;
 
@@ -141,7 +141,7 @@ export async function detectPort(portArg = ""): Promise<number> {
 
 function loadConfigAuthKey(): string {
   try {
-    const config = JSON.parse(readFileSync("/workspace/.piclaw/config.json", "utf8"));
+    const config = JSON.parse(readFileSync("/workspace/.qiushuiai/config.json", "utf8"));
     return String(config?.web?.internalSecret || "").trim();
   } catch {
     return "";
@@ -151,9 +151,9 @@ function loadConfigAuthKey(): string {
 export function resolveAuthKey(authKeyArg = ""): string {
   return (
     authKeyArg ||
-    process.env.PICLAW_EXPORT_AUTH_KEY ||
-    process.env.PICLAW_INTERNAL_SECRET ||
-    process.env.PICLAW_WEB_INTERNAL_SECRET ||
+    process.env.QIUSHUIAI_EXPORT_AUTH_KEY ||
+    process.env.QIUSHUIAI_INTERNAL_SECRET ||
+    process.env.QIUSHUIAI_WEB_INTERNAL_SECRET ||
     loadConfigAuthKey()
   ).trim();
 }
@@ -225,7 +225,7 @@ export function runWkhtmltopdf(binary: string, htmlPath: string, pdfPath: string
 export async function run(options = parseCliArgs()): Promise<string> {
   const authKey = resolveAuthKey(options.authKeyArg);
   if (!authKey) {
-    throw new Error("No internal export auth key configured. Pass --auth-key or set web.internalSecret / PICLAW_INTERNAL_SECRET.");
+    throw new Error("No internal export auth key configured. Pass --auth-key or set web.internalSecret / QIUSHUIAI_INTERNAL_SECRET.");
   }
 
   const { outPath, htmlPath, outDir } = resolveOutputPaths(options.outPath);

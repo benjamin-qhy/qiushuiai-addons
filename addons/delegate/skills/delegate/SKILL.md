@@ -50,7 +50,7 @@ Automatic selection is capped at the verified tier of the current model. If the 
 
 ## Explicit model selection
 
-Use `model: "provider/model"` only to select an exact entry from **Approved delegate models**. Explicit selection can bypass the automatic tier choice. It cannot bypass provider approval, ordered classification, exclusions, child-CLI executability, or image-capability checks. A model visible only to Piclaw runtime is not enough.
+Use `model: "provider/model"` only to select an exact entry from **Approved delegate models**. Explicit selection can bypass the automatic tier choice. It cannot bypass provider approval, ordered classification, exclusions, child-CLI executability, or image-capability checks. A model visible only to QiushuiAI runtime is not enough.
 
 ## Tool profiles
 
@@ -60,7 +60,7 @@ Use `model: "provider/model"` only to select an exact entry from **Approved dele
 | `standard` (default) | `read,grep,find,ls,bash` |
 | `full` | `read,grep,find,ls,bash,edit,write` |
 
-If the known MCP adapter is installed, Delegate adds the `mcp` tool. A custom comma-separated list of Pi child built-ins is accepted; custom lists must name `mcp` explicitly when needed. Do not assume other Piclaw add-on tools are present. Tool profiles are not an operating-system sandbox; prefer `read_only` when the child must not receive shell access.
+If the known MCP adapter is installed, Delegate adds the `mcp` tool. A custom comma-separated list of Pi child built-ins is accepted; custom lists must name `mcp` explicitly when needed. Do not assume other QiushuiAI add-on tools are present. Tool profiles are not an operating-system sandbox; prefer `read_only` when the child must not receive shell access.
 
 ## Files
 

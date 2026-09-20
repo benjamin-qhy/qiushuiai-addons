@@ -4,7 +4,7 @@ import { settingsFieldStyles } from "./settings-fields.ts";
  */
 // @ts-nocheck
 const API_BASE = '/agent/addons/api/imap';
-const preactHtm = globalThis.__piclawPreactHtm || globalThis.__piclawPreact || null;
+const preactHtm = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact || null;
 const html = preactHtm?.html;
 const useEffect = preactHtm?.useEffect;
 const useMemo = preactHtm?.useMemo;
@@ -66,13 +66,13 @@ function passwordKeychainName(name) {
 let paneRegistered = false;
 
 function registerPane() {
-  const registry = globalThis.__piclawSettingsPaneRegistry || {};
+  const registry = globalThis.__qiushuiaiSettingsPaneRegistry || {};
   const registerSettingsPane = registry.registerSettingsPane;
   if (!registerSettingsPane || !HAS_RUNTIME || paneRegistered) return;
 
   registerSettingsPane({
     id: 'imap',
-    label: 'IMAP',
+    label: 'IMAP 邮件',
     icon: ICON,
     order: 36,
     searchable: true,
@@ -352,6 +352,6 @@ function ImapPane() {
 if (typeof globalThis !== 'undefined') {
   try { registerPane(); } catch {}
   if (typeof window !== 'undefined') {
-    window.addEventListener('piclaw:addons-loaded', () => { try { registerPane(); } catch {} });
+    window.addEventListener('qiushuiai:addons-loaded', () => { try { registerPane(); } catch {} });
   }
 }

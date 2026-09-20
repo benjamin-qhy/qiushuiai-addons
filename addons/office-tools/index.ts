@@ -10,7 +10,7 @@ import { printHtmlToPdf } from "./browser-pdf.ts";
 type MaybeAbortSignal = AbortSignal | null | undefined;
 
 function registerToolStatusHintProvider(provider: { id: string; buildHints: (ctx: { toolName: string; args: unknown }) => unknown }): void {
-  const fn = (globalThis as any).__piclaw_registerToolStatusHintProvider;
+  const fn = (globalThis as any).__qiushuiai_registerToolStatusHintProvider;
   if (typeof fn === "function") fn(provider);
 }
 const EXT_DIR = typeof import.meta.dir === "string" ? import.meta.dir : dirname(new URL(import.meta.url).pathname);

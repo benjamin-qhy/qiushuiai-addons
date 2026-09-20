@@ -96,7 +96,7 @@ export const ImageProcessSchema = Type.Object({
 type ImageProcessParams = Static<typeof ImageProcessSchema>;
 
 function getWorkspaceDir(): string {
-  const configured = process.env.PICLAW_WORKSPACE?.trim();
+  const configured = process.env.QIUSHUIAI_WORKSPACE?.trim();
   return resolve(configured || process.cwd());
 }
 

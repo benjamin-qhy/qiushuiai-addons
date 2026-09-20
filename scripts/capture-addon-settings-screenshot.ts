@@ -23,7 +23,7 @@ function parseArgs(argv: string[]): Args {
     i += 1;
   }
 
-  const url = requireDisposableTestTarget(values.get("url")?.trim() || process.env.PICLAW_E2E_URL);
+  const url = requireDisposableTestTarget(values.get("url")?.trim() || process.env.QIUSHUIAI_E2E_URL);
   const pane = values.get("pane")?.trim();
   const out = values.get("out")?.trim();
   const timeoutMs = Number(values.get("timeout") || 30000);
@@ -52,7 +52,7 @@ async function main() {
     await sleep(3000);
 
     await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent("piclaw:open-settings"));
+      window.dispatchEvent(new CustomEvent("qiushuiai:open-settings"));
     });
 
     await page.waitForFunction(() => !!document.querySelector('.settings-dialog, .settings-dialog-backdrop'), { timeout: args.timeoutMs });

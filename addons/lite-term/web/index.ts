@@ -1,20 +1,20 @@
 // @ts-nocheck
 /**
- * lite-term/web/index.ts — xterm.js terminal pane replacement for Piclaw.
+ * lite-term/web/index.ts — xterm.js terminal pane replacement for QiushuiAI.
  *
  * Replaces the built-in Ghostty terminal panes by registering the same pane ids:
- * `terminal` and `terminal-tab`. The backend remains Piclaw's existing
+ * `terminal` and `terminal-tab`. The backend remains QiushuiAI's existing
  * /terminal/session + /terminal/ws JSON protocol.
  */
 
-const ADDON_PACKAGE = "@rcarmo/piclaw-addon-lite-term";
+const ADDON_PACKAGE = "@qiushuiai/qiushuiai-addon-lite-term";
 const ASSET_BASE = `/agent/addons/assets/${encodeURIComponent(ADDON_PACKAGE)}`;
-const TERMINAL_TAB_PATH = "piclaw://terminal";
-const TERMINAL_ANON_CLIENT_HEADER = "x-piclaw-terminal-client";
-const TERMINAL_ANON_CLIENT_STORAGE_KEY = "piclaw_terminal_client";
-const RENDERER_STORAGE_KEY = "piclaw:lite-term:renderer";
-const STYLE_ID = "piclaw-lite-term-style";
-const XTERM_CSS_ID = "piclaw-lite-term-xterm-css";
+const TERMINAL_TAB_PATH = "qiushuiai://terminal";
+const TERMINAL_ANON_CLIENT_HEADER = "x-qiushuiai-terminal-client";
+const TERMINAL_ANON_CLIENT_STORAGE_KEY = "qiushuiai_terminal_client";
+const RENDERER_STORAGE_KEY = "qiushuiai:lite-term:renderer";
+const STYLE_ID = "qiushuiai-lite-term-style";
+const XTERM_CSS_ID = "qiushuiai-lite-term-xterm-css";
 const TERMINAL_FONT_FAMILY = 'FiraCode Nerd Font Mono, JetBrainsMono Nerd Font Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace';
 const TERMINAL_HEARTBEAT_MS = 25_000;
 const TERMINAL_RECONNECT_DELAYS_MS = [500, 1_000, 2_000, 5_000, 10_000];
@@ -567,7 +567,7 @@ class LiteTermPaneInstance {
       console.warn("[lite-term] image addon unavailable", error);
     }
 
-    // AttachAddon is intentionally not activated: Piclaw's terminal socket uses
+    // AttachAddon is intentionally not activated: QiushuiAI's terminal socket uses
     // JSON control frames rather than a raw PTY byte stream. Keep it vendored and
     // import-validated with the rest of the xterm family.
     this.attachAddonModule = runtime.attach;
@@ -650,7 +650,7 @@ class LiteTermPaneInstance {
   installThemeSync() {
     const sync = () => this.ownerWindow.requestAnimationFrame(() => this.applyTheme());
     this.themeChangeListener = sync;
-    this.ownerWindow.addEventListener("piclaw-theme-change", sync);
+    this.ownerWindow.addEventListener("qiushuiai-theme-change", sync);
     this.mediaQuery = this.ownerWindow.matchMedia?.("(prefers-color-scheme: dark)");
     this.mediaQueryListener = sync;
     if (this.mediaQuery?.addEventListener) this.mediaQuery.addEventListener("change", sync);
@@ -845,7 +845,7 @@ class LiteTermPaneInstance {
     catch { payload = { type: "output", data: String(event.data) }; }
 
     if (payload?.type === "session") {
-      this.terminal.__piclawSessionMeta = {
+      this.terminal.__qiushuiaiSessionMeta = {
         sessionId: typeof payload.session_id === "string" ? payload.session_id : null,
         createdAt: typeof payload.created_at === "string" ? payload.created_at : null,
         processPid: typeof payload.process_pid === "number" ? payload.process_pid : null,
@@ -926,7 +926,7 @@ class LiteTermPaneInstance {
       this.ownerWindow.removeEventListener("resize", this.resizeListener);
       this.ownerWindow.removeEventListener("dock-resize", this.resizeListener);
     }
-    if (this.themeChangeListener) this.ownerWindow.removeEventListener("piclaw-theme-change", this.themeChangeListener);
+    if (this.themeChangeListener) this.ownerWindow.removeEventListener("qiushuiai-theme-change", this.themeChangeListener);
     if (this.mediaQuery && this.mediaQueryListener) {
       if (this.mediaQuery.removeEventListener) this.mediaQuery.removeEventListener("change", this.mediaQueryListener);
       else if (this.mediaQuery.removeListener) this.mediaQuery.removeListener(this.mediaQueryListener);
@@ -940,7 +940,7 @@ class LiteTermPaneInstance {
 
 export const liteTermPaneExtension = {
   id: "terminal",
-  label: "Lite Terminal",
+  label: "轻量终端",
   icon: "terminal",
   capabilities: ["terminal"],
   placement: "dock",
@@ -951,7 +951,7 @@ export const liteTermPaneExtension = {
 
 export const liteTermTabPaneExtension = {
   id: "terminal-tab",
-  label: "Lite Terminal",
+  label: "轻量终端",
   icon: "terminal",
   capabilities: ["terminal"],
   placement: "tabs",
@@ -964,7 +964,7 @@ export const liteTermTabPaneExtension = {
 };
 
 function registerLiteTermPanes() {
-  const webApi = globalThis.__piclaw_web;
+  const webApi = globalThis.__qiushuiai_web;
   if (!webApi || typeof webApi.registerPane !== "function") return false;
   webApi.registerPane(liteTermPaneExtension);
   webApi.registerPane(liteTermTabPaneExtension);
@@ -976,7 +976,7 @@ function registerLiteTermPanes() {
 try {
   registerLiteTermPanes();
   if (typeof window !== "undefined") {
-    window.addEventListener("piclaw:addons-loaded", () => { try { registerLiteTermPanes(); } catch {} });
+    window.addEventListener("qiushuiai:addons-loaded", () => { try { registerLiteTermPanes(); } catch {} });
   }
 } catch (error) {
   console.warn("[lite-term] pane registration failed", error);

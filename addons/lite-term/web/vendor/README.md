@@ -1,6 +1,6 @@
 # Vendored xterm.js runtime
 
-This directory vendors the browser runtime used by `@rcarmo/piclaw-addon-lite-term` so low-spec Piclaw deployments do not depend on core Ghostty/WASM assets.
+This directory vendors the browser runtime used by `@qiushuiai/qiushuiai-addon-lite-term` so low-spec QiushuiAI deployments do not depend on core Ghostty/WASM assets.
 
 Vendored packages:
 
@@ -19,4 +19,4 @@ Vendored packages:
 - `@xterm/addon-web-links` 0.12.0
 - `@xterm/addon-webgl` 0.19.0
 
-All are MIT licensed by the xterm.js authors. Piclaw provides the terminal font assets; this add-on only vendors xterm runtime code and CSS.
+All are MIT licensed by the xterm.js authors. QiushuiAI provides the terminal font assets; this add-on only vendors xterm runtime code and CSS.

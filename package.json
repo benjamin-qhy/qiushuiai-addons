@@ -1,27 +1,29 @@
 {
-  "name": "@rcarmo/piclaw-addons",
-  "version": "2.0.1",
-  "description": "Community add-ons for piclaw — extensions, skills, and widgets",
+  "name": "@qiushuiai/qiushuiai-addons",
+  "version": "3.0.0",
+  "description": "QiushuiAI 官方插件、技能和组件集合",
   "keywords": [
     "extensions",
     "pi-package",
-    "piclaw",
+    "qiushuiai",
+    "qiushuiai-addon",
     "skills"
   ],
   "type": "module",
   "scripts": {
     "sync:catalog": "bun scripts/sync-catalog.ts --write",
     "check:catalog": "bun scripts/sync-catalog.ts --check",
+    "audit:brand": "bun scripts/audit-brand.ts",
     "typecheck:earendil-compat": "tsc --noEmit -p tsconfig.earendil-compat.json && tsc --noEmit -p addons/m365/tsconfig.json && tsc --noEmit -p addons/remote-peer/tsconfig.json && tsc --noEmit -p addons/linkr/tsconfig.json && tsc --noEmit -p addons/a2a/tsconfig.json",
     "test:earendil-compat": "bun test addons/cheapskate/index.test.ts addons/codex-conversion/index.test.ts addons/delegate/index.test.ts addons/m365/tests/*.test.ts addons/skill-model-effort/index.test.ts addons/smart-compaction/index.test.ts addons/autoresearch/supervisor.test.ts addons/linkr/linkr.test.ts addons/a2a",
     "addon:e2e": "cd tests/addon-e2e && bun run test -- --project=desktop-chrome",
-    "addon:e2e:all": "cd tests/addon-e2e && PICLAW_ADDON=all bun run test -- --project=desktop-chrome",
+    "addon:e2e:all": "cd tests/addon-e2e && QIUSHUIAI_ADDON=all bun run test -- --project=desktop-chrome",
     "addon:e2e:report": "cd tests/addon-e2e && bun run report",
     "typecheck:a2a": "tsc --noEmit -p addons/a2a/tsconfig.json"
   },
-  "homepage": "https://github.com/rcarmo/piclaw-addons",
+  "homepage": "https://benjamin-qhy.github.io/qiushuiai-addons/",
   "bugs": {
-    "url": "https://github.com/rcarmo/piclaw-addons/issues"
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons/issues"
   },
   "pi": {
     "extensions": [
@@ -207,7 +209,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rcarmo/piclaw-addons.git"
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git"
   },
   "files": [
     "LICENSE",

@@ -8,8 +8,8 @@ Autonomous experiment loop extension and skill for [pi](https://github.com/mario
 
 ## Why vendored
 
-Piclaw runs pi-autoresearch as a headless sub-agent in a tmux session,
-supervised by piclaw's `autoresearch-supervisor` extension. The files are
+QiushuiAI runs pi-autoresearch as a headless sub-agent in a tmux session,
+supervised by qiushuiai's `autoresearch-supervisor` extension. The files are
 vendored unmodified so the sub-agent can load them without requiring a
 separate `pi install` step.
 
@@ -25,7 +25,7 @@ To update, copy fresh files from the upstream repo:
 
 ```bash
 cd /workspace/tmp && git clone https://github.com/davebcn87/pi-autoresearch.git
-cp pi-autoresearch/extensions/pi-autoresearch/index.ts /workspace/piclaw-addons/addons/autoresearch/vendor/autoresearch/extensions/pi-autoresearch/
-cp pi-autoresearch/skills/autoresearch-create/SKILL.md /workspace/piclaw-addons/addons/autoresearch/vendor/autoresearch/skills/autoresearch-create/
-cp pi-autoresearch/LICENSE /workspace/piclaw-addons/addons/autoresearch/vendor/autoresearch/
+cp pi-autoresearch/extensions/pi-autoresearch/index.ts /workspace/qiushuiai-addons/addons/autoresearch/vendor/autoresearch/extensions/pi-autoresearch/
+cp pi-autoresearch/skills/autoresearch-create/SKILL.md /workspace/qiushuiai-addons/addons/autoresearch/vendor/autoresearch/skills/autoresearch-create/
+cp pi-autoresearch/LICENSE /workspace/qiushuiai-addons/addons/autoresearch/vendor/autoresearch/
 ```

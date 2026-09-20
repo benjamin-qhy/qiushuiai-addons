@@ -4,12 +4,12 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 // Explicit companion checkout: never resolves installed/live runtime state.
-const integration = process.env.PICLAW_A2A_CORE_SOURCE ? test : test.skip;
+const integration = process.env.QIUSHUIAI_A2A_CORE_SOURCE ? test : test.skip;
 integration(
-  "real Piclaw host route + durable operation service interoperate over raw authenticated A2A HTTP",
+  "real QiushuiAI host route + durable operation service interoperate over raw authenticated A2A HTTP",
   async () => {
-    const core = process.env.PICLAW_A2A_CORE_SOURCE!;
-    if (!core.startsWith("/") || process.env.PICLAW_E2E_DISPOSABLE !== "1")
+    const core = process.env.QIUSHUIAI_A2A_CORE_SOURCE!;
+    if (!core.startsWith("/") || process.env.QIUSHUIAI_E2E_DISPOSABLE !== "1")
       throw new Error("Explicit disposable companion source required.");
     const root = mkdtempSync(join(tmpdir(), "a2a-host-"));
     const script = join(root, "probe.ts");
@@ -28,7 +28,7 @@ integration(
  const grant={revision:'r1',target:'echo',allowedTools:[],maxToolCalls:0,timeoutMs:5000,parentWorkId:null};
  setAddonOperationHost({authorize:(_p,t)=>t==='echo'?{decision:'allow',grant}:{decision:'rejected'},execute:async()=>{calls++;await new Promise(r=>{complete=r;});return {status:'completed',output:'real core public result'};}});
  const api=installAddonRuntimeApi();
- const service=await withExternalAddonRegistrationContext({packageName:'@rcarmo/piclaw-addon-a2a',entryPath:${JSON.stringify(join(addon, "runtime.ts"))}},()=>Promise.resolve(new A2aService(api,${JSON.stringify(root)},async()=> 'disposable-host-credential-123456789')));
+ const service=await withExternalAddonRegistrationContext({packageName:'@qiushuiai/qiushuiai-addon-a2a',entryPath:${JSON.stringify(join(addon, "runtime.ts"))}},()=>Promise.resolve(new A2aService(api,${JSON.stringify(root)},async()=> 'disposable-host-credential-123456789')));
  freezeExternalAddonRoutes();
  const server=Bun.serve({hostname:'127.0.0.1',port:0,fetch:async req=>await handleExternalAddonRoutes(req,new URL(req.url).pathname)||new Response('missing',{status:404})});
  const pushed=[];const callback=Bun.serve({hostname:'127.0.0.1',port:0,fetch:async req=>{if(req.headers.get('authorization')!=='Bearer disposable-host-credential-123456789')return new Response('no',{status:401});pushed.push(await req.json());return new Response(null,{status:204});}});
@@ -62,10 +62,10 @@ integration(
         {
           env: {
             ...process.env,
-            PICLAW_DB_IN_MEMORY: "1",
-            PICLAW_WORKSPACE: root,
-            PICLAW_STORE: join(root, "store"),
-            PICLAW_DATA: join(root, "data"),
+            QIUSHUIAI_DB_IN_MEMORY: "1",
+            QIUSHUIAI_WORKSPACE: root,
+            QIUSHUIAI_STORE: join(root, "store"),
+            QIUSHUIAI_DATA: join(root, "data"),
           },
           stdout: "pipe",
           stderr: "pipe",

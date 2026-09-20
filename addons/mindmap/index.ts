@@ -64,7 +64,7 @@ function handleRoute(req: Request, pathname: string): Response | null {
 }
 
 export default function mindmapAddon(_pi: any) {
-  const registerRoute = (globalThis as any).__piclaw_registerRoute as
+  const registerRoute = (globalThis as any).__qiushuiai_registerRoute as
     | ((prefix: string, handler: typeof handleRoute, extensionPath?: string) => "created" | "updated")
     | undefined;
 
@@ -74,6 +74,6 @@ export default function mindmapAddon(_pi: any) {
       console.log("[mindmap] Route registered: /mindmap-vendor/* → " + VENDOR_DIR);
     }
   } else {
-    console.warn("[mindmap] WARNING: __piclaw_registerRoute not available.");
+    console.warn("[mindmap] WARNING: __qiushuiai_registerRoute not available.");
   }
 }

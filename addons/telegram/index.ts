@@ -1,13 +1,13 @@
 /**
- * @rcarmo/piclaw-addon-telegram — Telegram Bot channel addon for PiClaw.
+ * @qiushuiai/qiushuiai-addon-telegram — Telegram Bot channel addon for QiushuiAI.
  *
  * Connects via Telegram Bot API long polling, receives inbound messages,
  * and sends agent responses back through Telegram.
  *
  * Configuration:
- *   - PICLAW_TELEGRAM_BOT_TOKEN: Bot token from @BotFather
- *   - PICLAW_TELEGRAM_ENABLED: Set to "1" to enable
- *   - PICLAW_TELEGRAM_POLLING_TIMEOUT: Long poll timeout in seconds (default 30)
+ *   - QIUSHUIAI_TELEGRAM_BOT_TOKEN: Bot token from @BotFather
+ *   - QIUSHUIAI_TELEGRAM_ENABLED: Set to "1" to enable
+ *   - QIUSHUIAI_TELEGRAM_POLLING_TIMEOUT: Long poll timeout in seconds (default 30)
  */
 import type { ExtensionAPI, ExtensionFactory } from "@earendil-works/pi-coding-agent";
 import type { NewMessage } from "./channel-types.js";
@@ -16,13 +16,13 @@ const ADDON_ID = "telegram";
 const BOT_TOKEN_KEYCHAIN = "telegram/bot-token";
 
 function getConfig(): { botToken: string; enabled: boolean; pollingTimeout: number } {
-  const interop = (globalThis as any).__piclawRuntimeInterop;
+  const interop = (globalThis as any).__qiushuiaiRuntimeInterop;
   const kv = interop?.getExtensionKvStore?.();
   const legacyKvToken = typeof kv?.get(ADDON_ID, "botToken") === "string" ? String(kv.get(ADDON_ID, "botToken")).trim() : "";
-  const botToken = process.env.TELEGRAM_BOT_TOKEN?.trim() || process.env.PICLAW_TELEGRAM_BOT_TOKEN?.trim() || legacyKvToken;
-  const enabled = process.env.PICLAW_TELEGRAM_ENABLED === "1" || kv?.get(ADDON_ID, "enabled") === true;
+  const botToken = process.env.TELEGRAM_BOT_TOKEN?.trim() || process.env.QIUSHUIAI_TELEGRAM_BOT_TOKEN?.trim() || legacyKvToken;
+  const enabled = process.env.QIUSHUIAI_TELEGRAM_ENABLED === "1" || kv?.get(ADDON_ID, "enabled") === true;
   const storedTimeout = Number(kv?.get(ADDON_ID, "pollingTimeout"));
-  const pollingTimeout = Number(process.env.PICLAW_TELEGRAM_POLLING_TIMEOUT) || (Number.isFinite(storedTimeout) && storedTimeout > 0 ? storedTimeout : 30);
+  const pollingTimeout = Number(process.env.QIUSHUIAI_TELEGRAM_POLLING_TIMEOUT) || (Number.isFinite(storedTimeout) && storedTimeout > 0 ? storedTimeout : 30);
   return { botToken, enabled, pollingTimeout };
 }
 
@@ -39,7 +39,7 @@ export function handleGetConfig() {
 
 export function handleSetConfig(payload: unknown) {
   const body = payload && typeof payload === "object" ? payload as Record<string, unknown> : {};
-  const kv = (globalThis as any).__piclawRuntimeInterop?.getExtensionKvStore?.();
+  const kv = (globalThis as any).__qiushuiaiRuntimeInterop?.getExtensionKvStore?.();
   if (typeof body.enabled === "boolean") kv?.set(ADDON_ID, "enabled", body.enabled);
   if (typeof body.pollingTimeout === "number" && Number.isFinite(body.pollingTimeout)) {
     kv?.set(ADDON_ID, "pollingTimeout", Math.max(5, Math.min(120, Math.round(body.pollingTimeout))));
@@ -54,7 +54,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi(ADDON_ID, "config", {
     get: async () => handleGetConfig(),
@@ -63,7 +63,7 @@ if (typeof registerAddonConfigApi === "function") {
 }
 
 const register: ExtensionFactory = (pi: ExtensionAPI) => {
-  const interop = (globalThis as any).__piclawRuntimeInterop;
+  const interop = (globalThis as any).__qiushuiaiRuntimeInterop;
 
   // Register channel detector for Telegram JIDs
   if (interop?.registerChannelDetector) {

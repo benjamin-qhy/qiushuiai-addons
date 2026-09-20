@@ -15,8 +15,8 @@ describe("Remote Peer Settings registration", () => {
     expect(source).not.toContain('minWidth: "180px"');
     expect(source).toContain('action: "remote_permissions"');
   });
-  for (const uiKey of ["__piclawPreactHtm", "__piclawPreact"]) {
-    for (const registryKey of ["__piclawSettingsPaneRegistry", "__piclaw_web"]) {
+  for (const uiKey of ["__qiushuiaiPreactHtm", "__qiushuiaiPreact"]) {
+    for (const registryKey of ["__qiushuiaiSettingsPaneRegistry", "__qiushuiai_web"]) {
       test(`registers an SVG icon via ${uiKey} and ${registryKey}`, () => {
         const rendered: { markup: string }[] = [];
         const panes: any[] = [];
@@ -37,7 +37,7 @@ describe("Remote Peer Settings registration", () => {
           },
         });
         expect(panes).toHaveLength(1);
-        expect(panes[0]).toMatchObject({ id: "remote-peer", label: "Remote Peer", order: 190 });
+        expect(panes[0]).toMatchObject({ id: "remote-peer", label: "远程协作", order: 190 });
         expect(typeof panes[0].component).toBe("function");
         expect(rendered).toHaveLength(1);
         expect(panes[0].icon).toBe(rendered[0]);
@@ -46,7 +46,7 @@ describe("Remote Peer Settings registration", () => {
           expect(rendered[0]!.markup).toContain(attribute);
         }
         expect(rendered[0]!.markup).toMatch(/<(path|rect|circle)\b/);
-        expect(notifications).toBe(registryKey === "__piclawSettingsPaneRegistry" ? 1 : 0);
+        expect(notifications).toBe(registryKey === "__qiushuiaiSettingsPaneRegistry" ? 1 : 0);
       });
     }
   }
@@ -54,7 +54,7 @@ describe("Remote Peer Settings registration", () => {
   test("does not register without the UI runtime", () => {
     const panes: unknown[] = [];
     runInNewContext(source, {
-      __piclawSettingsPaneRegistry: { registerSettingsPane: (pane: unknown) => panes.push(pane) },
+      __qiushuiaiSettingsPaneRegistry: { registerSettingsPane: (pane: unknown) => panes.push(pane) },
     });
     expect(panes).toHaveLength(0);
   });

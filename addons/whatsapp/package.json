@@ -1,19 +1,10 @@
 {
-  "name": "@rcarmo/piclaw-addon-whatsapp",
-  "version": "0.1.4",
-  "description": "WhatsApp channel for PiClaw via Baileys. Connects to WhatsApp Web, receives/sends messages, and routes them through the agent.",
+  "name": "@qiushuiai/qiushuiai-addon-whatsapp",
+  "version": "0.1.5",
+  "description": "通过 Baileys 连接 WhatsApp Web，收发消息并转交智能体处理",
   "type": "module",
   "main": "index.ts",
   "license": "MIT",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "channel",
-      "messaging",
-      "whatsapp"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -33,9 +24,30 @@
   },
   "keywords": [
     "pi-package",
-    "piclaw",
-    "piclaw-addon",
+    "qiushuiai",
+    "qiushuiai-addon",
     "whatsapp"
   ],
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/whatsapp/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/whatsapp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/whatsapp"
+  },
+  "qiushuiai": {
+    "displayName": "WhatsApp 频道",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "channel",
+      "messaging",
+      "whatsapp"
+    ],
+    "displayTags": [
+      "频道",
+      "消息通信",
+      "WhatsApp 集成"
+    ],
+    "featured": false
+  }
 }

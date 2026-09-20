@@ -1,9 +1,9 @@
 // @ts-nocheck
 import { parseMarkdownTable, serializeMarkdownTable, trimEmptyTrailingRows } from "../shared.ts";
 
-const WIDGET_EVENT = "piclaw-extension-ui:widget";
-const PANEL_ID = "piclaw-editable-table-panel";
-const STYLE_ID = "piclaw-editable-table-style";
+const WIDGET_EVENT = "qiushuiai-extension-ui:widget";
+const PANEL_ID = "qiushuiai-editable-table-panel";
+const STYLE_ID = "qiushuiai-editable-table-style";
 
 function ensureStyles() {
   if (typeof document === "undefined" || document.getElementById(STYLE_ID)) return;
@@ -155,8 +155,8 @@ async function submitMarkdown(chatJid, markdown) {
 }
 
 function installEditableTableBridge() {
-  if (typeof window === "undefined" || window.__piclawEditableTableBridgeInstalled) return;
-  window.__piclawEditableTableBridgeInstalled = true;
+  if (typeof window === "undefined" || window.__qiushuiaiEditableTableBridgeInstalled) return;
+  window.__qiushuiaiEditableTableBridgeInstalled = true;
 
   window.addEventListener(WIDGET_EVENT, async (event) => {
     const payload = event?.detail?.payload;

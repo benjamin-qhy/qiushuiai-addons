@@ -1,48 +1,35 @@
-# Telegram integration
+# Telegram 频道
 
-Telegram is an **optional secondary channel** for mobile-first chat access.
-The web UI remains the primary interface.
+通过 Bot API 长轮询连接 Telegram，收发消息并转交智能体处理
 
-Requires Piclaw `>=2.0.0`.
+## 功能定位
 
-## Enable
+这是 QiushuiAI 的扩展插件，技术标识为 `telegram`。
 
-Open **Settings → Telegram**, save the BotFather token, enable the channel, then reload Piclaw. The token is stored in the Piclaw keychain as `telegram/bot-token`; non-secret settings use the direct add-on config API and extension KV.
+- 软件包：`@qiushuiai/qiushuiai-addon-telegram`
+- 当前版本：`0.1.4`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`频道`、`消息通信`、`Telegram 集成`
 
-Environment overrides are also supported:
+## 安装
 
-```bash
-PICLAW_TELEGRAM_ENABLED=1
-TELEGRAM_BOT_TOKEN=123456789:your_botfather_token
+在 QiushuiAI 中打开**设置 → 插件**，搜索“Telegram 频道”并安装。也可以直接使用无需登录的公开安装包：
+
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-telegram-0.1.4.tgz
 ```
 
-`PICLAW_TELEGRAM_BOT_TOKEN` and legacy KV-stored tokens remain readable for backward compatibility, but new secrets are written only to the keychain.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-If disabled (or missing a token), the add-on remains inactive and Piclaw continues normally.
+## 提供的能力
 
-## Chat IDs and topics
+- 入口：`index.ts`
+- 入口：`web/index.ts`
 
-Piclaw stores Telegram chats as `chat_jid` values like:
+## 配置与安全
 
-- `telegram:123456789` (DM)
-- `telegram:-1001234567890` (group/supergroup)
-- `telegram:-1001234567890:topic:42` (forum topic)
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-## Notes
+## 技术资料
 
-- Telegram uses long polling by default.
-- Telegram sends assistant messages unchanged; unlike WhatsApp, it does not prepend the assistant name.
-- Telegram formatting guidance is applied in channel-specific prompt hints.
-- This channel is opt-in and lazy-loaded, so default web-first setups pay no Telegram startup cost.
-
-## Disable
-
-Disable the channel in **Settings → Telegram**, then reload Piclaw. Unsetting `PICLAW_TELEGRAM_ENABLED` disables environment-based enablement but does not override an enabled value saved through Settings.
-
-## Settings field appearance (0.1.3)
-
-Text-like fields use the host's shared `settings-addon-*` controls and associated
-labels, matching core Settings in Classic and Visual without changing save
-payloads, defaults or secret handling. A package-local layered stylesheet keeps
-older supported hosts readable; host rules take precedence when available.
-Native checkboxes and action buttons retain their own control roles.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/telegram/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

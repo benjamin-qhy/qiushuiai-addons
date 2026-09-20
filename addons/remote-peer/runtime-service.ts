@@ -1,9 +1,9 @@
 import {
-  getPiclawRuntimeApi,
-  requirePiclawRuntimeApi,
+  getQiushuiAIRuntimeApi,
+  requireQiushuiAIRuntimeApi,
 } from "./compat/runtime.js";
 import { PeerService } from "./service.js";
-const key = Symbol.for("piclaw.remote-peer.iroh-v1.service");
+const key = Symbol.for("qiushuiai.remote-peer.iroh-v1.service");
 type Shared = {
   service: PeerService;
   unregister: () => void;
@@ -13,7 +13,7 @@ export function getPeerService(): PeerService {
   const globals = globalThis as any;
   const old = globals[key] as Shared | undefined;
   if (old) return old.service;
-  const runtime = requirePiclawRuntimeApi();
+  const runtime = requireQiushuiAIRuntimeApi();
   const service = new PeerService({
     dataDir: runtime.messaging.getAddonDataDir("remote-peer"),
     runtime,
@@ -39,5 +39,5 @@ export async function closePeerService() {
   if (globals[key] === shared) delete globals[key];
 }
 export function hasPeerRuntime() {
-  return getPiclawRuntimeApi()?.messaging?.version === 1;
+  return getQiushuiAIRuntimeApi()?.messaging?.version === 1;
 }

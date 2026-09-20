@@ -4,9 +4,9 @@ import { join } from "node:path";
 import { finishAstGrepProgress, startAstGrepProgress, withAstGrepProgress } from "./index.js";
 
 
-test("manifest declares the supported Piclaw version range", () => {
+test("manifest declares the supported QiushuiAI version range", () => {
   const manifest = JSON.parse(readFileSync(join(import.meta.dir, "package.json"), "utf8"));
-  expect(manifest.piclaw.compatibleVersions).toBe(">=1.8.0");
+  expect(manifest.qiushuiai.compatibleVersions).toBe(">=3.0.0");
 });
 
 function uiHarness(hasUI = true) {

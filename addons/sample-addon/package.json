@@ -1,18 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-sample-addon",
-  "version": "0.1.11",
-  "description": "Sample add-on — starter template showing a settings pane, keychain secret, SQLite KV config, and a test endpoint",
+  "name": "@qiushuiai/qiushuiai-addon-sample-addon",
+  "version": "0.1.12",
+  "description": "展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "sample",
-      "template",
-      "developer"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -28,11 +19,32 @@
   },
   "keywords": [
     "pi-package",
-    "piclaw",
-    "piclaw-addon",
+    "qiushuiai",
+    "qiushuiai-addon",
     "sample",
     "template"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/sample-addon/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/sample-addon",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/sample-addon"
+  },
+  "qiushuiai": {
+    "displayName": "插件示例",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "sample",
+      "template",
+      "developer"
+    ],
+    "displayTags": [
+      "示例",
+      "模板",
+      "开发工具"
+    ],
+    "featured": false
+  }
 }

@@ -55,7 +55,7 @@ const JUNK_PATH_PATTERNS: RegExp[] = [
   /^\/proc\//,                         // proc filesystem
   /^\/sys\//,                          // sys filesystem
   /^(?:\/tmp|tmp)\//,                  // host temp files or workspace tmp/
-  /(?:^|\/)\.piclaw\/tmp\//,          // piclaw temp files
+  /(?:^|\/)\.qiushuiai\/tmp\//,          // qiushuiai temp files
   /(?:^|\/)\.cache\//,                // cache dirs
   /(?:^|\/)node_modules\//,           // dependency trees
   /(?:^|\/)\.pi\/agent\/sessions\//,  // pi session files
@@ -91,7 +91,7 @@ function findCommonDirectoryPrefix(paths: string[]): string {
 
 /**
  * Group paths by their top-level root so unrelated outliers (`tmp/...`)
- * do not destroy compression for the main cluster (`piclaw/...`).
+ * do not destroy compression for the main cluster (`qiushuiai/...`).
  */
 function topLevelPathKey(path: string): string {
   if (!path.includes("/")) return "";
@@ -137,12 +137,12 @@ function renderCompressedPathCluster(paths: string[]): string {
  * when needed, compressing multiple top-level clusters independently.
  *
  * Example:
- *   piclaw/runtime/web/src/ui/app.ts
- *   piclaw/runtime/web/src/ui/theme.ts
- *   piclaw/runtime/test/web/app.test.ts
+ *   qiushuiai/runtime/web/src/ui/app.ts
+ *   qiushuiai/runtime/web/src/ui/theme.ts
+ *   qiushuiai/runtime/test/web/app.test.ts
  *   tmp/report.patch
  * →
- *   base: piclaw/runtime/
+ *   base: qiushuiai/runtime/
  *   web/src/ui/: app.ts, theme.ts
  *   test/web/: app.test.ts
  *   tmp/report.patch

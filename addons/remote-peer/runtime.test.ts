@@ -6,10 +6,10 @@ import { closePeerService, getPeerService } from "./runtime-service.js";
 test("startup contributes only Iroh chat transport, disabled until configured", async () => {
   const root = mkdtempSync(join(tmpdir(), "iroh-runtime-"));
   const global = globalThis as any;
-  const old = global.__piclaw_runtime;
+  const old = global.__qiushuiai_runtime;
   let registered: any;
   let routes = 0;
-  global.__piclaw_runtime = {
+  global.__qiushuiai_runtime = {
     lifecycle: {
       version: 1,
       onShutdown: (handler: () => Promise<void>) => {
@@ -45,7 +45,7 @@ test("startup contributes only Iroh chat transport, disabled until configured", 
   } finally {
     await closePeerService();
     delete global.__peerShutdown;
-    global.__piclaw_runtime = old;
+    global.__qiushuiai_runtime = old;
     rmSync(root, { recursive: true, force: true });
   }
 });

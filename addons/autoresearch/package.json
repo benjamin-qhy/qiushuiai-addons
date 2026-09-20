@@ -1,21 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-autoresearch",
-  "version": "0.1.4",
-  "description": "Autonomous experiment loop sub-agent (start/stop/status tools via tmux)",
+  "name": "@qiushuiai/qiushuiai-addon-autoresearch",
+  "version": "0.1.5",
+  "description": "通过 tmux 运行可启动、停止和查看状态的自主实验循环子智能体",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "experiments",
-      "research",
-      "automation"
-    ],
-    "skills": [
-      "skills/autoresearch-create"
-    ]
-  },
   "agents": {
     "skills": [
       {
@@ -32,7 +20,9 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
@@ -47,5 +37,29 @@
       "skills"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/autoresearch/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/autoresearch",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/autoresearch"
+  },
+  "qiushuiai": {
+    "displayName": "自主研究",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "experiments",
+      "research",
+      "automation"
+    ],
+    "displayTags": [
+      "实验",
+      "研究",
+      "自动化"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/autoresearch-create"
+    ]
+  }
 }

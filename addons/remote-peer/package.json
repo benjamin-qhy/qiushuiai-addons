@@ -1,22 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-remote-peer",
-  "version": "0.3.4",
-  "description": "Iroh-only client-ID peer chat with explicit pairing, default-off mDNS, durable delivery and files",
+  "name": "@qiushuiai/qiushuiai-addon-remote-peer",
+  "version": "0.3.5",
+  "description": "通过 Iroh 提供基于客户端 ID 的节点聊天、显式配对、可靠投递和文件传输",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=3.0.1",
-    "tags": [
-      "remote",
-      "agents",
-      "messaging",
-      "interop"
-    ],
-    "skills": [
-      "skills/remote-peer"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -48,15 +35,15 @@
     "@earendil-works/pi-coding-agent": "*"
   },
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
-    "remote-peer",
+    "interop",
     "messaging",
-    "interop"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
+    "remote-peer"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/remote-peer/",
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/remote-peer",
   "dependencies": {
     "@number0/iroh": "1.1.0",
     "bonjour-service": "1.4.4"
@@ -67,5 +54,31 @@
   },
   "engines": {
     "bun": ">=1.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/remote-peer"
+  },
+  "qiushuiai": {
+    "displayName": "远程节点",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "remote",
+      "agents",
+      "messaging",
+      "interop"
+    ],
+    "displayTags": [
+      "远程协作",
+      "智能体",
+      "消息通信",
+      "互操作"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/remote-peer"
+    ]
   }
 }

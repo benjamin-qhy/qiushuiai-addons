@@ -1,10 +1,10 @@
 # Remote Peer operator guide
 
-Remote Peer 0.3 connects new Piclaw clients through Iroh. It has no peer HTTP endpoint, compatibility mode or legacy database import. Install it on both instances, then pair them by client ID.
+Remote Peer 0.3 connects new QiushuiAI clients through Iroh. It has no peer HTTP endpoint, compatibility mode or legacy database import. Install it on both instances, then pair them by client ID.
 
 ## Requirements
 
-- Piclaw 3.0.1 or newer. Piclaw 3.0.0 lacks the process lifecycle API used to close Iroh and mDNS resources safely.
+- QiushuiAI 3.0.1 or newer. QiushuiAI 3.0.0 lacks the process lifecycle API used to close Iroh and mDNS resources safely.
 - Bun 1.4.1 or newer.
 - A supported `@number0/iroh@1.1.0` prebuilt target. Published targets cover Linux x64/arm64/arm (glibc and musl variants), macOS arm64, Windows x64/arm64 and Android arm/arm64. Intel macOS is not published. No Rust compiler is needed.
 - Network access to the configured Iroh relay when direct UDP connectivity is unavailable.
@@ -28,7 +28,7 @@ The fresh pane shows:
 
 ### What enabling does
 
-Enabling starts Iroh with the current key, relay and lookup settings. Disabling closes the endpoint and mDNS resources but retains the fresh identity, peers and delivery records. Changing runtime network settings restarts those resources inside the process; a Piclaw restart is not normally required.
+Enabling starts Iroh with the current key, relay and lookup settings. Disabling closes the endpoint and mDNS resources but retains the fresh identity, peers and delivery records. Changing runtime network settings restarts those resources inside the process; a QiushuiAI restart is not normally required.
 
 ## Pair by client ID
 
@@ -66,7 +66,7 @@ An endpoint ticket carries the same public endpoint ID plus current relay and di
 ## Relay settings
 
 - **n0 relays** — use the public Iroh relay map.
-- **Custom relays** — provide up to eight HTTPS relay URLs. An optional `authTokenKeychain` names an existing Piclaw keychain entry. Do not put the token itself in Settings.
+- **Custom relays** — provide up to eight HTTPS relay URLs. An optional `authTokenKeychain` names an existing QiushuiAI keychain entry. Do not put the token itself in Settings.
 - **Direct only** — disables relay fallback. Peers must have working direct UDP paths.
 
 Iroh tries direct paths and falls back to encrypted relay transport. The Settings health area reports the home relay and last selected peer path. Relay service operators forward encrypted packets; Remote Peer payloads remain protected by QUIC identity and signed application envelopes.
@@ -123,7 +123,7 @@ dashboard poll. A stale draft cannot restore permissions restricted elsewhere.
 
 ## Sending and retrying
 
-Agents use Piclaw's normal chat transport:
+Agents use QiushuiAI's normal chat transport:
 
 ```text
 chat({ action: "directory" })
@@ -161,7 +161,7 @@ Identity rotation requires every peer and pending request to be revoked first, f
 - requires explicit new pairing everywhere;
 - leaves pre-0.3 legacy files untouched.
 
-Back up the entire `iroh-v1` directory with Piclaw stopped or through a consistent SQLite backup. Losing `secret-key.bin` changes the client ID. Do not restore `peers.db` without its matching key.
+Back up the entire `iroh-v1` directory with QiushuiAI stopped or through a consistent SQLite backup. Losing `secret-key.bin` changes the client ID. Do not restore `peers.db` without its matching key.
 
 ## Diagnostics
 

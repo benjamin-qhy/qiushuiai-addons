@@ -39,7 +39,7 @@ function commitAll(repoDir: string, message: string): void {
 
 describe("autoresearch workdir helpers", () => {
   test("clearAutoresearchSessionFiles removes session files and prior reports", () => {
-    const ws = createTempWorkspace("piclaw-addon-autoresearch-files-");
+    const ws = createTempWorkspace("qiushuiai-addon-autoresearch-files-");
     cleanups.push(ws.cleanup);
 
     for (const filename of AUTORESEARCH_SESSION_FILE_NAMES) {
@@ -58,7 +58,7 @@ describe("autoresearch workdir helpers", () => {
   });
 
   test("prepareDirectAutoresearchWorktree creates a fresh branch worktree and clears inherited autoresearch files", () => {
-    const ws = createTempWorkspace("piclaw-addon-autoresearch-worktree-");
+    const ws = createTempWorkspace("qiushuiai-addon-autoresearch-worktree-");
     cleanups.push(ws.cleanup);
 
     initGitRepo(ws.workspace);
@@ -86,7 +86,7 @@ describe("autoresearch workdir helpers", () => {
   });
 
   test("prepareDirectAutoresearchWorktree preserves nested project paths inside the fresh worktree", () => {
-    const ws = createTempWorkspace("piclaw-addon-autoresearch-subdir-");
+    const ws = createTempWorkspace("qiushuiai-addon-autoresearch-subdir-");
     cleanups.push(ws.cleanup);
 
     initGitRepo(ws.workspace);
@@ -112,7 +112,7 @@ describe("autoresearch workdir helpers", () => {
   });
 
   test("prepareDirectAutoresearchWorktree error message describes git worktree mode", () => {
-    const ws = createTempWorkspace("piclaw-addon-autoresearch-no-git-");
+    const ws = createTempWorkspace("qiushuiai-addon-autoresearch-no-git-");
     cleanups.push(ws.cleanup);
 
     expect(() => prepareDirectAutoresearchWorktree(ws.workspace, join(ws.workspace, "session"), "autoresearch/test-no-git")).toThrow(

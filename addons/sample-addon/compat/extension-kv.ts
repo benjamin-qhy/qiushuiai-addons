@@ -1,8 +1,8 @@
 /**
  * compat/extension-kv.ts — Extension KV store client for standalone addons.
  *
- * Accesses piclaw's global extension KV store singleton when running inside
- * the piclaw runtime. Falls back to an in-memory store for standalone use.
+ * Accesses qiushuiai's global extension KV store singleton when running inside
+ * the qiushuiai runtime. Falls back to an in-memory store for standalone use.
  *
  * Extensions use this through scoped wrappers that bind the extension ID.
  */
@@ -103,12 +103,12 @@ class RuntimeBackedStorage implements ExtensionStorage {
 // ── Factory ──────────────────────────────────────────────────────
 
 function getRuntimeInterop(): { getExtensionKvStore?: () => RuntimeKvStore } | null {
-  const interop = (globalThis as { __piclawRuntimeInterop?: { getExtensionKvStore?: () => RuntimeKvStore } }).__piclawRuntimeInterop;
+  const interop = (globalThis as { __qiushuiaiRuntimeInterop?: { getExtensionKvStore?: () => RuntimeKvStore } }).__qiushuiaiRuntimeInterop;
   return interop || null;
 }
 
 /**
- * Try to resolve piclaw's runtime KV store.
+ * Try to resolve qiushuiai's runtime KV store.
  * Use the runtime global bridge without importing runtime source modules.
  */
 function tryGetRuntimeStore(): RuntimeKvStore | null {
@@ -118,7 +118,7 @@ function tryGetRuntimeStore(): RuntimeKvStore | null {
       return interop.getExtensionKvStore();
     }
   } catch {
-    // Not running inside piclaw — use fallback.
+    // Not running inside qiushuiai — use fallback.
   }
 
   return null;
@@ -126,7 +126,7 @@ function tryGetRuntimeStore(): RuntimeKvStore | null {
 
 /**
  * Create a scoped ExtensionStorage for the given extension ID.
- * If running inside piclaw, uses the DB-backed store.
+ * If running inside qiushuiai, uses the DB-backed store.
  * Otherwise falls back to in-memory.
  */
 export function createExtensionStorage(extensionId: string): ExtensionStorage {

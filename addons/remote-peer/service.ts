@@ -1,7 +1,7 @@
 import { createHash, randomUUID, randomBytes } from "node:crypto";
 import type {
   ChatTransportRequest,
-  PiclawRuntimeApi,
+  QiushuiAIRuntimeApi,
   ChatTransportAttachment,
   ChatTransportDirectoryEntry,
 } from "./compat/runtime.js";
@@ -46,7 +46,7 @@ function text(value: unknown, max: number) {
 }
 export interface PeerServiceOptions {
   dataDir: string;
-  runtime: PiclawRuntimeApi;
+  runtime: QiushuiAIRuntimeApi;
   bindAddr?: string;
   transportFactory?: (options: any) => IrohTransport;
   discoveryFactory?: (options: any) => PeerDiscovery;
@@ -144,7 +144,7 @@ export class PeerService {
         endpointId: this.transport.id,
         instanceId: this.transport.id,
         port: this.transport.port(),
-        name: c.instanceName || "Piclaw-" + this.transport.id.slice(0, 8),
+        name: c.instanceName || "QiushuiAI-" + this.transport.id.slice(0, 8),
         ...(c.mdnsInterface ? { interfaceAddress: c.mdnsInterface } : {}),
       });
       await this.discovery.start();
@@ -1153,7 +1153,7 @@ export class PeerService {
       if (data.chat) {
         const enqueue = this.options.runtime.enqueueAgentMessage;
         if (!enqueue)
-          throw new Error("Piclaw agent-message enqueue API is unavailable.");
+          throw new Error("QiushuiAI agent-message enqueue API is unavailable.");
         await enqueue({
           chatJid: data.chat,
           content: `Remote work ${row.id}: ${body.status}\n${result}`,

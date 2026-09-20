@@ -4,7 +4,7 @@
  * All behavior lives in the web entry (`web/index.ts`), which injects a font
  * picker into the document editor footer and live-switches the CodeMirror font
  * between bundled writing faces. This runtime extension is intentionally inert;
- * it exists so the package is a well-formed piclaw extension and shows up in the
+ * it exists so the package is a well-formed qiushuiai extension and shows up in the
  * installed add-on list. No tools, events, or config are registered.
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";

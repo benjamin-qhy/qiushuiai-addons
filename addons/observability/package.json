@@ -1,27 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-observability",
-  "version": "0.1.17",
-  "description": "OpenTelemetry observability — trace errors and agent turns across piclaw instances to Azure Application Insights (with Live Metrics) and local Graphite",
+  "name": "@qiushuiai/qiushuiai-addon-observability",
+  "version": "0.1.18",
+  "description": "通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "observability",
-      "tracing",
-      "otel",
-      "opentelemetry",
-      "application-insights",
-      "graphite",
-      "metrics",
-      "live-metrics",
-      "core"
-    ],
-    "skills": [
-      "skills/usage-telemetry-chart"
-    ]
-  },
   "agents": {
     "skills": [
       {
@@ -52,9 +34,45 @@
     "observability",
     "opentelemetry",
     "pi-package",
-    "piclaw",
-    "piclaw-addon"
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/observability/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/observability",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/observability"
+  },
+  "qiushuiai": {
+    "displayName": "可观测性",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "observability",
+      "tracing",
+      "otel",
+      "opentelemetry",
+      "application-insights",
+      "graphite",
+      "metrics",
+      "live-metrics",
+      "core"
+    ],
+    "displayTags": [
+      "可观测性",
+      "链路追踪",
+      "遥测",
+      "开放遥测",
+      "应用洞察",
+      "Graphite 指标",
+      "指标",
+      "实时指标",
+      "核心推荐"
+    ],
+    "featured": true,
+    "skills": [
+      "skills/usage-telemetry-chart"
+    ]
+  }
 }

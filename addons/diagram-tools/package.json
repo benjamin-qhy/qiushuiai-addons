@@ -1,28 +1,14 @@
 {
-  "name": "@rcarmo/piclaw-addon-diagram-tools",
-  "version": "0.1.0",
-  "description": "Architecture diagram workflow — JSON graph definitions, SVG renderer, colour picker widget",
+  "name": "@qiushuiai/qiushuiai-addon-diagram-tools",
+  "version": "0.1.1",
+  "description": "提供 JSON 图定义、SVG 渲染器和颜色选择器组件的架构图工作流",
   "type": "module",
-  "piclaw": {
-    "type": "skill",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "diagrams",
-      "svg",
-      "portfolio",
-      "architecture"
-    ],
-    "skills": [
-      "skills/diagram-workflow",
-      "skills/diagram-colour-picker"
-    ]
-  },
   "license": "MIT",
   "keywords": [
-    "pi-package",
-    "piclaw",
-    "piclaw-addon",
     "diagrams",
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
     "svg"
   ],
   "pi": {
@@ -30,5 +16,32 @@
       "skills"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/diagram-tools/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/diagram-tools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/diagram-tools"
+  },
+  "qiushuiai": {
+    "displayName": "图表工具",
+    "type": "skill",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "diagrams",
+      "svg",
+      "portfolio",
+      "architecture"
+    ],
+    "displayTags": [
+      "图表",
+      "矢量图",
+      "作品集",
+      "架构"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/diagram-workflow",
+      "skills/diagram-colour-picker"
+    ]
+  }
 }

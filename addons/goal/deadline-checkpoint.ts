@@ -61,7 +61,7 @@ export interface GoalDeadlineResolution {
   continuationText?: string;
 }
 
-// Piclaw serializes prompt mutations through one lane per chat, so only one
+// QiushuiAI serializes prompt mutations through one lane per chat, so only one
 // Goal deadline latch can own that chat at a time. Agent-end suppression is
 // keyed separately by exact turn identity: release may precede a delayed
 // agent_end when abort settlement fails, and that old event must never restart
@@ -208,7 +208,7 @@ function clearPersistedCheckpoint(goal: PersistedGoal, chatJid: string): Persist
 
 function currentPlan(chatJid: string): { items: PlanItem[]; fingerprint: string } | null {
   try {
-    const candidate = (globalThis as Record<string, unknown>).__piclaw_planSidebarApi;
+    const candidate = (globalThis as Record<string, unknown>).__qiushuiai_planSidebarApi;
     if (!candidate || typeof candidate !== "object" || typeof (candidate as PlanApi).getPlan !== "function") return null;
     const raw = (candidate as PlanApi).getPlan(chatJid)?.plan;
     const items = Array.isArray(raw) ? raw.filter((item): item is PlanItem => {

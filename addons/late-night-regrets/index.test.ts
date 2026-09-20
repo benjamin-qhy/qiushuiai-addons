@@ -5,7 +5,7 @@ describe("late-night-regrets", () => {
   test("compat storage avoids runtime source imports", async () => {
     const source = await Bun.file(join(import.meta.dir, "compat", "extension-kv.ts")).text();
     expect(source).not.toContain("require(");
-    expect(source).not.toContain("piclaw/runtime/src");
+    expect(source).not.toContain("qiushuiai/runtime/src");
   });
 
   test("train script exists and is valid TypeScript", async () => {
@@ -31,15 +31,14 @@ describe("late-night-regrets", () => {
   test("package.json has correct metadata", async () => {
     const pkgPath = join(import.meta.dir, "package.json");
     const pkg = JSON.parse(await Bun.file(pkgPath).text());
-    expect(pkg.name).toBe("@rcarmo/piclaw-addon-late-night-regrets");
-    expect(pkg.piclaw.type).toBe("extension");
-    expect(pkg.piclaw.tags).toContain("bayesian");
-    expect(pkg.piclaw.tags).toContain("self-improvement");
-    expect(pkg.piclaw.skills).toContain("skills/late-night-regrets");
+    expect(pkg.name).toBe("@qiushuiai/qiushuiai-addon-late-night-regrets");
+    expect(pkg.qiushuiai.type).toBe("extension");
+    expect(pkg.qiushuiai.categories).toContain("bayesian");
+    expect(pkg.qiushuiai.categories).toContain("self-improvement");
   });
 
   test("extension entry point exports a default function", async () => {
-    // Can't fully test without piclaw runtime, but verify the module shape
+    // Can't fully test without qiushuiai runtime, but verify the module shape
     const mod = await import("./index.ts");
     expect(typeof mod.default).toBe("function");
     expect(typeof mod.getTrainScriptPath).toBe("function");

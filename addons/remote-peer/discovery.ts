@@ -2,7 +2,7 @@ import { isIP } from "node:net";
 import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 
-const SERVICE_TYPE = "piclaw-peer";
+const SERVICE_TYPE = "qiushuiai-peer";
 const SERVICE_PROTOCOL = "udp";
 const MAX_CANDIDATES = 64;
 const MAX_TTL_SECONDS = 120;

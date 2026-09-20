@@ -12,19 +12,19 @@ test('kanban-editor exports an extension entrypoint', () => {
 
 test('kanban-editor manifest declares the web pane entry', () => {
   const manifest = JSON.parse(readFileSync(resolve(addonDir, 'package.json'), 'utf8')) as any;
-  expect(manifest.name).toBe('@rcarmo/piclaw-addon-kanban-editor');
+  expect(manifest.name).toBe('@qiushuiai/qiushuiai-addon-kanban-editor');
   expect(manifest.pi?.web?.entries).toEqual(['web/index.ts']);
 });
 
 test('kanban-editor README documents wiki links', () => {
   const readme = readFileSync(resolve(addonDir, 'README.md'), 'utf8');
   expect(readme).toContain('[[ops-roadmap]]');
-  expect(readme).toContain('opens the target board in a normal workspace tab/editor');
+  expect(readme).toContain('在普通工作区标签页或编辑器中打开目标看板');
 });
 
 test('kanban-editor web entry uses addon-owned assets', () => {
   const source = readFileSync(resolve(addonDir, 'web', 'index.ts'), 'utf8');
-  expect(source).toContain('/agent/addons/assets/%40rcarmo%2Fpiclaw-addon-kanban-editor/web/vendor');
+  expect(source).toContain('/agent/addons/assets/%40qiushuiai%2Fqiushuiai-addon-kanban-editor/web/vendor');
   expect(source).not.toContain('/static/js/vendor/kanban-editor.js');
   expect(source).not.toContain('/static/css/kanban.css');
 });

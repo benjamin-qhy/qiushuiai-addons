@@ -13,7 +13,7 @@ const ADDON_ID = "sample-addon";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const DEFAULT_KEYCHAIN_ENTRY = "sample-addon/api-key";
 
-const preactHtm = globalThis.__piclawPreactHtm || globalThis.__piclawPreact || null;
+const preactHtm = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact || null;
 const html = preactHtm?.html;
 const useState = preactHtm?.useState;
 const useEffect = preactHtm?.useEffect;
@@ -184,14 +184,14 @@ function SampleAddonSettings() {
 try {
   if (HAS_RUNTIME) {
     let reg, notify;
-    const r = globalThis.__piclawSettingsPaneRegistry;
+    const r = globalThis.__qiushuiaiSettingsPaneRegistry;
     if (r) { reg = r.registerSettingsPane; notify = r.notifySettingsPanesChanged; }
-    if (!reg && globalThis.__piclaw_web?.registerSettingsPane) {
-      reg = globalThis.__piclaw_web.registerSettingsPane;
-      notify = () => globalThis.dispatchEvent?.(new CustomEvent('piclaw:settings-panes-changed'));
+    if (!reg && globalThis.__qiushuiai_web?.registerSettingsPane) {
+      reg = globalThis.__qiushuiai_web.registerSettingsPane;
+      notify = () => globalThis.dispatchEvent?.(new CustomEvent('qiushuiai:settings-panes-changed'));
     }
     if (reg) {
-      reg({ id: "sample-addon", label: "Sample Addon", icon: ICON, component: SampleAddonSettings, order: 200 });
+      reg({ id: "sample-addon", label: "示例插件", icon: ICON, component: SampleAddonSettings, order: 200 });
       notify?.();
     }
   }

@@ -77,10 +77,10 @@ function submit() {
   });
   const changed = Object.keys(result).length;
   if (!changed) {
-    window.piclawWidget.submit({ text: 'No colour changes — keeping current palette.' });
+    window.qiushuiaiWidget.submit({ text: 'No colour changes — keeping current palette.' });
   } else {
     const lines = Object.entries(result).map(([tag, c]) => `${tag}: fill=${c.fill} stroke=${c.stroke}`);
-    window.piclawWidget.submit({ text: 'Updated colours:\n' + lines.join('\n') });
+    window.qiushuiaiWidget.submit({ text: 'Updated colours:\n' + lines.join('\n') });
   }
 }
 </script>

@@ -1,19 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-win-ui",
-  "version": "0.1.1",
-  "description": "Windows desktop automation tools via Win32 UI Automation and screenshots",
+  "name": "@qiushuiai/qiushuiai-addon-win-ui",
+  "version": "0.1.2",
+  "description": "通过 Win32 UI Automation 和截图提供 Windows 桌面自动化工具",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "windows",
-      "automation",
-      "desktop",
-      "screenshots"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -24,12 +14,35 @@
     "typebox": "*"
   },
   "keywords": [
+    "automation",
     "pi-package",
-    "piclaw",
-    "piclaw-addon",
-    "windows",
-    "automation"
+    "qiushuiai",
+    "qiushuiai-addon",
+    "windows"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/win-ui/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/win-ui",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/win-ui"
+  },
+  "qiushuiai": {
+    "displayName": "Windows 界面自动化",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "windows",
+      "automation",
+      "desktop",
+      "screenshots"
+    ],
+    "displayTags": [
+      "Windows 工具",
+      "自动化",
+      "桌面自动化",
+      "截图"
+    ],
+    "featured": false
+  }
 }

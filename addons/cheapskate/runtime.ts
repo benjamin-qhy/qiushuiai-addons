@@ -13,7 +13,7 @@ export interface CheapskateRuntimeInteropBridge {
 
 function bridge(): CheapskateRuntimeInteropBridge | null {
   try {
-    return (globalThis as { __piclawRuntimeInterop?: CheapskateRuntimeInteropBridge }).__piclawRuntimeInterop || null;
+    return (globalThis as { __qiushuiaiRuntimeInterop?: CheapskateRuntimeInteropBridge }).__qiushuiaiRuntimeInterop || null;
   } catch {
     return null;
   }

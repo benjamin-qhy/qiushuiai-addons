@@ -122,7 +122,7 @@ test("disabled runtime creates no database, cannot send, registers bounded owned
 });
 
 test("host capability negotiation never substitutes unscoped messaging for operations", () => {
-  const original = (globalThis as any).__piclaw_runtime;
+  const original = (globalThis as any).__qiushuiai_runtime;
   try {
     for (const api of [
       undefined,
@@ -134,10 +134,10 @@ test("host capability negotiation never substitutes unscoped messaging for opera
         lifecycle: { version: 1 },
       },
     ]) {
-      (globalThis as any).__piclaw_runtime = api;
+      (globalThis as any).__qiushuiai_runtime = api;
       expect(a2aHostApi()).toBeNull();
     }
   } finally {
-    (globalThis as any).__piclaw_runtime = original;
+    (globalThis as any).__qiushuiai_runtime = original;
   }
 });

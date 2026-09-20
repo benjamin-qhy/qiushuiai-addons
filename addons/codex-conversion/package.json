@@ -1,27 +1,17 @@
 {
-  "name": "@rcarmo/piclaw-addon-codex-conversion",
-  "version": "0.2.1",
-  "description": "Provider-aware Codex and Copilot prompt and tool profiles for Piclaw",
+  "name": "@qiushuiai/qiushuiai-addon-codex-conversion",
+  "version": "0.2.2",
+  "description": "为 QiushuiAI 提供感知供应商的 Codex 与 Copilot 提示词和工具配置",
   "type": "module",
   "main": "src/index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.15.0",
-    "tags": [
-      "codex",
-      "tools",
-      "openai",
-      "adapter",
-      "prompting"
-    ]
-  },
   "license": "MIT",
   "keywords": [
-    "pi-package",
-    "piclaw-addon",
+    "adapter",
     "codex",
     "openai",
-    "adapter"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
@@ -38,10 +28,30 @@
     "tree-sitter-bash": "^0.25.1",
     "web-tree-sitter": "^0.26.7"
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/codex-conversion/",
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/codex-conversion",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rcarmo/piclaw-addons.git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
     "directory": "addons/codex-conversion"
+  },
+  "qiushuiai": {
+    "displayName": "Codex 转换",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "codex",
+      "tools",
+      "openai",
+      "adapter",
+      "prompting"
+    ],
+    "displayTags": [
+      "Codex 适配",
+      "工具",
+      "OpenAI 集成",
+      "适配器",
+      "提示词"
+    ],
+    "featured": false
   }
 }

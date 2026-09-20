@@ -231,7 +231,7 @@ export class A2aService {
     this.outboundStore = null;
   }
 }
-const singleton = Symbol.for("piclaw.a2a.service.v1");
+const singleton = Symbol.for("qiushuiai.a2a.service.v1");
 export function currentA2aService(): A2aService | null {
   return (globalThis as any)[singleton] ?? null;
 }
@@ -246,7 +246,7 @@ export function startA2aRuntime(): A2aService | null {
     await service.close();
     if (currentA2aService() === service) delete (globalThis as any)[singleton];
   });
-  const registrar = (globalThis as any).__piclaw_registerAddonConfigApi as
+  const registrar = (globalThis as any).__qiushuiai_registerAddonConfigApi as
     Registrar | undefined;
   registrar?.(
     "a2a",

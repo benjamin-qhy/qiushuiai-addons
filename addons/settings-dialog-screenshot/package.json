@@ -1,24 +1,13 @@
 {
-  "name": "@rcarmo/piclaw-addon-settings-dialog-screenshot",
-  "version": "0.1.0",
-  "description": "Developer skill for capturing tightly cropped screenshots of the Pi web settings dialog only",
+  "name": "@qiushuiai/qiushuiai-addon-settings-dialog-screenshot",
+  "version": "0.1.1",
+  "description": "用于截取 Pi Web 设置对话框紧凑画面的开发技能",
   "type": "module",
-  "piclaw": {
-    "type": "skill",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "developer",
-      "documentation",
-      "screenshots",
-      "ui"
-    ],
-    "skills": [
-      "skills/settings-dialog-screenshot"
-    ]
-  },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "skills": [
@@ -33,5 +22,31 @@
       }
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/settings-dialog-screenshot/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/settings-dialog-screenshot",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/settings-dialog-screenshot"
+  },
+  "qiushuiai": {
+    "displayName": "设置截图",
+    "type": "skill",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "developer",
+      "documentation",
+      "screenshots",
+      "ui"
+    ],
+    "displayTags": [
+      "开发工具",
+      "文档",
+      "截图",
+      "界面"
+    ],
+    "featured": false,
+    "skills": [
+      "skills/settings-dialog-screenshot"
+    ]
+  }
 }

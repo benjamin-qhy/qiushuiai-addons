@@ -17,7 +17,7 @@ describe("delegate addon", () => {
   test("compat storage avoids runtime source imports", () => {
     const source = readFileSync(resolve(addonDir, "compat", "extension-kv.ts"), "utf8");
     expect(source).not.toContain("require(");
-    expect(source).not.toContain("piclaw/runtime/src");
+    expect(source).not.toContain("qiushuiai/runtime/src");
   });
 
   test("delegate task previews are compact and single-line", () => {
@@ -277,7 +277,7 @@ anthropic       claude-sonnet-4.6  200K     32K      yes       yes
     const dir = mkdtempSync(join(tmpdir(), "delegate-astra-execute-"));
     const previousCli = process.env.PI_DELEGATE_CLI;
     const globals = globalThis as Record<string, any>;
-    const previousRegistrar = globals.__piclaw_registerAddonConfigApi;
+    const previousRegistrar = globals.__qiushuiai_registerAddonConfigApi;
     let configApi: any;
     try {
       const marker = resolve(dir, "launches.txt");
@@ -295,10 +295,10 @@ anthropic       claude-sonnet-4.6  200K     32K      yes       yes
         console.log(JSON.stringify({type:"message_end", message:{role:"assistant", provider:"github-copilot", model:"gpt-5.4-mini", content:[{type:"text",text:"ASTRA_AUTO_OK"}], stopReason:"stop"}}));
       `);
       process.env.PI_DELEGATE_CLI = `${process.execPath} ${script}`;
-      globals.__piclaw_registerAddonConfigApi = (_addon: string, action: string, handlers: any) => { if (action === "config") configApi = handlers; };
+      globals.__qiushuiai_registerAddonConfigApi = (_addon: string, action: string, handlers: any) => { if (action === "config") configApi = handlers; };
       // A fresh module gives this test an isolated in-memory config and catalog.
       const module = await import(`./delegate.ts?astra-execute=${encodeURIComponent(dir)}`);
-      globals.__piclaw_registerAddonConfigApi = previousRegistrar;
+      globals.__qiushuiai_registerAddonConfigApi = previousRegistrar;
       let tool: any;
       module.default({ on() {}, registerTool(value: any) { tool = value; } });
       await configApi.set({ searchable_providers: ["github-copilot"] });
@@ -311,8 +311,8 @@ anthropic       claude-sonnet-4.6  200K     32K      yes       yes
       await expect(tool.execute("denied", { prompt: "must not launch" }, undefined, undefined, ctx)).rejects.toThrow("No approved executable");
       expect(readFileSync(marker, "utf8")).toBe("github-copilot/gpt-5.4-mini\n");
     } finally {
-      if (previousRegistrar === undefined) delete globals.__piclaw_registerAddonConfigApi;
-      else globals.__piclaw_registerAddonConfigApi = previousRegistrar;
+      if (previousRegistrar === undefined) delete globals.__qiushuiai_registerAddonConfigApi;
+      else globals.__qiushuiai_registerAddonConfigApi = previousRegistrar;
       if (previousCli === undefined) delete process.env.PI_DELEGATE_CLI;
       else process.env.PI_DELEGATE_CLI = previousCli;
       rmSync(dir, { recursive: true, force: true });
@@ -416,8 +416,8 @@ anthropic       claude-sonnet-4.6  200K     32K      yes       yes
     expect(retained.currentModel?.fullId).toBe("github-copilot/gpt-5.6-sol");
   });
 
-  test("workspace root follows Piclaw configuration and standalone cwd", () => {
-    expect(getDelegateWorkspaceRoot({ PICLAW_WORKSPACE: "/workspace" }, "/tmp")).toBe("/workspace");
+  test("workspace root follows QiushuiAI configuration and standalone cwd", () => {
+    expect(getDelegateWorkspaceRoot({ QIUSHUIAI_WORKSPACE: "/workspace" }, "/tmp")).toBe("/workspace");
     expect(getDelegateWorkspaceRoot({}, process.cwd())).toBe(process.cwd());
   });
 
@@ -497,7 +497,7 @@ anthropic       claude-sonnet-4.6  200K     32K      yes       yes
       expect(validateExplicitDelegateModel(model, executable, runtime, policy).error).toContain("matches a configured model exclusion");
     }
     expect(validateExplicitDelegateModel("custom/mystery-9000", executable, runtime, { ...policy, excluded_models: [] }).error).toContain("not in the ordered approved-model policy");
-    expect(validateExplicitDelegateModel("github-copilot/gpt-5.6-sol", executable, runtime, policy).error).toContain("available in Piclaw but not executable");
+    expect(validateExplicitDelegateModel("github-copilot/gpt-5.6-sol", executable, runtime, policy).error).toContain("available in QiushuiAI but not executable");
     expect(validateExplicitDelegateModel("unknown/missing", executable, runtime, policy).error).toContain("not available in the child Pi CLI catalog");
     expect(validateExplicitDelegateModel("GPT-5.4", executable, runtime, policy).error).toContain("exact approved provider/model ID");
 

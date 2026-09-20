@@ -98,7 +98,7 @@ function startTtsHttpServer(port: number, host?: string): Bun.Server<unknown> {
 
 function helloRequest(): Uint8Array {
   return concat(
-    encodeString(1, "piclaw voice-pipeline"),
+    encodeString(1, "qiushuiai voice-pipeline"),
     encodeUint32(2, 1),   // api_version_major
     encodeUint32(3, 10),  // api_version_minor
   );

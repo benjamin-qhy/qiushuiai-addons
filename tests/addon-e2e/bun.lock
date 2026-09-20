@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "piclaw-addon-e2e",
+      "name": "qiushuiai-addon-e2e",
       "devDependencies": {
         "@playwright/test": "^1.62.1",
       },

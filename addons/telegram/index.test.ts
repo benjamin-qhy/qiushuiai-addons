@@ -3,20 +3,20 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { TelegramChannel } from "./telegram.ts";
 
-const previousRegistrar = (globalThis as any).__piclaw_registerAddonConfigApi;
+const previousRegistrar = (globalThis as any).__qiushuiai_registerAddonConfigApi;
 const registrations: any[] = [];
-(globalThis as any).__piclaw_registerAddonConfigApi = (...args: any[]) => { registrations.push(args); return "created"; };
+(globalThis as any).__qiushuiai_registerAddonConfigApi = (...args: any[]) => { registrations.push(args); return "created"; };
 const mod = await import(`./index.ts?test=${Date.now()}`);
 
 afterEach(() => {
-  delete (globalThis as any).__piclawRuntimeInterop;
+  delete (globalThis as any).__qiushuiaiRuntimeInterop;
   delete process.env.TELEGRAM_BOT_TOKEN;
-  delete process.env.PICLAW_TELEGRAM_BOT_TOKEN;
+  delete process.env.QIUSHUIAI_TELEGRAM_BOT_TOKEN;
 });
 
-test("manifest declares the supported Piclaw version range", () => {
+test("manifest declares the supported QiushuiAI version range", () => {
   const manifest = JSON.parse(readFileSync(join(import.meta.dir, "package.json"), "utf8"));
-  expect(manifest.piclaw.compatibleVersions).toBe(">=2.0.0");
+  expect(manifest.qiushuiai.compatibleVersions).toBe(">=3.0.0");
   expect(manifest.dependencies?.grammy).toBe("1.46.0");
 });
 
@@ -44,7 +44,7 @@ test("registers the current module-scope config API contract", () => {
 test("stores only non-secret settings in extension KV", () => {
   const writes: any[] = [];
   const values = new Map<string, unknown>();
-  (globalThis as any).__piclawRuntimeInterop = {
+  (globalThis as any).__qiushuiaiRuntimeInterop = {
     getExtensionKvStore: () => ({
       get: (_addon: string, key: string) => values.get(key) ?? null,
       set: (addon: string, key: string, value: unknown) => { writes.push([addon, key, value]); values.set(key, value); },
@@ -65,5 +65,5 @@ test("web pane saves the bot token through keychain", () => {
   expect(source).not.toContain("body.botToken");
 });
 
-if (previousRegistrar === undefined) delete (globalThis as any).__piclaw_registerAddonConfigApi;
-else (globalThis as any).__piclaw_registerAddonConfigApi = previousRegistrar;
+if (previousRegistrar === undefined) delete (globalThis as any).__qiushuiai_registerAddonConfigApi;
+else (globalThis as any).__qiushuiai_registerAddonConfigApi = previousRegistrar;

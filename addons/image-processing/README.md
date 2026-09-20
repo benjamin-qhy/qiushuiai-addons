@@ -1,28 +1,34 @@
-# Image Processing
+# 图像处理
 
-The `image_process` tool performs workspace image operations with Sharp. Requires Piclaw `>=1.8.0`.
+通过 sharp 提供缩放、裁剪、转换、合成等图像处理能力
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **image-processing** from the catalog. Sharp is bundled as the add-on's runtime dependency.
+这是 QiushuiAI 的扩展插件，技术标识为 `image-processing`。
 
-## Tool
+- 软件包：`@qiushuiai/qiushuiai-addon-image-processing`
+- 当前版本：`0.1.5`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`图像`、`图像引擎`、`数据处理`、`工具`
 
-`image_process` accepts an `action`, input path, and action-specific options. Supported operations include:
+## 安装
 
-- geometry: resize, crop, rotate, flip, trim, extend, affine, tile
-- formats: `convert`, `optimize`, `svg_render`, `frames`, `spritesheet_to_gif`
-- colour: `greyscale`, `modulate`, `contrast`, `gamma`, `tint`, `normalize`, `negate`, `threshold`, `clahe`
-- filters: `blur`, `sharpen`, `median`
-- channels and composition: `extract_channel`, `remove_alpha`, `unflatten`, `composite`, `text`
-- inspection: `metadata` and `info`
+在 QiushuiAI 中打开**设置 → 插件**，搜索“图像处理”并安装。也可以直接使用无需登录的公开安装包：
 
-Relative paths are resolved against the workspace; absolute paths are also accepted. Set `preserve_transparency=false` to flatten transparent pixels onto white. The tool refuses to overwrite its input unless `overwrite` is true and otherwise derives a suffixed output path.
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-image-processing-0.1.5.tgz
+```
 
-## Formats
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-Output formats: PNG, JPEG, WebP, AVIF, TIFF, and GIF. Animated GIF/WebP processing preserves frames by default. GIF delay accepts one value or a per-frame array.
+## 提供的能力
 
-## Result
+- 入口：`index.ts`
 
-The tool returns a text summary and structured output details.
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/image-processing/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

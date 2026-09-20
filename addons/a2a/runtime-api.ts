@@ -52,7 +52,7 @@ export interface A2aHostApi {
 }
 /** No fallback to raw enqueue when an older runtime lacks admitted operations. */
 export function a2aHostApi(): A2aHostApi | null {
-  const api = (globalThis as any).__piclaw_runtime;
+  const api = (globalThis as any).__qiushuiai_runtime;
   return api?.operations?.version === 1 &&
     api?.messaging?.version === 1 &&
     api?.lifecycle?.version === 1 &&

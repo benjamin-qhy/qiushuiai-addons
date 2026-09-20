@@ -1,116 +1,46 @@
-# piclaw-addon-m365
+# Microsoft 365 工具
 
-Experimental Microsoft 365 tools for Piclaw.
+提供 Teams、Graph、Outlook、OneDrive、SharePoint、日历和待办事项实验工具
 
-## Install
+## 功能定位
 
-Requires Piclaw `>=2.13.3`.
+这是 QiushuiAI 的扩展插件，技术标识为 `m365`。
 
-Open **Settings → Add-Ons** and install **m365** from the catalog. The add-on loads after installation; the former `PICLAW_ENABLE_M365_EXPERIMENTAL` core gate is not used.
+- 软件包：`@qiushuiai/qiushuiai-addon-m365`
+- 当前版本：`0.1.3`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`微软办公`、`Microsoft 365 集成`、`Teams 集成`、`图查询`、`Outlook 集成`、`OneDrive 集成`、`SharePoint 集成`、`效率`
 
-## Capabilities
+## 安装
 
-The add-on exposes tools for:
+在 QiushuiAI 中打开**设置 → 插件**，搜索“Microsoft 365 工具”并安装。也可以直接使用无需登录的公开安装包：
 
-- Teams chats, messages, sending, and file-card helpers
-- Microsoft Graph profile, people, and mail operations
-- OneDrive browse, upload, and sharing flows
-- SharePoint browse, search, download, upload, sync, and move flows
-- Calendar queries and calendar SVG rendering
-- Microsoft To Do tasks and flagged emails through `m365_todo`
-
-Eleven bundled skills document the main Graph, Outlook, Teams, OneDrive, and SharePoint workflows.
-
-## Account support
-
-Graph-backed operations support consumer Microsoft accounts through an Outlook Live browser session and the consumer OAuth flow.
-
-The following operations still require a work or school Microsoft 365 account:
-
-- Teams chat tools (`m365_teams_*`)
-- SharePoint and enterprise document flows that require Teams or SharePoint work context
-
-Consumer accounts are detected through the Microsoft consumer tenant ID. When a consumer session is visible, Graph authentication prefers the Outlook Live PKCE flow before enterprise Teams-based token recovery.
-
-## Browser and platform support
-
-The add-on supports Windows, macOS, and Linux. Browser discovery always prefers:
-
-1. Edge
-2. Chrome
-3. Chromium
-
-Set `M365_EDGE_PATH` when automatic browser discovery is not sufficient.
-
-Stale browser and CDP cleanup is platform-aware:
-
-- Windows uses PowerShell process filtering and `taskkill`.
-- macOS and Linux use `ps` enumeration and process-group signals.
-
-Most validation has been performed on Windows.
-
-## Authentication and safety
-
-- Authentication, token, and cookie caches remain in RAM only.
-- Hosts may provide Graph and Teams chat-service credentials through the optional versioned callback described below.
-- A fresh sign-in shows an explicit consent interstitial unless `PICLAW_M365_YOLO=1`.
-- Existing browser sessions may provide cached tokens and follow their configured MFA and access policies.
-- The add-on supports one active account or browser session at a time.
-- State-changing and send actions require `confirm`; supported flows provide `dryRun` previews.
-- Mail send flows create drafts rather than sending directly.
-
-### Host-provided credential callback
-
-A managed host can register `globalThis.__piclaw_m365CredentialProviderV1` before the add-on first requests authentication:
-
-```ts
-globalThis.__piclaw_m365CredentialProviderV1 = async ({ resource, minRemainingSeconds }) => {
-  // resource is "graph" or "teams_chatsvc".
-  // Return null when the host has no suitable credential.
-  return {
-    token: await broker.getAccessToken(resource, minRemainingSeconds),
-    expiresAt: 1_800_000_000, // Unix epoch seconds; optional when the JWT has exp.
-    tenantId: "00000000-0000-0000-0000-000000000000", // optional
-  };
-};
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-m365-0.1.3.tgz
 ```
 
-The add-on checks this callback after its RAM cache and before browser/CDP acquisition. It waits at most five seconds for each call. Missing providers, `null`, failures, timeouts, stale credentials, tenant mismatches, and wrong audiences fall through to the existing browser flow. Provider errors and token values are never logged, stored in metadata, or written to configuration.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-Accepted tokens must be JWTs with at least five minutes remaining and an audience suitable for Microsoft Graph or Teams chat service. For `teams_chatsvc`, include region claims in the token or set `M365_CHATSVC_REGION`. Tenant, client, and scope selection remain the host's responsibility.
+## 提供的能力
 
-## Configuration
+- 入口：`index.ts`
+- 技能：`skills`
+- 技能：`m365-document-link-metadata`
+- 技能：`m365-graph-query`
+- 技能：`m365-mail`
+- 技能：`m365-onedrive-share-local-file`
+- 技能：`m365-profile`
+- 技能：`m365-spo-browse`
+- 技能：`m365-spo-download`
+- 技能：`m365-spo-search`
+- 技能：`m365-teams-chats`
+- 技能：`m365-teams-messages`
+- 技能：`m365-teams-send`
 
-| Variable | Purpose |
-|---|---|
-| `M365_EDGE_PATH` | Explicit Edge, Chrome, or Chromium executable |
-| `M365_USE_TEMP_EDGE_PROFILE=true` | Use a temporary browser profile instead of the normal signed-in profile |
-| `PICLAW_M365_YOLO=1` | Skip the explicit consent interstitial before authentication navigation |
-| `M365_TENANT_ID` | Force a tenant ID instead of starting from `common` and auto-discovering it |
-| `M365_CHATSVC_REGION` | Force the Teams chat-service region instead of auto-discovering it |
+## 配置与安全
 
-## `m365_todo`
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
 
-`m365_todo` provides a read-only task view that combines Microsoft To Do task lists and flagged email tasks.
+## 技术资料
 
-```ts
-m365_todo({ action: "list" })
-m365_todo({ sources: ["flaggedEmails"] })
-m365_todo({ search: "contract", dueBefore: "2026-05-01" })
-m365_todo({ includeCompleted: true, top: 100 })
-```
-
-Partial list failures are tolerated and returned in `details.errors`.
-
-## Validation
-
-From the `piclaw-addons` repository root:
-
-```bash
-bun x tsc --noEmit -p addons/m365/tsconfig.json
-bun test addons/m365/tests/*.test.ts
-bun run addons/m365/tests/validate.ts
-bun test standalone-import.test.ts
-```
-
-These checks do not require live Microsoft authentication. Live operations require a suitable signed-in browser session.
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/m365/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

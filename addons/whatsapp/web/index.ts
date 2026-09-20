@@ -1,8 +1,8 @@
 import { settingsFieldStyles } from "./settings-fields.ts";
 /**
- * web/index.ts — Browser-side settings pane for @rcarmo/piclaw-addon-whatsapp.
+ * web/index.ts — Browser-side settings pane for @qiushuiai/qiushuiai-addon-whatsapp.
  */
-const { html, useState, useEffect, useCallback } = (globalThis as any).__piclawPreactHtm || (globalThis as any).__piclawPreact || {};
+const { html, useState, useEffect, useCallback } = (globalThis as any).__qiushuiaiPreactHtm || (globalThis as any).__qiushuiaiPreact || {};
 const HAS_RUNTIME = Boolean(html && useState && useEffect && useCallback);
 
 const ADDON_ID = "whatsapp";
@@ -64,7 +64,7 @@ function WhatsAppSettings() {
       </h3>
 
       <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">Enabled</label>
+        <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">启用</label>
         <input type="checkbox" checked=${enabled} onChange=${(e: any) => setEnabled(e.target.checked)} />
         <span style="font-size: 12px; color: var(--text-secondary, #71767b);">
           ${config.connected ? "✅ Connected" : "⏸ Disconnected"}
@@ -72,7 +72,7 @@ function WhatsAppSettings() {
       </div>
 
       <div class="settings-addon-field">
-        <label class="settings-addon-label" for="whatsapp-phone">Phone</label>
+        <label class="settings-addon-label" for="whatsapp-phone">手机号码</label>
         <input class="settings-addon-control" id="whatsapp-phone"
           type="text"
           value=${phone}
@@ -83,7 +83,7 @@ function WhatsAppSettings() {
 
       ${config.pairingCode && html`
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
-          <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">Pairing Code</label>
+          <label style="font-size: 13px; color: var(--text-secondary, #71767b); min-width: 120px; text-align: right;">配对码</label>
           <code style="font-size: 16px; font-weight: bold; letter-spacing: 2px; color: var(--accent, #1d9bf0);">${config.pairingCode}</code>
         </div>
       `}
@@ -94,27 +94,27 @@ function WhatsAppSettings() {
           disabled=${saving}
           style="padding: 6px 16px; border-radius: 4px; border: 1px solid var(--border, #2f3336); background: var(--bg-elevated, #1a1a2e); color: var(--text-primary, #e7e9ea); cursor: pointer; font-size: 13px;"
         >
-          ${saving ? "Saving…" : "Save"}
+          ${saving ? "正在保存…" : "保存"}
         </button>
       </div>
 
       <p style="font-size: 11px; color: var(--text-secondary, #71767b); margin-top: 12px;">
-        After saving, restart PiClaw for changes to take effect. The pairing code appears on first connection — enter it in your WhatsApp app under Linked Devices.
+        After saving, restart QiushuiAI for changes to take effect. The pairing code appears on first connection — enter it in your WhatsApp app under Linked Devices.
       </p>
     </section>
   `;
 }
 
 // Register settings pane
-const r = (globalThis as any).__piclawSettingsPaneRegistry;
+const r = (globalThis as any).__qiushuiaiSettingsPaneRegistry;
 let reg: ((def: any) => void) | null = null;
 let notify: (() => void) | null = null;
 if (r) { reg = r.registerSettingsPane; notify = r.notifySettingsPanesChanged; }
-if (!reg && (globalThis as any).__piclaw_web?.registerSettingsPane) {
-  reg = (globalThis as any).__piclaw_web.registerSettingsPane;
-  notify = (globalThis as any).__piclaw_web.notifySettingsPanesChanged;
+if (!reg && (globalThis as any).__qiushuiai_web?.registerSettingsPane) {
+  reg = (globalThis as any).__qiushuiai_web.registerSettingsPane;
+  notify = (globalThis as any).__qiushuiai_web.notifySettingsPanesChanged;
 }
 if (reg) {
-  reg({ id: ADDON_ID, label: "WhatsApp", icon: ICON, component: WhatsAppSettings, order: 175 });
+  reg({ id: ADDON_ID, label: "WhatsApp 消息", icon: ICON, component: WhatsAppSettings, order: 175 });
   notify?.();
 }

@@ -1,19 +1,24 @@
 /**
- * addon-island.mjs — live GitHub issue counts for piclaw-addons
+ * addon-island.mjs — live GitHub issue counts for qiushuiai-addons
  *
- * Vanilla JS only. Mirrors the caching/fetch pattern from rcarmo.github.io.
- * Fetches open issues for rcarmo/piclaw-addons once per session,
+ * 仅使用原生 JavaScript，并复用站点的缓存与请求模式。
+ * Fetches open issues for benjamin-qhy/qiushuiai-addons once per session,
  * groups them by addon:<slug> labels, then:
  *   - Swaps card/detail icons to default-05.png for addons with open issues
  *   - Shows an issue-count badge on affected cards and detail pages
  */
 
-const REPO        = 'rcarmo/piclaw-addons';
+const REPO        = 'benjamin-qhy/qiushuiai-addons';
 const API_BASE    = 'https://api.github.com';
-const CACHE_KEY   = 'piclaw_addons_issues';
+const CACHE_KEY   = 'qiushuiai_addons_issues';
 const CACHE_TTL   = 15 * 60 * 1000;  // 15 min
-const ICON_PREFIX = '/piclaw-addons/assets/icons/';
+const ICON_PREFIX = '/qiushuiai-addons/assets/icons/';
 const ALERT_ICON  = `${ICON_PREFIX}default-05.png`;
+const CODE_COPY_RESET_MS = 1800;
+const COPY_ICON_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg>';
+const COPY_SUCCESS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6L9 17l-5-5"></path></svg>';
+const COPY_ERROR_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg>';
+const enhancedCodeBlocks = new WeakSet();
 
 // ── Session cache ─────────────────────────────────────────────────────────────
 function getCache() {
@@ -27,6 +32,87 @@ function getCache() {
 }
 function setCache(data) {
   try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data })); } catch {}
+}
+
+async function copyTextToClipboard(text) {
+  const value = typeof text === 'string' ? text : '';
+  if (!value) return false;
+
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {}
+  }
+
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = value;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    textarea.style.pointerEvents = 'none';
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    const copied = document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return copied;
+  } catch {
+    return false;
+  }
+}
+
+function setCodeCopyButtonState(button, state) {
+  if (!button) return;
+  const nextState = state || 'idle';
+  button.dataset.copyState = nextState;
+  const icon = button.querySelector('.addon-code-copy-icon');
+  const label = button.querySelector('.addon-code-copy-label');
+  if (!icon || !label) return;
+
+  if (nextState === 'success') {
+    icon.innerHTML = COPY_SUCCESS_SVG;
+    label.textContent = '已复制';
+    button.setAttribute('aria-label', '已复制');
+    button.setAttribute('title', '已复制');
+  } else if (nextState === 'error') {
+    icon.innerHTML = COPY_ERROR_SVG;
+    label.textContent = '复制失败';
+    button.setAttribute('aria-label', '复制失败');
+    button.setAttribute('title', '复制失败');
+  } else {
+    icon.innerHTML = COPY_ICON_SVG;
+    label.textContent = '复制';
+    button.setAttribute('aria-label', '复制代码');
+    button.setAttribute('title', '复制代码');
+  }
+}
+
+function enhanceCodeBlocks(root = document) {
+  const blocks = Array.from(root.querySelectorAll('.addon-code-block'));
+  for (const block of blocks) {
+    if (enhancedCodeBlocks.has(block)) continue;
+    enhancedCodeBlocks.add(block);
+
+    const button = block.querySelector('.addon-code-copy-btn');
+    const code = block.querySelector('pre code');
+    if (!button || !code) continue;
+    setCodeCopyButtonState(button, 'idle');
+
+    let resetTimer = null;
+    button.addEventListener('click', async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const ok = await copyTextToClipboard(code.textContent || '');
+      setCodeCopyButtonState(button, ok ? 'success' : 'error');
+      if (resetTimer) clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => {
+        setCodeCopyButtonState(button, 'idle');
+        resetTimer = null;
+      }, CODE_COPY_RESET_MS);
+    });
+  }
 }
 
 // ── Fetch all open issues, group by addon slug ────────────────────────────────
@@ -54,6 +140,7 @@ async function fetchIssueCounts() {
 
 // ── Apply to index page (card grid) ──────────────────────────────────────────
 export function mountIndex() {
+  enhanceCodeBlocks(document);
   fetchIssueCounts().then(counts => {
     if (!Object.keys(counts).length) return;
 
@@ -70,7 +157,7 @@ export function mountIndex() {
       if (!card.querySelector('.issue-badge')) {
         const badge = document.createElement('span');
         badge.className = 'issue-badge';
-        badge.textContent = `${n} open issue${n !== 1 ? 's' : ''}`;
+        badge.textContent = `${n} 个待处理问题`;
         const tags = card.querySelector('.card-tags');
         if (tags) tags.after(badge);
       }
@@ -80,6 +167,7 @@ export function mountIndex() {
 
 // ── Apply to detail page ──────────────────────────────────────────────────────
 export function mountDetail(slug) {
+  enhanceCodeBlocks(document);
   fetchIssueCounts().then(counts => {
     const n = counts[slug];
     if (!n) return;
@@ -96,6 +184,6 @@ export function mountDetail(slug) {
       const meta = document.querySelector('.detail-meta');
       if (meta) meta.appendChild(el);
     }
-    el.textContent = `${n} open issue${n !== 1 ? 's' : ''}`;
+    el.textContent = `${n} 个待处理问题`;
   }).catch(() => {});
 }

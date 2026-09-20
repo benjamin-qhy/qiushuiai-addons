@@ -1,14 +1,14 @@
-/** Explicit opt-in probe using fresh identities and n0 infrastructure, never live Piclaw state. */
+/** Explicit opt-in probe using fresh identities and n0 infrastructure, never live QiushuiAI state. */
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PeerService } from "./service.js";
 if (
-  process.env.PICLAW_E2E_DISPOSABLE !== "1" ||
-  process.env.PICLAW_IROH_NETWORK_TEST !== "1"
+  process.env.QIUSHUIAI_E2E_DISPOSABLE !== "1" ||
+  process.env.QIUSHUIAI_IROH_NETWORK_TEST !== "1"
 )
   throw new Error(
-    "Requires PICLAW_E2E_DISPOSABLE=1 and PICLAW_IROH_NETWORK_TEST=1; publishes ephemeral test endpoint addresses to n0.",
+    "Requires QIUSHUIAI_E2E_DISPOSABLE=1 and QIUSHUIAI_IROH_NETWORK_TEST=1; publishes ephemeral test endpoint addresses to n0.",
   );
 const root = mkdtempSync(join(tmpdir(), "iroh-network-"));
 const runtime: any = {

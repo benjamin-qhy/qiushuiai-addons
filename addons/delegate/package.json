@@ -1,22 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-delegate",
-  "version": "0.2.10",
-  "description": "Delegate tasks to operator-approved child-Pi models with fail-closed enforcement",
+  "name": "@qiushuiai/qiushuiai-addon-delegate",
+  "version": "0.2.11",
+  "description": "将任务委派给操作者批准的子 Pi 模型，并采用默认拒绝的安全策略",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "delegation",
-      "multi-model",
-      "cost-optimization",
-      "core"
-    ],
-    "skills": [
-      "skills/delegate"
-    ]
-  },
   "agents": {
     "skills": [
       {
@@ -27,7 +14,9 @@
   },
   "license": "MIT",
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "pi": {
     "extensions": [
@@ -42,5 +31,31 @@
       "skills"
     ]
   },
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/delegate/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/delegate",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/delegate"
+  },
+  "qiushuiai": {
+    "displayName": "任务委派",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "delegation",
+      "multi-model",
+      "cost-optimization",
+      "core"
+    ],
+    "displayTags": [
+      "任务委派",
+      "多模型",
+      "成本优化",
+      "核心推荐"
+    ],
+    "featured": true,
+    "skills": [
+      "skills/delegate"
+    ]
+  }
 }

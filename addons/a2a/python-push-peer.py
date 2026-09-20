@@ -9,7 +9,7 @@ from a2a.types import (SendMessageRequest, TaskPushNotificationConfig, GetTaskPu
 
 async def main():
     base, callback = sys.argv[1:]
-    if os.environ.get('PICLAW_E2E_DISPOSABLE') != '1' or not base.startswith('http://127.0.0.1:') or not callback.startswith('http://127.0.0.1:'):
+    if os.environ.get('QIUSHUIAI_E2E_DISPOSABLE') != '1' or not base.startswith('http://127.0.0.1:') or not callback.startswith('http://127.0.0.1:'):
         raise RuntimeError('Disposable loopback fixtures required')
     async with httpx.AsyncClient(headers={'Authorization':'Bearer python-inbound-fixture-key-long','A2A-Version':'1.0'},timeout=15) as http:
         card = await A2ACardResolver(http,base,'/api/addons/a2a/agents/echo/agent-card.json').get_agent_card()

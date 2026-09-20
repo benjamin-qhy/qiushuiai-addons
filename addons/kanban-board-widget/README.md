@@ -1,27 +1,34 @@
-# Kanban Board Page
+# 看板组件
 
-A file-backed kanban page for work items stored under `workitems/`. Requires Piclaw `>=1.8.0`.
+在 Web 时间线中显示可交互的看板仪表盘
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **kanban-board-widget** from the catalog, then reload Piclaw.
+这是 QiushuiAI 的扩展插件，技术标识为 `kanban-board-widget`。
 
-## Command and routes
+- 软件包：`@qiushuiai/qiushuiai-addon-kanban-board-widget`
+- 当前版本：`0.1.2`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`界面`、`看板`、`组件`、`仪表盘`
 
-The `/board` command reports the board URL. The add-on registers:
+## 安装
 
-- `/board-page` — full interactive board
-- `GET /api/board` — current lanes and tickets
-- `POST /api/board/move` — move a ticket between lanes
+在 QiushuiAI 中打开**设置 → 插件**，搜索“看板组件”并安装。也可以直接使用无需登录的公开安装包：
 
-The package does not register a `pi.web.entries` timeline renderer. Its main interface is the full browser page.
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-kanban-board-widget-0.1.2.tgz
+```
 
-## Work-item layout
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-The board reads Markdown tickets from these directories:
+## 提供的能力
 
-`00-inbox`, `10-next`, `20-doing`, `30-blocked`, `40-review`, `50-done`.
+- 入口：`index.ts`
 
-Tickets use YAML frontmatter for fields such as ID, title, status, priority, estimate, risk, tags, dates, and quality. Moving a ticket renames the file into the target lane and updates `status` and `updated` frontmatter when those fields exist.
+## 配置与安全
 
-Ticket IDs are restricted to simple filename-safe slugs. The page supports drag-and-drop, filtering, detail views, local same-lane ordering, and light/dark themes.
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/kanban-board-widget/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

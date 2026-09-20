@@ -25,8 +25,8 @@ import { createCheapskateStream, resetCheapskateRouterForTests } from "./router.
 import { buildCheapskateStatus } from "./status.ts";
 import type { CanonicalModelRef, RuntimeModelRegistry, ScopedModelLike } from "./shared.ts";
 
-const savedInterop = (globalThis as any).__piclawRuntimeInterop;
-const savedRegistrar = (globalThis as any).__piclaw_registerAddonConfigApi;
+const savedInterop = (globalThis as any).__qiushuiaiRuntimeInterop;
+const savedRegistrar = (globalThis as any).__qiushuiai_registerAddonConfigApi;
 
 beforeEach(() => {
   resetCheapskateForTests();
@@ -35,10 +35,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  if (savedInterop === undefined) delete (globalThis as any).__piclawRuntimeInterop;
-  else (globalThis as any).__piclawRuntimeInterop = savedInterop;
-  if (savedRegistrar === undefined) delete (globalThis as any).__piclaw_registerAddonConfigApi;
-  else (globalThis as any).__piclaw_registerAddonConfigApi = savedRegistrar;
+  if (savedInterop === undefined) delete (globalThis as any).__qiushuiaiRuntimeInterop;
+  else (globalThis as any).__qiushuiaiRuntimeInterop = savedInterop;
+  if (savedRegistrar === undefined) delete (globalThis as any).__qiushuiai_registerAddonConfigApi;
+  else (globalThis as any).__qiushuiai_registerAddonConfigApi = savedRegistrar;
 });
 
 function model(overrides: Partial<Model<any>> & Pick<Model<any>, "provider" | "id">): Model<any> {
@@ -212,7 +212,7 @@ describe("request-local routing", () => {
     });
     const config = enabledConfig(["first/zero", "second/zero"]);
     saveCheapskateConfig(config);
-    (globalThis as any).__piclawRuntimeInterop = { getModelRegistry: () => registry };
+    (globalThis as any).__qiushuiaiRuntimeInterop = { getModelRegistry: () => registry };
     const virtual = model({ provider: "cheapskate", id: "auto" });
     let dispatchedOptions: SimpleStreamOptions | undefined;
     const events = await collect(createCheapskateStream(virtual, { messages: [] }, { sessionId: "s1", apiKey: "virtual-key", headers: { "x-virtual": "remove" }, env: { VIRTUAL: "remove" } }, {
@@ -256,7 +256,7 @@ describe("request-local routing", () => {
     });
     const config = enabledConfig(["first/zero", "second/zero"]);
     saveCheapskateConfig(config);
-    (globalThis as any).__piclawRuntimeInterop = { getModelRegistry: () => registry };
+    (globalThis as any).__qiushuiaiRuntimeInterop = { getModelRegistry: () => registry };
     const events = await collect(createCheapskateStream(model({ provider: "cheapskate", id: "auto" }), { messages: [] }, undefined, { registry, hasKnownCost: () => true, scopedModels: () => [], streamSimple: (requestModel, context, options) => registry.getProvider(requestModel.provider)!.streamSimple(requestModel, context, options) }));
     expect(events.some((event) => event.type === "text_delta")).toBe(true);
     expect(events.at(-1)?.type).toBe("error");
@@ -269,7 +269,7 @@ describe("request-local routing", () => {
     const registry = createRegistry([alpha, beta]);
     const config = enabledConfig(["alpha/zero", "beta/zero"]);
     saveCheapskateConfig(config);
-    (globalThis as any).__piclawRuntimeInterop = { getModelRegistry: () => registry };
+    (globalThis as any).__qiushuiaiRuntimeInterop = { getModelRegistry: () => registry };
     const virtual = model({ provider: "cheapskate", id: "auto" });
     const run = async (sessionId: string, scopedModels: ScopedModelLike[]) => {
       const events = await collect(createCheapskateStream(virtual, { messages: [] }, { sessionId }, { registry, hasKnownCost: () => true, scopedModels: () => scopedModels, streamSimple: (requestModel, context, options) => registry.getProvider(requestModel.provider)!.streamSimple(requestModel, context, options) }));
@@ -350,7 +350,7 @@ describe("extension integration contract", () => {
   test("uses real current lifecycle fields and no hardcoded backend catalogue", () => {
     const source = readFileSync(resolve(import.meta.dir, "index.ts"), "utf8");
     const web = readFileSync(resolve(import.meta.dir, "web", "index.ts"), "utf8");
-    const readme = readFileSync(resolve(import.meta.dir, "README.md"), "utf8");
+    const readme = readFileSync(resolve(import.meta.dir, "README.en.md"), "utf8");
     const skill = readFileSync(resolve(import.meta.dir, "skills", "cheapskate", "SKILL.md"), "utf8");
     expect(source).not.toContain("event as any");
     expect(source).not.toContain("after_provider_response");
@@ -375,7 +375,7 @@ describe("extension integration contract", () => {
       on() {},
       registerTool() {},
     } as any;
-    (globalThis as any).__piclawRuntimeInterop = { getModelRegistry: () => registry, getScopedModels: () => [] };
+    (globalThis as any).__qiushuiaiRuntimeInterop = { getModelRegistry: () => registry, getScopedModels: () => [] };
     cheapskate(api);
     expect(registrations).toEqual([]);
   });

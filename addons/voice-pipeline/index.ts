@@ -1,5 +1,5 @@
 /**
- * voice-pipeline — piclaw extension
+ * voice-pipeline — qiushuiai extension
  *
  * ESPHome-only voice pipeline: connects to Ava on the ThinkSmart View,
  * drives wake word → Azure STT → Flint LLM → Azure TTS → announce.
@@ -7,7 +7,7 @@
  * The ESPHome client starts eagerly on extension load (not waiting for a
  * session_start) so the connection is always live, even between user turns.
  *
- * Configuration is via environment variables. In the piclaw container these
+ * Configuration is via environment variables. In the qiushuiai container these
  * map to keychain entries (e.g. keychain `azure/speech-key` → $AZURE_SPEECH_KEY),
  * so secrets can be kept in the keychain rather than plaintext env files.
  */

@@ -1,19 +1,10 @@
 {
-  "name": "@rcarmo/piclaw-addon-telegram",
-  "version": "0.1.3",
-  "description": "Telegram Bot channel for PiClaw. Connects via Bot API long polling, receives/sends messages, and routes them through the agent.",
+  "name": "@qiushuiai/qiushuiai-addon-telegram",
+  "version": "0.1.4",
+  "description": "通过 Bot API 长轮询连接 Telegram，收发消息并转交智能体处理",
   "type": "module",
   "main": "index.ts",
   "license": "MIT",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "channel",
-      "messaging",
-      "telegram"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -32,9 +23,30 @@
   },
   "keywords": [
     "pi-package",
-    "piclaw",
-    "piclaw-addon",
+    "qiushuiai",
+    "qiushuiai-addon",
     "telegram"
   ],
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/telegram/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/telegram",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/telegram"
+  },
+  "qiushuiai": {
+    "displayName": "Telegram 频道",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "channel",
+      "messaging",
+      "telegram"
+    ],
+    "displayTags": [
+      "频道",
+      "消息通信",
+      "Telegram 集成"
+    ],
+    "featured": false
+  }
 }

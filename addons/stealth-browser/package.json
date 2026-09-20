@@ -1,19 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-stealth-browser",
-  "version": "0.1.1",
-  "description": "Stealth browser automation via mochi.js — human-like interactions, fingerprint consistency, anti-detection bypass",
+  "name": "@qiushuiai/qiushuiai-addon-stealth-browser",
+  "version": "0.1.2",
+  "description": "通过 mochi.js 提供拟人交互、指纹一致性和反检测浏览器自动化",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=2.0.0",
-    "tags": [
-      "browser",
-      "automation",
-      "stealth",
-      "web"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -39,13 +29,38 @@
     "@mochi.js/core": "^0.9.5"
   },
   "keywords": [
-    "piclaw-addon",
-    "browser",
-    "stealth",
     "automation",
+    "browser",
+    "cdp",
     "mochi",
-    "cdp"
+    "pi-package",
+    "qiushuiai",
+    "qiushuiai-addon",
+    "stealth"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/stealth-browser/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/stealth-browser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/stealth-browser"
+  },
+  "qiushuiai": {
+    "displayName": "隐身浏览器",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "browser",
+      "automation",
+      "stealth",
+      "web"
+    ],
+    "displayTags": [
+      "浏览器",
+      "自动化",
+      "隐身访问",
+      "网页"
+    ],
+    "featured": false
+  }
 }

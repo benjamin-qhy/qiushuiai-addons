@@ -1,24 +1,24 @@
 /**
  * compat/keychain.ts — Keychain shim for standalone addons.
  *
- * Reads API tokens from environment variables injected by piclaw's keychain
+ * Reads API tokens from environment variables injected by qiushuiai's keychain
  * auto-injection (names sanitized: / - . → _ and uppercased).
  *
- * Falls back to reading from piclaw's keychain SQLite DB if available.
- * Provides the same function signatures as piclaw's secure/keychain.ts
+ * Falls back to reading from qiushuiai's keychain SQLite DB if available.
+ * Provides the same function signatures as qiushuiai's secure/keychain.ts
  * and secure/shell-secrets.ts so client code can import unchanged.
  */
 
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-const WORKSPACE_DIR = process.env.PICLAW_WORKSPACE || "/workspace";
+const WORKSPACE_DIR = process.env.QIUSHUIAI_WORKSPACE || "/workspace";
 
 function sanitizeEnvName(keychainName: string): string {
   return keychainName.replace(/[/\-.]/g, "_").toUpperCase();
 }
 
-// ── Types matching piclaw's keychain ─────────────────────────────
+// ── Types matching qiushuiai's keychain ─────────────────────────────
 
 export interface KeychainEntry {
   name: string;
@@ -55,12 +55,12 @@ function resolveFromEnv(name: string): KeychainEntry | null {
   return { name, type: "secret", secret: envValue };
 }
 
-// ── Compatibility API matching piclaw's secure/keychain.ts ───────
+// ── Compatibility API matching qiushuiai's secure/keychain.ts ───────
 
 /**
  * Get a keychain entry by name.
- * Reads from injected env vars (primary), then the live piclaw runtime keychain,
- * and only then falls back to the piclaw CLI.
+ * Reads from injected env vars (primary), then the live qiushuiai runtime keychain,
+ * and only then falls back to the qiushuiai CLI.
  */
 export async function getKeychainEntry(name: string): Promise<KeychainEntry> {
   const fromEnv = resolveFromEnv(name);
@@ -68,10 +68,10 @@ export async function getKeychainEntry(name: string): Promise<KeychainEntry> {
 
   try {
     const interop = (globalThis as {
-      __piclawRuntimeInterop?: {
+      __qiushuiaiRuntimeInterop?: {
         getKeychainEntry?: (entryName: string) => Promise<KeychainEntry>;
       };
-    }).__piclawRuntimeInterop;
+    }).__qiushuiaiRuntimeInterop;
     if (typeof interop?.getKeychainEntry === "function") {
       const entry = await interop.getKeychainEntry(name);
       if (entry?.secret) {
@@ -88,7 +88,7 @@ export async function getKeychainEntry(name: string): Promise<KeychainEntry> {
   }
 
   try {
-    const mod = require("piclaw/runtime/src/secure/keychain.js");
+    const mod = require("qiushuiai/runtime/src/secure/keychain.js");
     if (typeof mod?.getKeychainEntry === "function") {
       const entry = await mod.getKeychainEntry(name);
       if (entry?.secret) {
@@ -101,11 +101,11 @@ export async function getKeychainEntry(name: string): Promise<KeychainEntry> {
       }
     }
   } catch {
-    // Not running inside piclaw runtime — continue to CLI fallback.
+    // Not running inside qiushuiai runtime — continue to CLI fallback.
   }
 
   try {
-    const proc = Bun.spawnSync(["piclaw", "keychain", "get", name], {
+    const proc = Bun.spawnSync(["qiushuiai", "keychain", "get", name], {
       stdout: "pipe",
       stderr: "pipe",
       env: process.env,
@@ -174,13 +174,13 @@ export async function resolveKeychainPlaceholders(input: string): Promise<string
 /**
  * Build injected shell environment (stub — returns empty env in addon mode).
  * The real implementation decrypts all keychain entries for shell injection.
- * In addon mode, piclaw's bash tool already handles this.
+ * In addon mode, qiushuiai's bash tool already handles this.
  */
 export async function buildInjectedShellEnv(_options?: unknown): Promise<Record<string, string>> {
   return {};
 }
 
-// ── Compatibility API matching piclaw's secure/shell-secrets.ts ──
+// ── Compatibility API matching qiushuiai's secure/shell-secrets.ts ──
 
 export type InjectedShellFamily = "posix" | "powershell";
 

@@ -2,12 +2,12 @@ import { afterEach, describe, expect, test } from "bun:test";
 
 import sessionTreeAddon, { buildSessionTreeModel, buildTreeWidgetHtml } from "./index.ts";
 
-const savedRegisterWidgetKind = (globalThis as any).__piclaw_registerWidgetKind;
+const savedRegisterWidgetKind = (globalThis as any).__qiushuiai_registerWidgetKind;
 const savedWarn = console.warn;
 
 afterEach(() => {
-  if (savedRegisterWidgetKind === undefined) delete (globalThis as any).__piclaw_registerWidgetKind;
-  else (globalThis as any).__piclaw_registerWidgetKind = savedRegisterWidgetKind;
+  if (savedRegisterWidgetKind === undefined) delete (globalThis as any).__qiushuiai_registerWidgetKind;
+  else (globalThis as any).__qiushuiai_registerWidgetKind = savedRegisterWidgetKind;
   console.warn = savedWarn;
 });
 
@@ -85,7 +85,7 @@ describe("session-tree addon", () => {
     let kind = "";
     let render: ((artifact: Record<string, unknown>) => string) | undefined;
 
-    (globalThis as any).__piclaw_registerWidgetKind = (k: string, fn: (artifact: Record<string, unknown>) => string) => {
+    (globalThis as any).__qiushuiai_registerWidgetKind = (k: string, fn: (artifact: Record<string, unknown>) => string) => {
       kind = k;
       render = fn;
     };
@@ -102,7 +102,7 @@ describe("session-tree addon", () => {
   });
 
   test("falls back cleanly when widget registration is unavailable", () => {
-    delete (globalThis as any).__piclaw_registerWidgetKind;
+    delete (globalThis as any).__qiushuiai_registerWidgetKind;
 
     const warnings: string[] = [];
     console.warn = (...args: unknown[]) => {

@@ -71,7 +71,7 @@ function createContext(mode: "tui" | "rpc" | "json" | "print", selectedModel: an
 
 test("package keeps upstream attribution and runtime dependencies", () => {
   const manifest = JSON.parse(readFileSync(join(addonDir, "package.json"), "utf8"));
-  expect(manifest.name).toBe("@rcarmo/piclaw-addon-codex-conversion");
+  expect(manifest.name).toBe("@qiushuiai/qiushuiai-addon-codex-conversion");
   expect(manifest.pi.extensions).toEqual(["src/index.ts"]);
   expect(manifest.peerDependencies["@earendil-works/pi-coding-agent"]).toBe("*");
   expect(manifest.peerDependencies["@earendil-works/pi-ai"]).toBe("*");
@@ -83,7 +83,7 @@ test("package keeps upstream attribution and runtime dependencies", () => {
   expect(manifest.dependencies["tree-sitter-bash"]).toBeTruthy();
   expect(manifest.dependencies["web-tree-sitter"]).toBeTruthy();
   expect(readFileSync(join(addonDir, "LICENSE.upstream"), "utf8")).toContain("MIT License");
-  expect(readFileSync(join(addonDir, "README.md"), "utf8")).toContain("IgorWarzocha/pi-codex-conversion");
+  expect(readFileSync(join(addonDir, "README.en.md"), "utf8")).toContain("IgorWarzocha/pi-codex-conversion");
 });
 
 test("source imports current package names and keeps one provider observer overlay", () => {

@@ -11,7 +11,7 @@ const ADDON_ID = "observability";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const KEYCHAIN_ENTRY = "azure/appinsights-connection-string";
 
-const preactHtm = globalThis.__piclawPreactHtm || globalThis.__piclawPreact || null;
+const preactHtm = globalThis.__qiushuiaiPreactHtm || globalThis.__qiushuiaiPreact || null;
 const html = preactHtm?.html;
 const useState = preactHtm?.useState;
 const useEffect = preactHtm?.useEffect;
@@ -139,7 +139,7 @@ function ObservabilitySettings() {
       <h4 style=${H}>General</h4>
       ${check("Enabled", "enabled")}
       ${text("Instance name", "instance_name", hostname())}
-      ${hint("Identifies this piclaw instance in App Insights (cloud_RoleInstance). Blank = hostname.")}
+      ${hint("Identifies this qiushuiai instance in App Insights (cloud_RoleInstance). Blank = hostname.")}
 
       <h4 style=${H}>Azure Application Insights</h4>
       ${check("App Insights enabled", "appinsights_enabled")}
@@ -170,7 +170,7 @@ function ObservabilitySettings() {
       ${check("Graphite enabled", "graphite_enabled")}
       ${text("Host", "graphite_host", "192.168.1.250")}
       ${num("Port", "graphite_port", "2003")}
-      <div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>Metrics use the fixed <code>piclaw</code> prefix.</div>
+      <div style=${{ fontSize: "0.73rem", color: "var(--text-secondary)", margin: "0 0 12px" }}>Metrics use the fixed <code>qiushuiai</code> prefix.</div>
 
       <h4 style=${H}>Usage and compaction telemetry</h4>
       ${check("Export usage and compaction telemetry", "usage_telemetry_enabled")}
@@ -192,14 +192,14 @@ let observabilityPaneRegistered = false;
 function registerObservabilitySettingsPane() {
   if (!HAS_RUNTIME || observabilityPaneRegistered) return observabilityPaneRegistered;
   let reg, notify;
-  const r = globalThis.__piclawSettingsPaneRegistry;
+  const r = globalThis.__qiushuiaiSettingsPaneRegistry;
   if (r) { reg = r.registerSettingsPane; notify = r.notifySettingsPanesChanged; }
-  if (!reg && globalThis.__piclaw_web?.registerSettingsPane) {
-    reg = globalThis.__piclaw_web.registerSettingsPane;
-    notify = () => globalThis.dispatchEvent?.(new CustomEvent("piclaw:settings-panes-changed"));
+  if (!reg && globalThis.__qiushuiai_web?.registerSettingsPane) {
+    reg = globalThis.__qiushuiai_web.registerSettingsPane;
+    notify = () => globalThis.dispatchEvent?.(new CustomEvent("qiushuiai:settings-panes-changed"));
   }
   if (!reg) return false;
-  reg({ id: "observability", label: "Observability", icon: ICON, component: ObservabilitySettings, order: 170 });
+  reg({ id: "observability", label: "可观测性", icon: ICON, component: ObservabilitySettings, order: 170 });
   notify?.();
   observabilityPaneRegistered = true;
   return true;

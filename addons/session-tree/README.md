@@ -1,30 +1,34 @@
-# Session Tree
+# 会话树
 
-Interactive renderer for Piclaw's `/tree` command. Requires Piclaw `>=2.15.0`.
+为 QiushuiAI 的 /tree 命令提供基于快照的可交互会话树
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **session-tree** from the catalog, then reload Piclaw.
+这是 QiushuiAI 的扩展插件，技术标识为 `session-tree`。
 
-## Behaviour
+- 软件包：`@qiushuiai/qiushuiai-addon-session-tree`
+- 当前版本：`0.2.1`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`会话`、`树状视图`、`导航`、`组件`
 
-The add-on registers the `session_tree` widget kind through `globalThis.__piclaw_registerWidgetKind`. When `/tree` runs, Piclaw supplies the renderer with an invocation-scoped flat snapshot in `artifact.tree` and the current `chatJid`. The renderer reconstructs the hierarchy locally and returns an ordinary HTML widget artifact.
+## 安装
 
-The widget:
+在 QiushuiAI 中打开**设置 → 插件**，搜索“会话树”并安装。也可以直接使用无需登录的公开安装包：
 
-- highlights and scrolls to the active leaf
-- expands and collapses branches
-- filters by ID, label, type, role, tool, or content
-- lets the user inspect an entry before acting
-- submits exact `/tree <id>` and `/tree <id> --summarize` commands through `window.piclawWidget.submit`
-- reruns exact `/tree` through the widget bridge to capture a fresh snapshot
-- renders untrusted snapshot text with DOM text nodes and safely embeds initial JSON
-- adapts to narrow layouts and dark or light colour schemes
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-session-tree-0.2.1.tgz
+```
 
-The renderer never fetches tree data. If the host does not expose the widget registry, the add-on logs a warning and Piclaw keeps its normal plain-text response.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Ownership boundary
+## 提供的能力
 
-Piclaw core owns `/tree` command parsing, snapshot construction, navigation, summarization, and plain-text fallback. It passes `{ tree, chatJid }` through the generic renderer registry and generic HTML artifact path.
+- 入口：`index.ts`
 
-This add-on exclusively owns the interactive renderer. It does not depend on a session-tree HTTP endpoint, static core viewer, core frontend component, or session-tree-specific artifact routing.
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/session-tree/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

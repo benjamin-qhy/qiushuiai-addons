@@ -107,7 +107,7 @@ describe('win-ui helpers', () => {
   });
 
   test('writeBitmapToPath writes BMP and PNG from shared bitmap data', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'piclaw-win-ui-'));
+    const dir = mkdtempSync(join(tmpdir(), 'qiushuiai-win-ui-'));
     const bmpPath = join(dir, 'shot.bmp');
     const pngPath = join(dir, 'shot.png');
     const bitmap: BitmapPixels = {

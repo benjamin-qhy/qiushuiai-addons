@@ -2,17 +2,17 @@ import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSy
 import { tmpdir } from "node:os";
 import { join, resolve, sep } from "node:path";
 
-export const TEST_FS_ISOLATION_ACTIVE_ENV = "PICLAW_TEST_FS_ISOLATION_ACTIVE";
-export const TEST_FS_ISOLATION_ROOT_ENV = "PICLAW_TEST_FS_ISOLATION_ROOT";
+export const TEST_FS_ISOLATION_ACTIVE_ENV = "QIUSHUIAI_TEST_FS_ISOLATION_ACTIVE";
+export const TEST_FS_ISOLATION_ROOT_ENV = "QIUSHUIAI_TEST_FS_ISOLATION_ROOT";
 
-const ROOT_PREFIX = "piclaw-test-fs-";
-const MARKER_FILE = ".piclaw-test-filesystem-isolation";
-const MARKER_MAGIC = "piclaw test filesystem isolation";
+const ROOT_PREFIX = "qiushuiai-test-fs-";
+const MARKER_FILE = ".qiushuiai-test-filesystem-isolation";
+const MARKER_MAGIC = "qiushuiai test filesystem isolation";
 const PATH_ENV_KEYS = [
-  "PICLAW_WORKSPACE",
-  "PICLAW_STORE",
-  "PICLAW_DATA",
-  "PICLAW_PI_AGENT_DIR",
+  "QIUSHUIAI_WORKSPACE",
+  "QIUSHUIAI_STORE",
+  "QIUSHUIAI_DATA",
+  "QIUSHUIAI_PI_AGENT_DIR",
   "PI_CODING_AGENT_DIR",
   "HOME",
   "XDG_CONFIG_HOME",
@@ -23,22 +23,22 @@ const PATH_ENV_KEYS = [
   "TEMP",
 ] as const;
 const SECRET_ENV_KEYS = [
-  "PICLAW_KEYCHAIN_KEY",
-  "PICLAW_KEYCHAIN_KEY_FILE",
-  "PICLAW_INTERNAL_SECRET",
-  "PICLAW_WEB_INTERNAL_SECRET",
-  "PICLAW_WEB_TOTP_SECRET",
-  "PICLAW_WEB_WIDGET_TOKEN",
+  "QIUSHUIAI_KEYCHAIN_KEY",
+  "QIUSHUIAI_KEYCHAIN_KEY_FILE",
+  "QIUSHUIAI_INTERNAL_SECRET",
+  "QIUSHUIAI_WEB_INTERNAL_SECRET",
+  "QIUSHUIAI_WEB_TOTP_SECRET",
+  "QIUSHUIAI_WEB_WIDGET_TOKEN",
   "PUSHOVER_APP_TOKEN",
   "PUSHOVER_USER_KEY",
 ] as const;
 const DEPLOYMENT_PATH_ENV_KEYS = [
   "SUPERVISOR_CONF",
-  "PICLAW_WEB_TLS_CERT",
-  "PICLAW_WEB_TLS_KEY",
-  "PICLAW_RUNTIME_ROOT",
-  "PICLAW_RECORDINGS_DIR",
-  "PICLAW_WORKSPACE_SEARCH_ROOTS",
+  "QIUSHUIAI_WEB_TLS_CERT",
+  "QIUSHUIAI_WEB_TLS_KEY",
+  "QIUSHUIAI_RUNTIME_ROOT",
+  "QIUSHUIAI_RECORDINGS_DIR",
+  "QIUSHUIAI_WORKSPACE_SEARCH_ROOTS",
 ] as const;
 
 type MutableEnv = Record<string, string | undefined>;
@@ -155,8 +155,8 @@ function isSafeRootCandidate(path: string): boolean {
 function buildPaths(root: string) {
   const home = join(root, "home");
   const workspace = join(root, "workspace");
-  const store = join(workspace, ".piclaw", "store");
-  const data = join(workspace, ".piclaw", "data");
+  const store = join(workspace, ".qiushuiai", "store");
+  const data = join(workspace, ".qiushuiai", "data");
   const piAgentDir = join(home, ".pi", "agent");
   return {
     home,
@@ -172,8 +172,8 @@ function buildPaths(root: string) {
 }
 
 function runtimePathOverridesAreSafeDisposable(env: MutableEnv, root: string): boolean {
-  if (!env.PICLAW_WORKSPACE?.trim()) return false;
-  const values = [env.PICLAW_WORKSPACE, env.PICLAW_STORE, env.PICLAW_DATA].filter((value): value is string => Boolean(value?.trim()));
+  if (!env.QIUSHUIAI_WORKSPACE?.trim()) return false;
+  const values = [env.QIUSHUIAI_WORKSPACE, env.QIUSHUIAI_STORE, env.QIUSHUIAI_DATA].filter((value): value is string => Boolean(value?.trim()));
   return values.every((value) => {
     const resolved = resolve(value);
     if (!isWithin(root, resolved)) return false;
@@ -198,7 +198,7 @@ function inheritedRootIsUsable(env: MutableEnv): boolean {
 }
 
 export function ensureTestFilesystemIsolation(env: MutableEnv = process.env): TestFilesystemIsolation {
-  const e2eSecret = env.PICLAW_E2E_DISPOSABLE === "1" ? env.PICLAW_E2E_INTERNAL_SECRET : undefined;
+  const e2eSecret = env.QIUSHUIAI_E2E_DISPOSABLE === "1" ? env.QIUSHUIAI_E2E_INTERNAL_SECRET : undefined;
   const reusedRoot = inheritedRootIsUsable(env);
   const root = reusedRoot
     ? realpathSync(resolve(env[TEST_FS_ISOLATION_ROOT_ENV]!))
@@ -206,19 +206,19 @@ export function ensureTestFilesystemIsolation(env: MutableEnv = process.env): Te
   const createdRoot = !reusedRoot;
   const paths = buildPaths(root);
   const preserveRuntimePathOverrides = reusedRoot && runtimePathOverridesAreSafeDisposable(env, root);
-  const workspace = preserveRuntimePathOverrides ? resolve(env.PICLAW_WORKSPACE!) : paths.workspace;
-  const store = preserveRuntimePathOverrides ? resolve(env.PICLAW_STORE || join(workspace, ".piclaw", "store")) : paths.store;
-  const data = preserveRuntimePathOverrides ? resolve(env.PICLAW_DATA || join(workspace, ".piclaw", "data")) : paths.data;
+  const workspace = preserveRuntimePathOverrides ? resolve(env.QIUSHUIAI_WORKSPACE!) : paths.workspace;
+  const store = preserveRuntimePathOverrides ? resolve(env.QIUSHUIAI_STORE || join(workspace, ".qiushuiai", "store")) : paths.store;
+  const data = preserveRuntimePathOverrides ? resolve(env.QIUSHUIAI_DATA || join(workspace, ".qiushuiai", "data")) : paths.data;
 
   for (const path of Object.values(paths)) ensureSafeDirectory(root, path);
   for (const path of [workspace, store, data]) ensureSafeDirectory(root, path);
 
   env[TEST_FS_ISOLATION_ACTIVE_ENV] = "1";
   env[TEST_FS_ISOLATION_ROOT_ENV] = root;
-  env.PICLAW_WORKSPACE = workspace;
-  env.PICLAW_STORE = store;
-  env.PICLAW_DATA = data;
-  env.PICLAW_PI_AGENT_DIR = paths.piAgentDir;
+  env.QIUSHUIAI_WORKSPACE = workspace;
+  env.QIUSHUIAI_STORE = store;
+  env.QIUSHUIAI_DATA = data;
+  env.QIUSHUIAI_PI_AGENT_DIR = paths.piAgentDir;
   env.PI_CODING_AGENT_DIR = paths.piAgentDir;
   env.HOME = paths.home;
   env.XDG_CONFIG_HOME = paths.xdgConfig;
@@ -227,7 +227,7 @@ export function ensureTestFilesystemIsolation(env: MutableEnv = process.env): Te
   env.TMPDIR = paths.tmp;
   env.TMP = paths.tmp;
   env.TEMP = paths.tmp;
-  env.PICLAW_DB_IN_MEMORY = env.PICLAW_DB_IN_MEMORY ?? "1";
+  env.QIUSHUIAI_DB_IN_MEMORY = env.QIUSHUIAI_DB_IN_MEMORY ?? "1";
 
   for (const key of SECRET_ENV_KEYS) delete env[key];
   // Bash/SSH tools inject the entire keychain; none belongs in a test child.
@@ -235,7 +235,7 @@ export function ensureTestFilesystemIsolation(env: MutableEnv = process.env): Te
     if (/(?:API_KEY|ACCESS_KEY|ACCOUNT_KEY|PRIVATE_KEY|PASSWORD|TOKEN|SECRET|CONNECTION_STRING|_PAT)$/.test(key) || /^(SSH_|GITHUB_|GH_|AZURE_|AWS_|PORTAINER_|PROXMOX_|RESTIC_|MEMENTO_|BORGBACKUPSERVER_)/.test(key)) delete env[key];
   }
   for (const key of DEPLOYMENT_PATH_ENV_KEYS) delete env[key];
-  if (e2eSecret) env.PICLAW_E2E_INTERNAL_SECRET = e2eSecret;
+  if (e2eSecret) env.QIUSHUIAI_E2E_INTERNAL_SECRET = e2eSecret;
 
   let cleaned = false;
   const cleanup = () => {

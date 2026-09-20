@@ -51,7 +51,7 @@ export function buildCheapskateStatus(
       active_ref: null,
       candidates: [],
       excluded_costs: { positive: 0, unknown_or_malformed: 0, recursive: 0 },
-      empty_reason: "The Piclaw model catalogue is not available in this runtime.",
+      empty_reason: "The QiushuiAI model catalogue is not available in this runtime.",
     };
   }
 

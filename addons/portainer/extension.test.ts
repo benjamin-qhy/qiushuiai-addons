@@ -18,13 +18,13 @@ describe("portainer settings helpers", () => {
     expect(derivePortainerHostInput("https://relay.local:9443")).toBe("relay.local");
   });
 
-  test("compat shims do not import piclaw runtime source modules", () => {
+  test("compat shims do not import qiushuiai runtime source modules", () => {
     const kvSource = readFileSync(resolve(addonDir, "compat", "extension-kv.ts"), "utf8");
     const keychainSource = readFileSync(resolve(addonDir, "compat", "keychain.ts"), "utf8");
     expect(kvSource).not.toContain("require(");
-    expect(kvSource).not.toContain("piclaw/runtime/src");
+    expect(kvSource).not.toContain("qiushuiai/runtime/src");
     expect(keychainSource).not.toContain("require(");
-    expect(keychainSource).not.toContain("piclaw/runtime/src");
+    expect(keychainSource).not.toContain("qiushuiai/runtime/src");
   });
 
   test("tool schema uses Google-compatible string enums", () => {

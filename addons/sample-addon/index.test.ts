@@ -11,7 +11,7 @@ test("sample addon exports an extension entrypoint", () => {
 test("sample compat storage avoids runtime source imports", () => {
   const source = readFileSync(join(import.meta.dir, "compat", "extension-kv.ts"), "utf8");
   expect(source).not.toContain("require(");
-  expect(source).not.toContain("piclaw/runtime/src");
+  expect(source).not.toContain("qiushuiai/runtime/src");
 });
 
 test("sample settings uses labelled host controls with scoped older-host fallback", () => {

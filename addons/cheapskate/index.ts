@@ -49,7 +49,7 @@ async function saveConfig(payload: unknown) {
 }
 
 function installConfigApi(): void {
-  const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+  const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
   if (typeof registerAddonConfigApi !== "function") return;
   registerAddonConfigApi(CHEAPSKATE_PROVIDER_ID, "config", {
     get: async (_payload, req) => currentStatus(new URL(req.url).searchParams.get("chat_jid") || activeChatJid("")),

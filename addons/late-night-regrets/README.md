@@ -1,50 +1,34 @@
-# Late Night Regrets
+# 夜间反思
 
-Bayesian interaction-quality classification for Piclaw chat history. Requires Piclaw `>=2.1.0`.
+夜间训练贝叶斯交互质量分类器，识别行为模式并生成自我改进反思
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **late-night-regrets** from the catalog.
+这是 QiushuiAI 的扩展插件，技术标识为 `late-night-regrets`。
 
-## What ships
+- 软件包：`@qiushuiai/qiushuiai-addon-late-night-regrets`
+- 当前版本：`0.1.5`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`自我改进`、`分类器`、`贝叶斯`、`反思`、`质量`、`夜间任务`
 
-- `scripts/train-interaction-quality-bayes.ts` trains a weak-label Multinomial Naive Bayes model and writes classifier artifacts.
-- `scripts/classify-recent.ts` classifies recent messages.
-- `scripts/setup-nightly-task.ts` creates the optional scheduled agent task.
-- the `late-night-regrets` skill guides the agent through classification and reflection.
-- `/regrets` currently displays working/status feedback; it does not execute the classifier scripts itself.
+## 安装
 
-The extension registers a direct config API but no browser settings pane. Saved config is available to the injected prompt; the scripts still take their own CLI parameters where documented.
+在 QiushuiAI 中打开**设置 → 插件**，搜索“夜间反思”并安装。也可以直接使用无需登录的公开安装包：
 
-## Classifier artifacts
-
-By default, scripts write under `exports/interaction-quality/`:
-
-- `interaction-quality-weights-latest.json`
-- `interaction-quality-predictions-latest.jsonl`
-- `interaction-quality-attention-latest.jsonl`
-- `interaction-quality-report-latest.md`
-
-Classification is mechanical and uses no model tokens. The optional scheduled agent task reads the flagged set and may append reflection notes through the normal agent workflow.
-
-## Schedule setup
-
-Create the nightly task explicitly:
-
-```bash
-bun addons/late-night-regrets/scripts/setup-nightly-task.ts --cron '30 2 * * *'
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-late-night-regrets-0.1.5.tgz
 ```
 
-Installing the add-on alone does not schedule a task.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Categories
+## 提供的能力
 
-The classifier emits `successful_execution`, `course_correction`, `misinterpretation`, `over_engineering`, `under_delivery`, `context_failure`, `good_proactive`, or `neutral`.
+- 入口：`index.ts`
 
-## Development
+## 配置与安全
 
-```bash
-bun addons/late-night-regrets/scripts/train-interaction-quality-bayes.ts
-bun addons/late-night-regrets/scripts/train-interaction-quality-bayes.ts --recent-hours 48
-bun test addons/late-night-regrets/index.test.ts
-```
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/late-night-regrets/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

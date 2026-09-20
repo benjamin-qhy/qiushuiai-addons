@@ -1,18 +1,9 @@
 {
-  "name": "@rcarmo/piclaw-addon-ast-grep",
-  "version": "0.1.7",
-  "description": "Structural code search and rewrite using ast-grep as a native LLM tool",
+  "name": "@qiushuiai/qiushuiai-addon-ast-grep-tool",
+  "version": "0.1.8",
+  "description": "将 ast-grep 作为原生智能体工具，用于结构化代码搜索和重写",
   "type": "module",
   "main": "index.ts",
-  "piclaw": {
-    "type": "extension",
-    "compatibleVersions": ">=1.8.0",
-    "tags": [
-      "code-search",
-      "ast",
-      "refactoring"
-    ]
-  },
   "pi": {
     "extensions": [
       "index.ts"
@@ -27,9 +18,30 @@
   },
   "keywords": [
     "pi-package",
-    "piclaw",
-    "piclaw-addon"
+    "qiushuiai",
+    "qiushuiai-addon"
   ],
   "license": "MIT",
-  "homepage": "https://rcarmo.github.io/piclaw-addons/addons/ast-grep-tool/"
+  "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/ast-grep-tool",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/benjamin-qhy/qiushuiai-addons.git",
+    "directory": "addons/ast-grep-tool"
+  },
+  "qiushuiai": {
+    "displayName": "AST 代码检索",
+    "type": "extension",
+    "compatibleVersions": ">=3.0.0",
+    "categories": [
+      "code-search",
+      "ast",
+      "refactoring"
+    ],
+    "displayTags": [
+      "代码检索",
+      "语法树",
+      "重构"
+    ],
+    "featured": false
+  }
 }

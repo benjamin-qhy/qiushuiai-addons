@@ -1,26 +1,35 @@
-# Mindmap Editor
+# 思维导图
 
-A workspace editor for `.mindmap.yaml` and `.mindmap.yml` files. Requires Piclaw `>=1.8.0`.
+为 .mindmap.yaml 文件提供基于 D3 的思维导图编辑面板
 
-## Install
+## 功能定位
 
-Open **Settings → Add-Ons** and install **mindmap** from the catalog, then reload Piclaw.
+这是 QiushuiAI 的扩展插件，技术标识为 `mindmap`。
 
-## Use
+- 软件包：`@qiushuiai/qiushuiai-addon-mindmap`
+- 当前版本：`0.1.4`
+- 兼容版本：QiushuiAI `>=3.0.0`
+- 展示标签：`思维导图`、`编辑器`、`YAML 文件`、`图表`
 
-Open a mindmap YAML file from the workspace explorer or with `open_workspace_file`. The add-on registers a specialised pane and loads its bundled D3, YAML, editor JavaScript, and stylesheet assets.
+## 安装
 
-The editor provides:
+在 QiushuiAI 中打开**设置 → 插件**，搜索“思维导图”并安装。也可以直接使用无需登录的公开安装包：
 
-- horizontal, vertical, radial, and force-directed layouts
-- zoom and fit controls
-- undo and redo
-- node cut, copy, paste, add, and delete actions
-- automatic save back to the workspace file
-- conflict monitoring when the file changes outside the pane
+```text
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-mindmap-0.1.4.tgz
+```
 
-Only one editor instance owns a pane container at a time. Repeated open requests focus an existing tab instead of stacking duplicate editors.
+安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
 
-## Format
+## 提供的能力
 
-Files are YAML mindmaps consumed by the bundled browser editor. Keep the `.mindmap.yaml` or `.mindmap.yml` suffix so Piclaw selects the pane.
+- 入口：`index.ts`
+- 入口：`web/index.ts`
+
+## 配置与安全
+
+请优先通过插件设置面板完成配置。普通配置由插件配置接口保存；令牌、密码等敏感信息应存入 QiushuiAI 密钥链。不要把真实凭据写进工作区文件、日志或版本库。
+
+## 技术资料
+
+完整的原始技术说明、配置示例和故障排查资料保存在 [英文技术资料](https://github.com/benjamin-qhy/qiushuiai-addons/blob/main/addons/mindmap/README.en.md)。代码中的工具名、参数名、接口路径和第三方品牌保留原始技术名称。

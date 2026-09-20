@@ -91,8 +91,8 @@ export interface GoalToolResponse {
 }
 
 type GoalRuntimeContext = Pick<ExtensionContext, "sessionManager"> | Pick<ExtensionCommandContext, "sessionManager"> | undefined;
-type PiclawBroadcastEvent = (type: string, payload: Record<string, unknown>) => void;
-type PiclawRuntimeAgentMessageApi = {
+type QiushuiAIBroadcastEvent = (type: string, payload: Record<string, unknown>) => void;
+type QiushuiAIRuntimeAgentMessageApi = {
   enqueueAgentMessage?: (request: {
     chatJid: string;
     content: string;
@@ -232,7 +232,7 @@ export function normalizeChatJid(value: unknown): string {
   return trimmed || getChatJid("web:default");
 }
 
-// Lightweight diagnostic logger -> stderr (piclaw.stderr.log). Greppable via the
+// Lightweight diagnostic logger -> stderr (qiushuiai.stderr.log). Greppable via the
 // "[goal-debug]" tag. Used to surface agent_end continuation-gate decisions.
 function logGoalDebug(message: string, fields: Record<string, unknown>): void {
   try {
@@ -481,9 +481,9 @@ export function goalResponse(goal: ThreadGoal | null, includeCompletionReport = 
   };
 }
 
-function getBroadcastEvent(): PiclawBroadcastEvent | null {
-  const candidate = (globalThis as Record<string, unknown>).__PICLAW_BROADCAST_EVENT__;
-  return typeof candidate === "function" ? candidate as PiclawBroadcastEvent : null;
+function getBroadcastEvent(): QiushuiAIBroadcastEvent | null {
+  const candidate = (globalThis as Record<string, unknown>).__QIUSHUIAI_BROADCAST_EVENT__;
+  return typeof candidate === "function" ? candidate as QiushuiAIBroadcastEvent : null;
 }
 
 function broadcastGoalUpdated(goal: ThreadGoal | null, chatJidInput: unknown, source: GoalMutationSource, action: GoalMutationAction): void {
@@ -549,7 +549,7 @@ function cancelIfGoalStopped(goal: ThreadGoal): boolean {
 }
 
 function getPlanSidebarRuntimeApi(): PlanSidebarRuntimeApi | null {
-  const candidate = (globalThis as Record<string, unknown>).__piclaw_planSidebarApi;
+  const candidate = (globalThis as Record<string, unknown>).__qiushuiai_planSidebarApi;
   return candidate && typeof candidate === "object" && typeof (candidate as PlanSidebarRuntimeApi).getPlan === "function"
     ? candidate as PlanSidebarRuntimeApi
     : null;
@@ -840,7 +840,7 @@ function recordAssistantOutcome(chatJidInput: unknown, message: unknown): void {
 // continuation boundary, not a failure: without this the loop halts and the user
 // must run /goal resume after every compaction.
 //
-// Piclaw's mid-turn tool-execution hard ceiling and context-pressure guards call
+// QiushuiAI's mid-turn tool-execution hard ceiling and context-pressure guards call
 // session.abort() to force compaction; the assistant turn ends with
 // stopReason "aborted". Crucially, the compaction is usually DEFERRED to the next
 // prompt (pre-prompt compaction), so no session_compact event fires during this
@@ -849,7 +849,7 @@ function recordAssistantOutcome(chatJidInput: unknown, message: unknown): void {
 //
 // Only a hard error (model error / errorMessage) suppresses the autonomous loop.
 // Any non-errored outcome — a clean finish (ok), a tool-use finish, or a bare
-// `aborted` (Piclaw forcing compaction via the mid-turn tool-execution ceiling or
+// `aborted` (QiushuiAI forcing compaction via the mid-turn tool-execution ceiling or
 // the context-pressure guard) — is treated as a continuation boundary.
 //
 // History: 0.1.34 keyed continuation on the `session_compact` event and 0.1.35
@@ -915,13 +915,13 @@ function sendGoalSkippedActivity(pi: ExtensionAPI, chatJid: string, reason: Goal
   }
 }
 
-function getPiclawRuntimeAgentMessageApi(): PiclawRuntimeAgentMessageApi | null {
-  const runtime = (globalThis as { __piclaw_runtime?: PiclawRuntimeAgentMessageApi }).__piclaw_runtime;
+function getQiushuiAIRuntimeAgentMessageApi(): QiushuiAIRuntimeAgentMessageApi | null {
+  const runtime = (globalThis as { __qiushuiai_runtime?: QiushuiAIRuntimeAgentMessageApi }).__qiushuiai_runtime;
   return runtime && typeof runtime.enqueueAgentMessage === "function" ? runtime : null;
 }
 
 async function sendGoalPromptViaRuntimeApi(goal: ThreadGoal, content: string): Promise<boolean> {
-  const runtime = getPiclawRuntimeAgentMessageApi();
+  const runtime = getQiushuiAIRuntimeAgentMessageApi();
   if (!runtime?.enqueueAgentMessage) return false;
   await runtime.enqueueAgentMessage({
     chatJid: goal.chat_jid,
@@ -933,9 +933,9 @@ async function sendGoalPromptViaRuntimeApi(goal: ThreadGoal, content: string): P
 }
 
 function resolveLocalAgentBaseUrl(): string {
-  const fromEnv = normalizeText(process.env.PICLAW_AGENT_BASE_URL || process.env.PICLAW_WEB_BASE_URL || process.env.PICLAW_BASE_URL);
+  const fromEnv = normalizeText(process.env.QIUSHUIAI_AGENT_BASE_URL || process.env.QIUSHUIAI_WEB_BASE_URL || process.env.QIUSHUIAI_BASE_URL);
   if (fromEnv) return fromEnv.replace(/\/+$/, "");
-  let port = normalizeText(process.env.PICLAW_PORT || process.env.PORT, "8080");
+  let port = normalizeText(process.env.QIUSHUIAI_PORT || process.env.PORT, "8080");
   for (let index = 0; index < process.argv.length; index += 1) {
     const arg = process.argv[index];
     if (arg === "--port" && process.argv[index + 1]) port = process.argv[index + 1];
@@ -955,9 +955,9 @@ function isLoopbackAgentBaseUrl(baseUrl: string): boolean {
 
 export function buildLocalAgentMessageHeaders(baseUrl = resolveLocalAgentBaseUrl()): Record<string, string> {
   const headers: Record<string, string> = { "Content-Type": "application/json" };
-  const internalSecret = normalizeText(process.env.PICLAW_INTERNAL_SECRET || process.env.PICLAW_WEB_INTERNAL_SECRET);
+  const internalSecret = normalizeText(process.env.QIUSHUIAI_INTERNAL_SECRET || process.env.QIUSHUIAI_WEB_INTERNAL_SECRET);
   if (internalSecret && isLoopbackAgentBaseUrl(baseUrl)) {
-    headers["X-Piclaw-Internal-Secret"] = internalSecret;
+    headers["X-QiushuiAI-Internal-Secret"] = internalSecret;
     headers.Authorization = `Bearer ${internalSecret}`;
   }
   return headers;
@@ -1148,7 +1148,7 @@ type AddonConfigApiRegistrar = (
   extensionPath?: string,
 ) => "created" | "updated";
 
-const registerAddonConfigApi = (globalThis as Record<string, unknown>).__piclaw_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
+const registerAddonConfigApi = (globalThis as Record<string, unknown>).__qiushuiai_registerAddonConfigApi as AddonConfigApiRegistrar | undefined;
 if (typeof registerAddonConfigApi === "function") {
   registerAddonConfigApi("goal", "goal", {
     get: async (payload, req) => {

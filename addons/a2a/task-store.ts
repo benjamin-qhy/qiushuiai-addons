@@ -62,7 +62,7 @@ const terminal = new Set([
 export function isTerminalTask(task: Task): boolean {
   return terminal.has(task.status?.state ?? TaskState.TASK_STATE_UNSPECIFIED);
 }
-/** Protocol-only durable state, never Piclaw's messages database. */
+/** Protocol-only durable state, never QiushuiAI's messages database. */
 export class A2aTaskStore {
   private readonly db: Database;
   readonly push: A2aPushStore;

@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from "bun:test";
 
-const registrationKey = Symbol.for("@rcarmo/piclaw-addon-goal/deadline-checkpoint-registration");
+const registrationKey = Symbol.for("@qiushuiai/qiushuiai-addon-goal/deadline-checkpoint-registration");
 let importSequence = 0;
 
 async function importRuntime(label: string): Promise<void> {
@@ -12,14 +12,14 @@ afterEach(() => {
   const state = (globalThis as any)[registrationKey];
   if (typeof state?.unregister === "function") state.unregister();
   delete (globalThis as any)[registrationKey];
-  delete (globalThis as any).__piclaw_runtime;
+  delete (globalThis as any).__qiushuiai_runtime;
 });
 
 test("runtime registration is idempotent for duplicate startup imports", async () => {
   let registrations = 0;
   let unregisters = 0;
   let activeProvider: unknown = null;
-  (globalThis as any).__piclaw_runtime = {
+  (globalThis as any).__qiushuiai_runtime = {
     registerGoalDeadlineCheckpointProvider(provider: unknown) {
       registrations += 1;
       activeProvider = provider;
@@ -41,14 +41,14 @@ test("runtime registration is idempotent for duplicate startup imports", async (
 });
 
 test("runtime startup is a no-op on older cores with no registration API", async () => {
-  (globalThis as any).__piclaw_runtime = {};
+  (globalThis as any).__qiushuiai_runtime = {};
   await expect(importRuntime("older-core")).resolves.toBeUndefined();
-  delete (globalThis as any).__piclaw_runtime;
+  delete (globalThis as any).__qiushuiai_runtime;
   await expect(importRuntime("no-runtime")).resolves.toBeUndefined();
 });
 
 test("a throwing Goal checkpoint registrar fails closed without breaking startup", async () => {
-  (globalThis as any).__piclaw_runtime = {
+  (globalThis as any).__qiushuiai_runtime = {
     registerGoalDeadlineCheckpointProvider() {
       throw new Error("registrar unavailable");
     },

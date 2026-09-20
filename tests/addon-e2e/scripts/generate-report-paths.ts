@@ -1,4 +1,4 @@
-export function addonFromFile(file = '', configuredAddon = process.env.PICLAW_ADDON): string {
+export function addonFromFile(file = '', configuredAddon = process.env.QIUSHUIAI_ADDON): string {
   const normalized = file.replaceAll('\\', '/');
   const generatedMatch = normalized.match(/\.generated\/([^/]+)\//);
   const relativeMatch = normalized.match(/^(?!\.\.\/)([^/]+)\/[^/]+\.spec\.[cm]?[jt]s$/);

@@ -1,5 +1,5 @@
 /**
- * Browser-side draw.io integration for piclaw-addon-drawio-editor.
+ * Browser-side draw.io integration for qiushuiai-addon-drawio-editor.
  *
  * Registers:
  * - a web pane extension for .drawio workspace tabs
@@ -7,7 +7,7 @@
  * - an attachment preview definition for read-only .drawio attachments
  */
 
-import type { PaneContext, PaneInstance, PiclawWebApi, WebPaneExtension } from './pane-types.js';
+import type { PaneContext, PaneInstance, QiushuiAIWebApi, WebPaneExtension } from './pane-types.js';
 
 const DRAWIO_EXTENSIONS = /\.drawio(\.xml|\.svg|\.png)?$/i;
 const DRAWIO_MIME_TYPES = new Set([
@@ -112,11 +112,11 @@ class DrawioEditorInstance implements PaneInstance {
   }
 }
 
-const webApi = (globalThis as Record<string, unknown>).__piclaw_web as PiclawWebApi | undefined;
+const webApi = (globalThis as Record<string, unknown>).__qiushuiai_web as QiushuiAIWebApi | undefined;
 
 export const drawioPaneExtension: WebPaneExtension = {
   id: 'drawio-editor',
-  label: 'Draw.io Editor',
+  label: 'Draw.io 编辑器',
   icon: 'git-merge',
   capabilities: ['edit', 'preview'],
   placement: 'tabs',
@@ -146,7 +146,7 @@ if (webApi && typeof webApi.registerStandaloneTabUrlResolver === 'function') {
 if (webApi && typeof webApi.registerAttachmentPreview === 'function') {
   webApi.registerAttachmentPreview({
     id: 'drawio',
-    label: 'Draw.io preview (read-only)',
+    label: 'Draw.io 预览（只读）',
     match(contentType: unknown, filename?: unknown): boolean {
       const normalizedType = typeof contentType === 'string' ? contentType.trim().toLowerCase() : '';
       return isDrawioFile(typeof filename === 'string' ? filename : '') || DRAWIO_MIME_TYPES.has(normalizedType);
