@@ -12,7 +12,12 @@ const ROOT    = dirname(Bun.main);
 const CATALOG = join(ROOT, "catalog.json");
 const OUT     = join(ROOT, "docs");  // GitHub Pages serves from /docs
 
-const SITE_URL  = "https://rcarmo.github.io/piclaw-addons";
+const REPOSITORY = process.env.GITHUB_REPOSITORY?.trim() || "rcarmo/piclaw-addons";
+const [REPOSITORY_OWNER = "rcarmo", REPOSITORY_NAME = "piclaw-addons"] = REPOSITORY.split("/");
+const REPOSITORY_URL = `https://github.com/${REPOSITORY_OWNER}/${REPOSITORY_NAME}`;
+const SITE_URL = (process.env.PICLAW_ADDONS_SITE_URL?.trim()
+  || `https://${REPOSITORY_OWNER}.github.io/${REPOSITORY_NAME}`).replace(/\/$/, "");
+const SITE_BASE_PATH = new URL(SITE_URL).pathname.replace(/\/$/, "");
 const SITE_NAME = "piclaw-addons";
 const ASSET_VER = Date.now().toString(36);
 const PI_DEV_FOOTER_NOTE = `PiClaw is not affiliated with <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> — we’re just <em>huge fans</em>.`;
@@ -52,6 +57,10 @@ function esc(s: string) {
     .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+function sitePath(path: string): string {
+  return `${SITE_BASE_PATH}/${path.replace(/^\/+/, "")}`;
+}
+
 // ── OG card generation (1280×640) ─────────────────────────────────────────
 
 const RSVG_CONVERT = ['/home/linuxbrew/.linuxbrew/bin/rsvg-convert', 'rsvg-convert']
@@ -83,7 +92,7 @@ function mimeTypeFor(path: string): string {
 }
 
 function assetDataUri(relPath: string): string | null {
-  const full = join(ROOT, relPath.replace(/^\/piclaw-addons\//, ''));
+  const full = join(ROOT, relPath.replace(new RegExp(`^${SITE_BASE_PATH.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/`), ''));
   if (!existsSync(full)) return null;
   const buf = readFileSync(full);
   return `data:${mimeTypeFor(full)};base64,${Buffer.from(buf).toString('base64')}`;
@@ -140,7 +149,7 @@ function buildOgCardSvg(opts: { title: string; description: string; kicker: stri
     ${descLines.map((line, i) =>
       `<text x="${textX}" y="${safeY + 262 + i * 48}" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">${esc(line)}</text>`
     ).join('\n    ')}
-    <text x="${safeX + safeW - 24}" y="${safeY + safeH - 28}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io/piclaw-addons</text>
+    <text x="${safeX + safeW - 24}" y="${safeY + safeH - 28}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">${esc(new URL(SITE_URL).host + SITE_BASE_PATH)}</text>
   </g>
 </svg>`;
 }
@@ -174,8 +183,8 @@ function freshnessIndex(addon: Addon): number {
 
 function iconSrc(addon: Addon): string {
   const specific = join(ROOT, "assets", "icons", addon.slug + ".png");
-  if (existsSync(specific)) return `/piclaw-addons/assets/icons/${addon.slug}.png`;
-  return `/piclaw-addons/assets/icons/default-0${freshnessIndex(addon)}.png`;
+  if (existsSync(specific)) return sitePath(`assets/icons/${addon.slug}.png`);
+  return sitePath(`assets/icons/default-0${freshnessIndex(addon)}.png`);
 }
 
 function addonReadme(addon: Addon): string {
@@ -276,7 +285,7 @@ function ownerChips(addon: Addon): string {
 }
 
 function tarballUrl(addon: Addon): string {
-  return addon.install?.spec || `/piclaw-addons/packages/${addon.name.replace(/^@[^/]+\//, '')}-${addon.version}.tgz`;
+  return addon.install?.spec || sitePath(`packages/${addon.name.replace(/^@[^/]+\//, '')}-${addon.version}.tgz`);
 }
 
 function downloadPill(addon: Addon): string {
@@ -291,7 +300,7 @@ function installSnippet(addon: Addon): string {
 }
 
 function sourceUrl(addon: Addon): string {
-  return `https://github.com/rcarmo/piclaw-addons/tree/main/${addon.path.replace(/^\.\//, '')}`;
+  return `${REPOSITORY_URL}/tree/main/${addon.path.replace(/^\.\//, '')}`;
 }
 
 function sourceSnippet(addon: Addon): string {
@@ -363,7 +372,7 @@ function uxReportSnippet(addon: Addon): string {
   if (!addonUxReportPaths(addon)) return '';
   return `<div class="install-block">
     <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.75 1.5A1.75 1.75 0 0 0 2 3.25v9.5c0 .966.784 1.75 1.75 1.75h8.5A1.75 1.75 0 0 0 14 12.75v-7L9.75 1.5h-6Zm5.5 1.25L12.75 6H9.25V2.75ZM5 8.25h6v1H5v-1Zm0 2.5h6v1H5v-1Z"/></svg>
-    <span class="install-text"><strong>UX test report:</strong> <a href="/piclaw-addons/addons/${esc(addon.slug)}/tests/${esc(addon.slug)}-ux-report.pdf">PDF</a> · <a href="/piclaw-addons/addons/${esc(addon.slug)}/tests/${esc(addon.slug)}-ux-report.html">HTML</a></span>
+    <span class="install-text"><strong>UX test report:</strong> <a href="${sitePath(`addons/${addon.slug}/tests/${addon.slug}-ux-report.pdf`)}">PDF</a> · <a href="${sitePath(`addons/${addon.slug}/tests/${addon.slug}-ux-report.html`)}">HTML</a></span>
   </div>`;
 }
 
@@ -373,13 +382,13 @@ const CLARITY_SCRIPT = `<script type="text/javascript">
 </script>`;
 
 const CSS = `
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'IBM Plex Sans';src:url('/piclaw-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Inter';src:url('/piclaw-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'JetBrains Mono';src:url('/piclaw-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('${sitePath("assets/fonts/ibm-plex-sans-400.woff2")}') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('${sitePath("assets/fonts/ibm-plex-sans-500.woff2")}') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('${sitePath("assets/fonts/ibm-plex-sans-600.woff2")}') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('${sitePath("assets/fonts/ibm-plex-sans-700.woff2")}') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter';src:url('${sitePath("assets/fonts/inter-var.woff2")}') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('${sitePath("assets/fonts/jetbrains-mono-400.woff2")}') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('${sitePath("assets/fonts/jetbrains-mono-500.woff2")}') format('woff2');font-weight:500;font-display:swap}
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#f0f4ff;--ink:#0f1c2e;--ink-dim:rgba(15,28,46,.6);
@@ -569,8 +578,8 @@ writeOgCard('index', buildOgCardSvg({
   title: 'piclaw-addons',
   description: 'Community extensions, tools and add-ons for piclaw.',
   kicker: `${addons.length} ADD-ONS`,
-  imageDataUri: assetDataUri('/piclaw-addons/assets/icons/piclaw.png'),
-  meta: 'rcarmo/piclaw-addons',
+  imageDataUri: assetDataUri(sitePath('assets/icons/piclaw.png')),
+  meta: REPOSITORY,
 }));
 
 const indexHtml = `<!DOCTYPE html>
@@ -599,17 +608,17 @@ ${CLARITY_SCRIPT}
 
 <header class="hero">
   <div class="hero-inner">
-    <img class="hero-logo" src="/piclaw-addons/assets/icons/piclaw.png" alt="piclaw">
+    <img class="hero-logo" src="${sitePath("assets/icons/piclaw.png")}" alt="piclaw">
     <div class="hero-text">
       <div class="hero-title">piclaw-addons</div>
       <div class="hero-sub">Community extensions, tools and add-ons for <a href="https://github.com/rcarmo/piclaw" style="color:rgba(255,255,255,.85)">piclaw</a>.</div>
       <div class="hero-meta">${addons.length} add-ons &nbsp;·&nbsp; catalog v${catalog.version}</div>
       <div class="hero-actions">
-        <a class="hero-source" href="https://github.com/rcarmo/piclaw-addons" target="_blank" rel="noopener">
+        <a class="hero-source" href="${REPOSITORY_URL}" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           View on GitHub
         </a>
-        <a class="hero-source" href="/piclaw-addons/packages/">↓ Packages</a>
+        <a class="hero-source" href="${sitePath("packages/")}">↓ Packages</a>
       </div>
     </div>
   </div>
@@ -620,7 +629,7 @@ ${CLARITY_SCRIPT}
 </div>
 
 <main class="grid" id="grid">
-${addons.map(a => `  <a href="/piclaw-addons/addons/${esc(a.slug)}/" class="card${a.tags.includes("core") ? " card-core" : ""}" data-name="${esc(a.slug)} ${esc(a.description)} ${a.tags.join(" ")}">
+${addons.map(a => `  <a href="${sitePath(`addons/${a.slug}/`)}" class="card${a.tags.includes("core") ? " card-core" : ""}" data-name="${esc(a.slug)} ${esc(a.description)} ${a.tags.join(" ")}">
     ${coreBookmark(a)}
     <div class="card-header">
       <img class="card-icon" src="${iconSrc(a)}" alt="" loading="lazy">
@@ -637,7 +646,7 @@ ${addons.map(a => `  <a href="/piclaw-addons/addons/${esc(a.slug)}/" class="card
   </a>`).join("\n")}
 </main>
 
-${renderFooter(`<a href="https://github.com/rcarmo/piclaw-addons">piclaw-addons</a> &nbsp;·&nbsp;
+${renderFooter(`<a href="${REPOSITORY_URL}">piclaw-addons</a> &nbsp;·&nbsp;
   <a href="https://github.com/rcarmo/piclaw">piclaw</a>`)}
 
 <script>
@@ -649,7 +658,7 @@ search.addEventListener('input', () => {
 });
 </script>
 <script type="module">
-  import { mountIndex } from '/piclaw-addons/assets/js/addon-island.mjs';
+  import { mountIndex } from '${sitePath("assets/js/addon-island.mjs")}';
   mountIndex();
 </script>
 </body>
@@ -709,7 +718,7 @@ ${CLARITY_SCRIPT}
 <body>
 
 <nav class="detail-nav">
-  <a href="/piclaw-addons/" class="back">← all add-ons</a>
+  <a href="${sitePath("")}" class="back">← all add-ons</a>
 </nav>
 
 <div class="detail-hero">
@@ -741,10 +750,10 @@ ${CLARITY_SCRIPT}
 </div>
 ${skillList}
 
-${renderFooter(`<a href="/piclaw-addons/">piclaw-addons</a> &nbsp;·&nbsp;
+${renderFooter(`<a href="${sitePath("")}">piclaw-addons</a> &nbsp;·&nbsp;
   <a href="${esc(sourceUrl(addon))}">View source</a>`)}
 <script type="module">
-  import { mountDetail } from '/piclaw-addons/assets/js/addon-island.mjs';
+  import { mountDetail } from '${sitePath("assets/js/addon-island.mjs")}';
   mountDetail('${esc(addon.slug)}');
 </script>
 </body>
@@ -781,7 +790,7 @@ ${CLARITY_SCRIPT}
 <style>${CSS}</style>
 </head>
 <body>
-<nav class="detail-nav"><a href="/piclaw-addons/" class="back">← all add-ons</a></nav>
+<nav class="detail-nav"><a href="${sitePath("")}" class="back">← all add-ons</a></nav>
 <div class="detail-hero" style="padding:2rem 1.5rem 1.8rem">
   <div style="max-width:760px;margin:0 auto">
     <div class="detail-title" style="font-size:2rem">Packages</div>
@@ -803,7 +812,7 @@ ${CLARITY_SCRIPT}
         const baseName = a.name.replace(/^@[^/]+\//, '');
         const url = `${SITE_URL}/packages/${esc(baseName)}-${esc(a.version)}.tgz`;
         return `<tr style="border-bottom:1px solid var(--border)">
-          <td style="padding:.55rem .5rem"><a href="/piclaw-addons/addons/${esc(a.slug)}/" style="color:var(--accent);font-weight:600">${esc(a.slug)}</a></td>
+          <td style="padding:.55rem .5rem"><a href="${sitePath(`addons/${a.slug}/`)}" style="color:var(--accent);font-weight:600">${esc(a.slug)}</a></td>
           <td style="padding:.55rem .5rem;font-family:var(--font-mono);color:var(--ink-dim)">v${esc(a.version)}</td>
           <td style="padding:.55rem .5rem"><span style="font-size:.82rem;color:var(--ink-dim)">Settings → Add-Ons → <strong>${esc(a.slug)}</strong></span></td>
           <td style="padding:.55rem .5rem;text-align:right"><a href="${url}" style="color:var(--accent);font-weight:700;font-size:.82rem">⬇ .tgz</a></td>
@@ -812,7 +821,7 @@ ${CLARITY_SCRIPT}
     </tbody>
   </table>
 </div>
-${renderFooter(`<a href="/piclaw-addons/">piclaw-addons</a>`)}
+${renderFooter(`<a href="${sitePath("")}">piclaw-addons</a>`)}
 </body>
 </html>`;
 

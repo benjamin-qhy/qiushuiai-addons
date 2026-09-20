@@ -29,6 +29,14 @@ test("public tarball builder excludes local dependency and temporary trees", () 
   expect(source).toContain('"--exclude=./.tmp"');
 });
 
+test("site links adapt to the repository that runs the Pages build", () => {
+  expect(buildSource).toContain('const REPOSITORY = process.env.GITHUB_REPOSITORY?.trim() || "rcarmo/piclaw-addons"');
+  expect(buildSource).toContain('`https://${REPOSITORY_OWNER}.github.io/${REPOSITORY_NAME}`');
+  expect(buildSource).toContain('function sitePath(path: string): string');
+  expect(buildSource).not.toContain('href="/piclaw-addons/');
+  expect(buildSource).not.toContain("from '/piclaw-addons/");
+});
+
 test("only the selected foundational add-ons carry the core tag", () => {
   const packageFiles = Array.from(new Bun.Glob("addons/*/package.json").scanSync({ cwd: repoRoot })).sort();
   const coreSlugs = packageFiles.flatMap((path) => {
