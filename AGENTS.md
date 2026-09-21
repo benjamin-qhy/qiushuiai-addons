@@ -282,7 +282,6 @@ bun run check:catalog
 2. 将 microVM 准备成目标附加组件的**干净截图环境**：
    - microVM 的附加组件目录应优先使用临时 **overlayfs** 挂载，避免破坏性地反复复制和删除
    - 在该覆盖层中只安装或暴露目标附加组件
-   - 如果安装了 `cheapskate` 用于常规测试，请在截图**之前**将其移除，以免它扰乱设置导航栏
 3. 使用共享脚本截取界面：
    ```bash
    cd /workspace/qiushuiai-addons
@@ -293,7 +292,6 @@ bun run check:catalog
      --out addons/<slug>/assets/settings-pane-microvm.png
    ```
 4. 在 `addons/<slug>/README.md` 中引用该截图
-5. 截图完成后重新安装 `cheapskate`，使 microVM 保持随时可测试的状态
 6. 带设置面板的附加组件最好至少提供一张截图；非界面附加组件可不提供截图
 
 尽可能将截图存放在 `addons/<slug>/assets/` 下，以便 README 使用稳定的相对路径引用。
@@ -307,7 +305,7 @@ bun run check:catalog
 1. `validate-metadata` 会在拉取请求和推送到 `main` 时运行；它会检查生成的元数据和 Earendil 兼容性。
 2. 附加组件或目录脚本发生变更后，`sync-catalog` 会在 `main` 上运行，并可能同时更新 `catalog.json` 和根目录的 `package.json`。
 3. 附加组件、目录、资源或构建发生变更后，`build + deploy` 会在 `main` 上运行，并发布 GitHub Pages 网站和公开的 `.tgz` 文件。
-4. Pages 构建会校验并发布全部 48 个公开 tarball；仓库不使用 GitHub Packages。
+4. Pages 构建会校验并发布当前保留的 7 个公开 tarball；仓库不使用 GitHub Packages。
 
 ### 手动同步
 
@@ -338,7 +336,6 @@ bun run check:catalog   # 只验证（不同步时以状态码 1 退出）
 - 运行时端的设置和配置处理器应在模块加载时通过 `globalThis.__qiushuiai_registerAddonConfigApi(...)` 注册，使 Web 面板不依赖斜杠命令
 - v3 不提供旧版斜杠命令配置桥接；禁止依赖 `/addon-config-get` / `/addon-config-set`
 - 设置面板附加组件的界面发生实质性变化时，应至少包含一张从 microVM 测试实例截取并提交到 README 的截图
-- 执行截图时，应将 microVM 用作干净的测试环境：优先使用 overlayfs，只暴露目标附加组件，确保实际截图中不出现 `cheapskate`，然后重新安装或恢复 `cheapskate`
 - 技能应放在 `skills/<name>/SKILL.md` 中
 - 每次功能变更都必须提升版本号
 - 每次编辑 `package.json` 后都要运行 `sync:catalog`
@@ -359,3 +356,7 @@ bun run check:catalog   # 只验证（不同步时以状态码 1 退出）
 - 合并拉取请求后，移除工作树（`git worktree remove <path>`），并通过 `git worktree list` 确认已清理
 - 开始新工作前，运行 `git worktree list`，并清理所有陈旧或孤立的工作树（`git worktree prune`）
 - 绝不保留已合并分支的工作树
+
+## 当前维护范围
+
+仅保留 sample-addon、observability、settings-dialog-screenshot、export-timeline-pdf、kanban-editor、vent、plan-sidebar。其余插件已移除，未经用户要求不要恢复或继续其开发测试。

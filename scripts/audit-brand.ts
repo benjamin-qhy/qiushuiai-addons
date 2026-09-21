@@ -4,8 +4,6 @@ import { relative, resolve } from 'node:path';
 const repoRoot = resolve(import.meta.dir, '..');
 const allowed = new Set([
   'QIUSHUIAI-ADDON-V3-DEVELOPMENT-PLAN.md',
-  'addons/a2a/docs/deployment-canary.md',
-  'addons/linkr/docs/qualification-and-testing.md',
   'scripts/lib/qiushuiai-addon-identity.test.ts',
 ]);
 const ignoredSegments = new Set(['.git', 'node_modules']);

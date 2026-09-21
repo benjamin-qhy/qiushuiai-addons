@@ -167,7 +167,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Verify all public tarballs were built
         if: always() && github.event_name != 'pull_request'
-        run: test "$(find docs/packages -maxdepth 1 -name 'qiushuiai-addon-*.tgz' | wc -l | tr -d ' ')" = "48"
+        run: test "$(find docs/packages -maxdepth 1 -name 'qiushuiai-addon-*.tgz' | wc -l | tr -d ' ')" = "7"
       - name: Copy assets into docs
         if: always() && github.event_name != 'pull_request'
         run: mkdir -p docs/assets && cp -r assets/* docs/assets/

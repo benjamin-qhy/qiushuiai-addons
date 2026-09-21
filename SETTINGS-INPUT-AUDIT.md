@@ -1,3 +1,5 @@
+> 历史记录：2026-09-21 起本仓库仅保留 README 所列 7 个插件。下文其他插件不属于当前维护范围。
+
 # Add-on Settings input audit — 19 September 2026
 
 All 14 registered first-party Settings panes are covered by `settings-inputs.test.ts`.

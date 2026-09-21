@@ -10,19 +10,22 @@
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
-    "types": ["bun-types"]
+    "types": [
+      "bun-types"
+    ]
   },
   "include": [
-    "addons/autoresearch/supervisor.ts",
-    "addons/cheapskate/*.ts",
-    "addons/cheapskate/web/**/*.ts",
-    "addons/codex-conversion/**/*.ts",
-    "addons/delegate/**/*.ts",
-    "addons/skill-model-effort/**/*.ts",
-    "addons/smart-compaction/**/*.ts"
+    "addons/export-timeline-pdf/**/*.ts",
+    "addons/kanban-editor/**/*.ts",
+    "addons/observability/**/*.ts",
+    "addons/plan-sidebar/**/*.ts",
+    "addons/sample-addon/**/*.ts",
+    "addons/settings-dialog-screenshot/**/*.ts",
+    "addons/vent/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "addons/autoresearch/vendor"
+    "addons/**/tests/**",
+    "addons/**/*.test.ts"
   ]
 }

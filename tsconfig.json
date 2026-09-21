@@ -11,5 +11,5 @@
     "types": ["bun-types"]
   },
   "include": ["addons/**/*.ts", "lib/**/*.ts"],
-  "exclude": ["node_modules", "addons/drawio-editor/vendor"]
+  "exclude": ["node_modules"]
 }

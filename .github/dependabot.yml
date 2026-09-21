@@ -19,42 +19,6 @@ updates:
           - "patch"
 
   - package-ecosystem: "bun"
-    directory: "/addons/codex-conversion"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "05:00"
-      timezone: "Etc/UTC"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "deps"
-    groups:
-      routine-codex-conversion-updates:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  - package-ecosystem: "bun"
-    directory: "/addons/image-processing"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "05:00"
-      timezone: "Etc/UTC"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "deps"
-    groups:
-      routine-image-processing-updates:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  - package-ecosystem: "bun"
     directory: "/addons/observability"
     schedule:
       interval: "weekly"
@@ -66,24 +30,6 @@ updates:
       prefix: "deps"
     groups:
       routine-observability-updates:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  - package-ecosystem: "bun"
-    directory: "/addons/stealth-browser"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "05:00"
-      timezone: "Etc/UTC"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "deps"
-    groups:
-      routine-stealth-browser-updates:
         patterns:
           - "*"
         update-types:
