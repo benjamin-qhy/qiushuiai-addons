@@ -7,7 +7,7 @@
 这是 QiushuiAI 的技能插件，技术标识为 `export-timeline-pdf`。
 
 - 软件包：`@qiushuiai/qiushuiai-addon-export-timeline-pdf`
-- 当前版本：`0.1.2`
+- 当前版本：`0.1.3`
 - 兼容版本：QiushuiAI `>=3.0.0`
 - 展示标签：`导出`、`PDF 文档`、`时间线`
 
@@ -16,7 +16,7 @@
 在 QiushuiAI 中打开**设置 → 插件**，搜索“导出时间线 PDF”并安装。也可以直接使用无需登录的公开安装包：
 
 ```text
-https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-export-timeline-pdf-0.1.2.tgz
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-export-timeline-pdf-0.1.3.tgz
 ```
 
 安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。

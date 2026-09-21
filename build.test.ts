@@ -1,9 +1,18 @@
 import { expect, test } from "bun:test";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const repoRoot = new URL(".", import.meta.url).pathname;
 const buildSource = readFileSync(new URL("./build.ts", import.meta.url), "utf8");
+
+test("generated site contains only current catalog plugins and packages", () => {
+  const catalog = JSON.parse(readFileSync(join(repoRoot, "catalog.json"), "utf8"));
+  const slugs = catalog.addons.map((addon: { slug: string }) => addon.slug).sort();
+  expect(readdirSync(join(repoRoot, "docs/addons")).sort()).toEqual(slugs);
+  const packages = catalog.addons.map((addon: { name: string; version: string }) =>
+    `${addon.name.replace(/^@[^/]+\//, "")}-${addon.version}.tgz`).sort();
+  expect(readdirSync(join(repoRoot, "docs/packages")).filter(name => name.endsWith(".tgz")).sort()).toEqual(packages);
+});
 
 test("addon detail pages include a direct tarball download pill", () => {
   expect(buildSource).toContain("function downloadPill(addon: Addon)");
@@ -43,7 +52,7 @@ test("only the selected foundational add-ons are featured", () => {
     const manifest = JSON.parse(readFileSync(join(repoRoot, path), "utf8"));
     return manifest.qiushuiai?.featured === true ? [path.split("/")[1]] : [];
   });
-  expect(coreSlugs).toEqual(["observability", "plan-sidebar"]);
+  expect(coreSlugs).toEqual(["observability"]);
 
   const catalog = JSON.parse(readFileSync(join(repoRoot, "catalog.json"), "utf8"));
   const catalogCoreSlugs = catalog.addons.filter((addon: any) => addon.featured === true).map((addon: any) => addon.slug).sort();

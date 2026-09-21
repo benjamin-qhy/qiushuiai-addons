@@ -130,6 +130,9 @@ function tryGetRuntimeStore(): RuntimeKvStore | null {
  * Otherwise falls back to in-memory.
  */
 export function createExtensionStorage(extensionId: string): ExtensionStorage {
+  const host = (globalThis as { __qiushuiaiRuntimeInterop?: { createAddonStorage?: (id: string) => ExtensionStorage } }).__qiushuiaiRuntimeInterop;
+  if (host?.createAddonStorage) return host.createAddonStorage(extensionId);
+  if (host) throw new Error("QiushuiAI add-on persistent storage is unavailable; refusing in-memory fallback.");
   const runtimeStore = tryGetRuntimeStore();
   if (runtimeStore) {
     return new RuntimeBackedStorage(extensionId, runtimeStore);

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "fields": [
+    {
+      "key": "enabled",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "启用示例工具",
+        "en-US": "Enable sample tool"
+      }
+    },
+    {
+      "key": "greeting",
+      "type": "text",
+      "label": {
+        "zh-CN": "工具返回的问候语",
+        "en-US": "Tool greeting"
+      }
+    },
+    {
+      "key": "secret_keychain",
+      "type": "text",
+      "label": {
+        "zh-CN": "已保存密钥的名称",
+        "en-US": "Saved secret name"
+      }
+    }
+  ]
+}

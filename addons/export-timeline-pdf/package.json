@@ -1,6 +1,6 @@
 {
   "name": "@qiushuiai/qiushuiai-addon-export-timeline-pdf",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "将聊天时间线导出为 PDF，并保留头像和引用消息标记",
   "type": "module",
   "license": "MIT",
@@ -41,5 +41,16 @@
     "skills": [
       "skills/export-timeline-pdf"
     ]
+  },
+  "agents": {
+    "skills": [
+      {
+        "name": "export-timeline-pdf",
+        "path": "./skills/export-timeline-pdf"
+      }
+    ]
+  },
+  "dependencies": {
+    "playwright-core": "1.62.0"
   }
 }

@@ -9,6 +9,7 @@ on:
     paths:
       - 'catalog.json'
       - 'build.ts'
+      - 'scripts/prepare-published-addon.ts'
       - '.github/workflows/build.yml'
       - 'assets/**'
       - 'addons/**'
@@ -108,14 +109,6 @@ jobs:
           done <<< "$prepared"
           test -n "$QIUSHUIAI_PREP_ROOT" && test -d "$QIUSHUIAI_WORKSPACE"
 
-          # Prepared packages are source copies. Install Remote Peer's exact
-          # runtime dependencies inside the disposable fixture without requiring
-          # an add-on-local lockfile, using the test server's sanitised environment.
-          remote_peer_dir="$QIUSHUIAI_WORKSPACE/.pi/extensions/node_modules/@qiushuiai/qiushuiai-addon-remote-peer"
-          test ! -e "$remote_peer_dir/bun.lock" && test ! -e "$remote_peer_dir/bun.lockb"
-          bun run scripts/run-test-instance.ts -- \
-            bun install --cwd "$remote_peer_dir" --omit peer --ignore-scripts
-
           QIUSHUIAI_E2E_INTERNAL_SECRET="$QIUSHUIAI_INTERNAL_SECRET" QIUSHUIAI_E2E_KEYCHAIN_KEY="$QIUSHUIAI_KEYCHAIN_KEY" \
             bun run scripts/run-test-instance.ts -- bun run .qiushuiai-runtime/runtime/src/index.ts > /tmp/qiushuiai-addon-e2e.log 2>&1 &
           SERVER_PID=$!
@@ -167,7 +160,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
       - name: Verify all public tarballs were built
         if: always() && github.event_name != 'pull_request'
-        run: test "$(find docs/packages -maxdepth 1 -name 'qiushuiai-addon-*.tgz' | wc -l | tr -d ' ')" = "7"
+        run: test "$(find docs/packages -maxdepth 1 -name 'qiushuiai-addon-*.tgz' | wc -l | tr -d ' ')" = "5"
       - name: Copy assets into docs
         if: always() && github.event_name != 'pull_request'
         run: mkdir -p docs/assets && cp -r assets/* docs/assets/

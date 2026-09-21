@@ -1,7 +1,7 @@
 {
   "name": "@qiushuiai/qiushuiai-addon-settings-dialog-screenshot",
-  "version": "0.1.1",
-  "description": "用于截取 Pi Web 设置对话框紧凑画面的开发技能",
+  "version": "0.1.2",
+  "description": "截取 QiushuiAI 真实设置页面或插件设置弹窗，生成可交付的 PNG 图片",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -48,5 +48,8 @@
     "skills": [
       "skills/settings-dialog-screenshot"
     ]
+  },
+  "dependencies": {
+    "playwright-core": "1.62.0"
   }
 }

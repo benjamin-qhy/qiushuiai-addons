@@ -305,7 +305,7 @@ bun run check:catalog
 1. `validate-metadata` 会在拉取请求和推送到 `main` 时运行；它会检查生成的元数据和 Earendil 兼容性。
 2. 附加组件或目录脚本发生变更后，`sync-catalog` 会在 `main` 上运行，并可能同时更新 `catalog.json` 和根目录的 `package.json`。
 3. 附加组件、目录、资源或构建发生变更后，`build + deploy` 会在 `main` 上运行，并发布 GitHub Pages 网站和公开的 `.tgz` 文件。
-4. Pages 构建会校验并发布当前保留的 7 个公开 tarball；仓库不使用 GitHub Packages。
+4. Pages 构建会校验并发布当前保留的 5 个公开 tarball；仓库不使用 GitHub Packages。
 
 ### 手动同步
 
@@ -359,4 +359,4 @@ bun run check:catalog   # 只验证（不同步时以状态码 1 退出）
 
 ## 当前维护范围
 
-仅保留 sample-addon、observability、settings-dialog-screenshot、export-timeline-pdf、kanban-editor、vent、plan-sidebar。其余插件已移除，未经用户要求不要恢复或继续其开发测试。
+仅保留 sample-addon、observability、settings-dialog-screenshot、export-timeline-pdf、vent。其余插件已移除，未经用户要求不要恢复或继续其开发测试。

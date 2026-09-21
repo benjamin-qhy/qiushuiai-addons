@@ -18,6 +18,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { trace, context, SpanKind, SpanStatusCode, type Tracer, type Span } from "@opentelemetry/api";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 
 import { addLogSink, removeLogSink, type LogSink as RuntimeLogSink, type LogRecord } from "./compat/log-sink.js";
 
@@ -529,6 +530,18 @@ if (typeof registerAddonConfigApi === "function") {
 // ── Extension entry point ────────────────────────────────────────
 
 export default function observabilityExtension(pi: ExtensionAPI): void {
+  pi.registerTool({
+    name: "observability_usage",
+    label: "observability_usage",
+    description: "Read actual recorded model usage for the current conversation from QiushuiAI. Includes totals and provider/model/source breakdowns. Null cost or unknown counters mean unavailable. Monetary totals are model-price estimates, not actual Codex subscription charges. No external telemetry account is needed.",
+    parameters: Type.Object({}),
+    async execute() {
+      const bridge = (globalThis as { __qiushuiaiRuntimeInterop?: { getCurrentUsage?: () => unknown } }).__qiushuiaiRuntimeInterop;
+      if (!bridge?.getCurrentUsage) throw new Error("This host does not provide current conversation usage statistics.");
+      const usage = bridge.getCurrentUsage();
+      return { content: [{ type: "text", text: JSON.stringify(usage, null, 2) }], details: usage };
+    },
+  });
   void ensureProcessRuntimeConfig(loadConfig()).catch(() => undefined);
   pi.on("resources_discover", () => ({ skillPaths: [join(baseDir, "skills", "usage-telemetry-chart", "SKILL.md")] }));
 

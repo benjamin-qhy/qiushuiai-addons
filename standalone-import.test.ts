@@ -13,7 +13,7 @@ afterEach(() => {
   }
 });
 
-async function importStandaloneAddon(slug: "kanban-editor" | "observability" | "plan-sidebar" | "sample-addon" | "vent") {
+async function importStandaloneAddon(slug: "observability" | "sample-addon" | "vent") {
   const tempRoot = mkdtempSync(join(tmpdir(), `qiushuiai-addon-${slug}-`));
   tempDirs.push(tempRoot);
 
@@ -46,7 +46,7 @@ async function importStandaloneAddon(slug: "kanban-editor" | "observability" | "
 }
 
 
-for (const slug of ["kanban-editor", "observability", "plan-sidebar", "sample-addon", "vent"] as const) {
+for (const slug of ["observability", "sample-addon", "vent"] as const) {
  test(`standalone ${slug} imports outside the repository`, async () => {
   const mod = await importStandaloneAddon(slug);
   expect(typeof mod.default).toBe("function");

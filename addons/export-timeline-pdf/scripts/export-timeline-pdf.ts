@@ -26,7 +26,7 @@
  */
 
 import { accessSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "fs";
-import { dirname } from "path";
+import { dirname, join, resolve } from "path";
 import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
@@ -42,7 +42,7 @@ Range options (all optional, combinable):
   --last <n>             Export only the last N messages
 
 Other options:
-  --chat <jid>           Chat JID (default: web:default)
+  --chat <jid>           Current conversation JID (required unless QIUSHUIAI_CHAT_JID is set)
   --theme <light|dark>   Color theme (default: light)
   --out <path>           Output PDF path
   --port <n>             QiushuiAI web server port (default: auto-detect or 8080)
@@ -88,15 +88,16 @@ function assertPositiveIntegerString(value: string, label: string): void {
 }
 
 export function parseCliArgs(args = process.argv.slice(2)): ExportTimelinePdfOptions {
-  const chatJid = getArg(args, "--chat") || "web:default";
+  const chatJid = getArg(args, "--chat") || process.env.QIUSHUIAI_CHAT_JID || "";
+  if (!chatJid.trim()) throw new Error("Pass the current conversation with --chat; no default conversation is assumed.");
   const fromTs = getArg(args, "--from") || "";
   const toTs = getArg(args, "--to") || "";
   const fromRow = getArg(args, "--from-row") || "";
   const toRow = getArg(args, "--to-row") || "";
   const lastN = getArg(args, "--last") || "";
   const theme = (getArg(args, "--theme") || "light").toLowerCase();
-  const outPath = getArg(args, "--out") || `/workspace/exports/timeline-${safeChatPathSegment(chatJid)}.pdf`;
-  const portArg = getArg(args, "--port") || "";
+  const outPath = resolve(getArg(args, "--out") || join("exports", `timeline-${safeChatPathSegment(chatJid)}.pdf`));
+  const portArg = getArg(args, "--port") || process.env.QIUSHUIAI_WEB_PORT || "";
   const htmlOnly = hasFlag(args, "--html-only");
   const authKeyArg = getArg(args, "--auth-key") || "";
 
@@ -127,16 +128,10 @@ export function resolveOutputPaths(outPath: string): { outPath: string; htmlPath
 }
 
 export async function detectPort(portArg = ""): Promise<number> {
-  if (portArg) return Number(portArg);
-  for (const port of [8080, 3000, 8443]) {
-    try {
-      const res = await fetch(`http://127.0.0.1:${port}/manifest.json`, { signal: AbortSignal.timeout(2000) });
-      if (res.ok || res.status === 302) return port;
-    } catch {
-      // try next
-    }
-  }
-  return 8080;
+  const value = portArg || process.env.QIUSHUIAI_WEB_PORT || "";
+  assertPositiveIntegerString(value, "--port");
+  if (!value || Number(value) > 65535) throw new Error("Set QIUSHUIAI_WEB_PORT or --port to the running QiushuiAI instance.");
+  return Number(value);
 }
 
 function loadConfigAuthKey(): string {
@@ -222,6 +217,21 @@ export function runWkhtmltopdf(binary: string, htmlPath: string, pdfPath: string
   }
 }
 
+/** Render actual export HTML in an isolated browser and close it explicitly. */
+export async function renderPdf(htmlPath: string, pdfPath: string): Promise<void> {
+  const candidates = [process.env.QIUSHUIAI_CHROME_PATH, "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", Bun.which("chromium"), Bun.which("google-chrome")];
+  const chrome = candidates.find((path): path is string => Boolean(path && existsSync(path)));
+  if (!chrome) return runWkhtmltopdf(ensureWkhtmltopdf(), htmlPath, pdfPath);
+  const { chromium } = await import("playwright-core");
+  const browser = await chromium.launch({ executablePath: chrome, headless: true, timeout: 30_000 });
+  try {
+    const page = await browser.newPage();
+    await page.goto(pathToFileURL(resolve(htmlPath)).href, { waitUntil: "load", timeout: 30_000 });
+    await page.locator('html[data-render-done="true"] #export-root').waitFor();
+    await page.pdf({ path: resolve(pdfPath), format: "A4", printBackground: true });
+  } finally { await browser.close(); }
+}
+
 export async function run(options = parseCliArgs()): Promise<string> {
   const authKey = resolveAuthKey(options.authKeyArg);
   if (!authKey) {
@@ -246,11 +256,10 @@ export async function run(options = parseCliArgs()): Promise<string> {
     return htmlPath;
   }
 
-  const wkhtmltopdf = ensureWkhtmltopdf();
-  runWkhtmltopdf(wkhtmltopdf, htmlPath, outPath);
+  await renderPdf(htmlPath, outPath);
 
   if (!existsSync(outPath)) {
-    throw new Error("wkhtmltopdf did not create the PDF output");
+    throw new Error("PDF renderer did not create the output");
   }
   const size = statSync(outPath).size;
   if (size < 1500) {

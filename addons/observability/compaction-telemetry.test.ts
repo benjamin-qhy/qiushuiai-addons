@@ -47,7 +47,9 @@ test("export spools, sends, and advances its durable checkpoint", async () => {
   db.run(`INSERT INTO compaction_telemetry VALUES (NULL, 'gen-1', '2026-08-30T00:00:00Z', 'manual', 'selective', 'single_pass', 'success', 'local', 'fast-summary', NULL, 48000, 1200, 200, 700, 300, 1, NULL, NULL, 0)`);
   db.close();
   const received: string[] = [];
-  const server = createServer(socket => socket.on("data", data => received.push(data.toString())));
+  let receivedEnd!: () => void;
+  const receivedPromise = new Promise<void>(resolve => { receivedEnd = resolve; });
+  const server = createServer(socket => { socket.on("data", data => received.push(data.toString())); socket.on("end", receivedEnd); });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
   try {
     const address = server.address(); if (!address || typeof address === "string") throw new Error("missing server address");
@@ -55,6 +57,7 @@ test("export spools, sends, and advances its durable checkpoint", async () => {
     expect(result).toMatchObject({ batches: 1 });
     expect(result.points).toBeGreaterThan(0);
     expect(loadCompactionCheckpoint(path)).toEqual({ id: 1 });
+    await receivedPromise;
     expect(received.join("\n")).toContain("qiushuiai.smith_test.compaction.local.fast-summary.selective.single_pass.manual.success.none.duration.ttft_ms 700");
     expect(received.join("\n")).not.toContain("qiushuiai.compaction.smith_test");
     expect(await exportCompactionTelemetry({ ...config, graphite_port: address.port }, new Date("2026-08-30T00:02:00Z"), path)).toEqual({ batches: 0, points: 0 });
@@ -72,12 +75,14 @@ test("export rewrites queued legacy compaction paths before Carbon delivery", as
     points: [{ path: "qiushuiai.compaction.smith.local.model.selective.single_pass.manual.success.none.attempt.count", value: 1, timestamp: 1 }],
   })}\n`);
   const received: string[] = [];
-  const server = createServer(socket => socket.on("data", data => received.push(data.toString())));
+  let receivedEnd!: () => void;
+  const receivedPromise = new Promise<void>(resolve => { receivedEnd = resolve; });
+  const server = createServer(socket => { socket.on("data", data => received.push(data.toString())); socket.on("end", receivedEnd); });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
   try {
     const address = server.address(); if (!address || typeof address === "string") throw new Error("missing server address");
     expect(await exportCompactionTelemetry({ ...config, graphite_port: address.port }, new Date(), path)).toEqual({ batches: 1, points: 0 });
-    await new Promise(resolve => setTimeout(resolve, 20));
+    await receivedPromise;
     expect(received.join("\n")).toContain("qiushuiai.smith.compaction.local.model.selective.single_pass.manual.success.none.attempt.count 1 1");
     expect(received.join("\n")).not.toContain("qiushuiai.compaction.smith");
   } finally { server.close(); }

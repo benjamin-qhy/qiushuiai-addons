@@ -1,71 +1,24 @@
 ---
 name: export-timeline-pdf
-description: Export a chat timeline to a PDF using the internal localhost export endpoint and wkhtmltopdf.
+description: 将当前 QiushuiAI 对话的真实消息导出为 PDF，支持时间范围、消息条数和深浅主题。
 distribution: public
 ---
 
-# Export timeline PDF
+# 导出对话 PDF
 
-Export chat history through qiushuiai's internal localhost HTML export endpoint and render it with `wkhtmltopdf`.
+从当前 QiushuiAI 实例读取真实聊天记录，生成 PDF 和供核对的 HTML。不要自行编写或模拟聊天内容。
 
-## Steps
+1. 从当前会话上下文取得准确的 chat JID。不要使用 `web:default` 代替当前会话；无法确定时先查询会话信息。
+2. 找到本技能目录向上两级的 `scripts/export-timeline-pdf.ts`，使用该脚本的绝对路径。工作目录保持在当前项目，让输出落到项目的 `exports/`。
+3. 运行脚本并传入 `--chat` 的真实值；需要截取范围时使用 `--last`、`--from`、`--to`、`--from-row`、`--to-row`。可传 `--theme light` 或 `--theme dark`，以及 `--out` 指定项目内输出文件。
+4. 端口默认读取 `QIUSHUIAI_WEB_PORT`；未配置时通过 `--port` 指定实际运行实例，禁止扫描其他端口猜测。
+5. 检查生成的 PDF 文件和正文，确认包含实际消息。最后通过宿主的文件附件工具交付 PDF。仅生成 HTML 不算完成 PDF 导出。
 
-1. Export the last 50 messages:
-   ```bash
-   bun ../../scripts/export-timeline-pdf.ts --chat web:default --last 50
-   ```
+## 运行条件
 
-2. Export a date range:
-   ```bash
-   bun ../../scripts/export-timeline-pdf.ts --chat web:default \
-     --from "2026-03-01T00:00:00Z" --to "2026-03-05T23:59:59Z"
-   ```
+- 本机正在运行 QiushuiAI。
+- 内部导出密钥由宿主环境提供：`QIUSHUIAI_EXPORT_AUTH_KEY`、`QIUSHUIAI_INTERNAL_SECRET` 或 `QIUSHUIAI_WEB_INTERNAL_SECRET`。不要在对话或日志中显示密钥；缺少时明确报告尚未配置。
+- 已安装 Chrome/Chromium 或 `wkhtmltopdf`。Chrome 可通过 `QIUSHUIAI_CHROME_PATH` 指定。脚本使用独立临时浏览器配置，不读取用户浏览器资料。
+- `--html-only` 仅用于诊断，不表示 PDF 已生成。
 
-3. Export a specific message range by row ID:
-   ```bash
-   bun ../../scripts/export-timeline-pdf.ts --chat web:default \
-     --from-row 1234 --to-row 1300
-   ```
-
-4. Dark theme:
-   ```bash
-   bun ../../scripts/export-timeline-pdf.ts --chat web:default --last 20 --theme dark
-   ```
-
-## Options
-
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--chat` | Chat JID to export | `web:default` |
-| `--from` | Start timestamp (ISO 8601) | (all) |
-| `--to` | End timestamp (ISO 8601) | (all) |
-| `--from-row` | Start message row ID | (all) |
-| `--to-row` | End message row ID | (all) |
-| `--last` | Export only the last N messages | (all) |
-| `--theme` | `light` or `dark` | `light` |
-| `--out` | Output PDF path | `/workspace/exports/timeline-<chat>.pdf` |
-| `--port` | QiushuiAI web port | auto-detect / `8080` |
-| `--auth-key` | Internal export auth key | env/config lookup |
-| `--html-only` | Save HTML sidecar without rendering PDF | off |
-
-## Auth
-
-The internal endpoint is only available on localhost and requires an internal auth key.
-The script resolves it in this order:
-
-1. `--auth-key`
-2. `QIUSHUIAI_EXPORT_AUTH_KEY`
-3. `QIUSHUIAI_INTERNAL_SECRET`
-4. `QIUSHUIAI_WEB_INTERNAL_SECRET`
-5. `web.internalSecret` from `/workspace/.qiushuiai/config.json`
-
-## Prerequisites
-
-- `wkhtmltopdf` must be installed and available on `PATH`
-- qiushuiai web server must be running locally
-
-## Notes
-
-- The script is read-only: it never opens SQLite and never writes auth/session state.
-- The HTML export endpoint is `GET /internal/export/timeline`.
-- The script writes an HTML sidecar next to the PDF for inspection, then renders that local file so bearer tokens are not passed to `wkhtmltopdf`.
+脚本调用只读的本机 `/internal/export/timeline` 接口，不直接读取宿主存储，不修改会话或登录状态。认证信息只发送给内部接口，不传递给 PDF 渲染器。

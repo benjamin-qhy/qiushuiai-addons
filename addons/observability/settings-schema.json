@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "fields": [
+    {
+      "key": "enabled",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "启用外部遥测",
+        "en-US": "Enable external telemetry"
+      }
+    },
+    {
+      "key": "instance_name",
+      "type": "text",
+      "label": {
+        "zh-CN": "实例名称",
+        "en-US": "Instance name"
+      }
+    },
+    {
+      "key": "appinsights_enabled",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "发送到 Azure Application Insights",
+        "en-US": "Send to Azure Application Insights"
+      }
+    },
+    {
+      "key": "appinsights_keychain",
+      "type": "text",
+      "label": {
+        "zh-CN": "Azure 连接密钥名称",
+        "en-US": "Azure connection secret name"
+      }
+    },
+    {
+      "key": "appinsights_live_metrics",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "启用 Azure 实时指标",
+        "en-US": "Enable Azure live metrics"
+      }
+    },
+    {
+      "key": "appinsights_standard_metrics",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "启用 Azure 标准指标",
+        "en-US": "Enable Azure standard metrics"
+      }
+    },
+    {
+      "key": "appinsights_sampling_ratio",
+      "type": "number",
+      "label": {
+        "zh-CN": "采样比例（0 到 1）",
+        "en-US": "Sampling ratio (0 to 1)"
+      },
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    {
+      "key": "graphite_enabled",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "发送到 Graphite",
+        "en-US": "Send to Graphite"
+      }
+    },
+    {
+      "key": "graphite_host",
+      "type": "text",
+      "label": {
+        "zh-CN": "Graphite 服务器地址",
+        "en-US": "Graphite server address"
+      }
+    },
+    {
+      "key": "graphite_port",
+      "type": "number",
+      "label": {
+        "zh-CN": "Graphite 端口",
+        "en-US": "Graphite port"
+      },
+      "min": 1,
+      "max": 65535,
+      "step": 1
+    },
+    {
+      "key": "usage_telemetry_enabled",
+      "type": "boolean",
+      "label": {
+        "zh-CN": "导出用量记录",
+        "en-US": "Export usage records"
+      }
+    },
+    {
+      "key": "usage_telemetry_interval_minutes",
+      "type": "number",
+      "label": {
+        "zh-CN": "导出间隔（分钟）",
+        "en-US": "Export interval (minutes)"
+      },
+      "min": 1,
+      "max": 60,
+      "step": 1
+    },
+    {
+      "key": "graphite_render_url",
+      "type": "text",
+      "label": {
+        "zh-CN": "Graphite 图表地址",
+        "en-US": "Graphite chart URL"
+      }
+    }
+  ]
+}

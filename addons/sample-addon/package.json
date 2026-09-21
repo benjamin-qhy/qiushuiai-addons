@@ -1,6 +1,6 @@
 {
   "name": "@qiushuiai/qiushuiai-addon-sample-addon",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板",
   "type": "module",
   "main": "index.ts",
