@@ -1,6 +1,6 @@
 {
   "name": "@qiushuiai/qiushuiai-addon-vent",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "将可配置的工作区反馈日志能力集成到 QiushuiAI",
   "type": "module",
   "main": "index.ts",

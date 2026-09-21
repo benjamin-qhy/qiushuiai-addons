@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "fields": [
+    {
+      "key": "output_path",
+      "type": "text",
+      "label": {
+        "zh-CN": "反馈日志文件（项目内路径）",
+        "en-US": "Feedback log file (project-relative path)"
+      }
+    }
+  ]
+}

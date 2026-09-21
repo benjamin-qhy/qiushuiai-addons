@@ -1,6 +1,6 @@
 {
   "name": "@qiushuiai/qiushuiai-addon-observability",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite",
   "type": "module",
   "main": "index.ts",
@@ -20,7 +20,10 @@
       "entries": [
         "web/index.ts"
       ]
-    }
+    },
+    "skills": [
+      "skills"
+    ]
   },
   "dependencies": {
     "@azure/monitor-opentelemetry": "^1.19",
@@ -28,7 +31,8 @@
     "@opentelemetry/resources": "^2.10.0"
   },
   "peerDependencies": {
-    "@earendil-works/pi-coding-agent": "*"
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
   },
   "keywords": [
     "observability",

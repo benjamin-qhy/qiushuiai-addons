@@ -6,7 +6,7 @@
       "slug": "export-timeline-pdf",
       "name": "@qiushuiai/qiushuiai-addon-export-timeline-pdf",
       "displayName": "导出时间线 PDF",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "type": "skill",
       "description": "将聊天时间线导出为 PDF，并保留头像和引用消息标记",
       "path": "addons/export-timeline-pdf",
@@ -23,50 +23,20 @@
       ],
       "featured": false,
       "compatibleVersions": ">=3.0.0",
-      "skills": [],
+      "skills": [
+        "export-timeline-pdf"
+      ],
       "install": {
         "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-export-timeline-pdf-0.1.2.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-export-timeline-pdf-0.1.3.tgz"
       },
-      "updatedAt": "2026-09-20"
-    },
-    {
-      "slug": "kanban-editor",
-      "name": "@qiushuiai/qiushuiai-addon-kanban-editor",
-      "displayName": "看板编辑器",
-      "version": "0.1.3",
-      "type": "extension",
-      "description": "编辑工作区 .kanban.md 文件，并支持 Obsidian 风格的看板双向链接",
-      "path": "addons/kanban-editor",
-      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/kanban-editor",
-      "categories": [
-        "editor",
-        "kanban",
-        "markdown",
-        "wiki-links",
-        "workspace"
-      ],
-      "displayTags": [
-        "Markdown 编辑",
-        "双向链接",
-        "工作区",
-        "看板",
-        "编辑器"
-      ],
-      "featured": false,
-      "compatibleVersions": ">=3.0.0",
-      "skills": [],
-      "install": {
-        "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-kanban-editor-0.1.3.tgz"
-      },
-      "updatedAt": "2026-09-20"
+      "updatedAt": "2026-09-21"
     },
     {
       "slug": "observability",
       "name": "@qiushuiai/qiushuiai-addon-observability",
       "displayName": "可观测性",
-      "version": "0.1.18",
+      "version": "0.1.19",
       "type": "extension",
       "description": "通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite",
       "path": "addons/observability",
@@ -100,47 +70,15 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-observability-0.1.18.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-observability-0.1.19.tgz"
       },
       "updatedAt": "2026-09-21"
-    },
-    {
-      "slug": "plan-sidebar",
-      "name": "@qiushuiai/qiushuiai-addon-plan-sidebar",
-      "displayName": "计划侧边栏",
-      "version": "0.1.26",
-      "type": "extension",
-      "description": "提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储",
-      "path": "addons/plan-sidebar",
-      "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/plan-sidebar",
-      "categories": [
-        "core",
-        "markdown",
-        "planning",
-        "session",
-        "ui"
-      ],
-      "displayTags": [
-        "Markdown 编辑",
-        "会话",
-        "核心推荐",
-        "界面",
-        "计划"
-      ],
-      "featured": true,
-      "compatibleVersions": ">=3.0.0",
-      "skills": [],
-      "install": {
-        "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-plan-sidebar-0.1.26.tgz"
-      },
-      "updatedAt": "2026-09-20"
     },
     {
       "slug": "sample-addon",
       "name": "@qiushuiai/qiushuiai-addon-sample-addon",
       "displayName": "插件示例",
-      "version": "0.1.12",
+      "version": "0.1.13",
       "type": "extension",
       "description": "展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板",
       "path": "addons/sample-addon",
@@ -160,17 +98,17 @@
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-sample-addon-0.1.12.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-sample-addon-0.1.13.tgz"
       },
-      "updatedAt": "2026-09-20"
+      "updatedAt": "2026-09-21"
     },
     {
       "slug": "settings-dialog-screenshot",
       "name": "@qiushuiai/qiushuiai-addon-settings-dialog-screenshot",
       "displayName": "设置截图",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "type": "skill",
-      "description": "用于截取 Pi Web 设置对话框紧凑画面的开发技能",
+      "description": "截取 QiushuiAI 真实设置页面或插件设置弹窗，生成可交付的 PNG 图片",
       "path": "addons/settings-dialog-screenshot",
       "homepage": "https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/settings-dialog-screenshot",
       "categories": [
@@ -192,15 +130,15 @@
       ],
       "install": {
         "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-settings-dialog-screenshot-0.1.1.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-settings-dialog-screenshot-0.1.2.tgz"
       },
-      "updatedAt": "2026-09-20"
+      "updatedAt": "2026-09-21"
     },
     {
       "slug": "vent",
       "name": "@qiushuiai/qiushuiai-addon-vent",
       "displayName": "工作区反馈日志",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "type": "extension",
       "description": "将可配置的工作区反馈日志能力集成到 QiushuiAI",
       "path": "addons/vent",
@@ -224,9 +162,9 @@
       "skills": [],
       "install": {
         "kind": "tarball",
-        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-vent-0.1.5.tgz"
+        "spec": "https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-vent-0.1.6.tgz"
       },
-      "updatedAt": "2026-09-20"
+      "updatedAt": "2026-09-21"
     }
   ]
 }

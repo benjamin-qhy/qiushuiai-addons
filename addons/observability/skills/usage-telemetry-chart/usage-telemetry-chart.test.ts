@@ -31,8 +31,10 @@ test("queries and groups instance-first usage metrics", async () => {
       "--render-url", `http://127.0.0.1:${address.port}`,
       "--days", "7",
       "--output", output,
-    ], { stdout: "pipe", stderr: "pipe" });
-    expect(await child.exited).toBe(0);
+    ], { stdout: "pipe", stderr: "pipe", env: { ...process.env, HTTP_PROXY: "", HTTPS_PROXY: "", ALL_PROXY: "", http_proxy: "", https_proxy: "", all_proxy: "" } });
+    const status = await child.exited;
+    const error = await new Response(child.stderr).text();
+    expect({ status, error }).toEqual({ status: 0, error: "" });
     expect(requestedTarget).toBe("qiushuiai.*.usage.*.*.tokens.total");
     const svg = readFileSync(output, "utf8");
     expect(svg).toContain("smith");

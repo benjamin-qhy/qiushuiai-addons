@@ -62,14 +62,12 @@ bun add https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon
 
 ## 可用插件
 
-当前仅保留以下 7 个插件，其余插件已从本仓库工作版本移除。
+当前仅保留以下 5 个插件，其余插件已从本仓库工作版本移除。
 
 | 插件 | 技术标识 | 说明 |
 |---|---|---|
 | [导出时间线 PDF](addons/export-timeline-pdf/) | `export-timeline-pdf` | 将聊天时间线导出为 PDF，并保留头像和引用消息标记 |
-| [看板编辑器](addons/kanban-editor/) | `kanban-editor` | 编辑工作区 .kanban.md 文件，并支持 Obsidian 风格的看板双向链接 |
 | [可观测性](addons/observability/) | `observability` | 通过 OpenTelemetry 将错误和智能体轮次追踪到 Azure Application Insights 和本地 Graphite |
-| [计划侧边栏](addons/plan-sidebar/) | `plan-sidebar` | 提供右侧会话计划栏、统一的计划更新动作和 Markdown 存储 |
 | [插件示例](addons/sample-addon/) | `sample-addon` | 展示设置面板、钥匙串密钥、KV 配置和测试端点的插件开发模板 |
 | [设置截图](addons/settings-dialog-screenshot/) | `settings-dialog-screenshot` | 用于截取 Pi Web 设置对话框紧凑画面的开发技能 |
 | [工作区反馈日志](addons/vent/) | `vent` | 将可配置的工作区反馈日志能力集成到 QiushuiAI |

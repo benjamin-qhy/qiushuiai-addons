@@ -7,7 +7,7 @@
 这是 QiushuiAI 的扩展插件，技术标识为 `observability`。
 
 - 软件包：`@qiushuiai/qiushuiai-addon-observability`
-- 当前版本：`0.1.18`
+- 当前版本：`0.1.19`
 - 兼容版本：QiushuiAI `>=3.0.0`
 - 展示标签：`可观测性`、`链路追踪`、`遥测`、`开放遥测`、`应用洞察`、`Graphite 指标`、`指标`、`实时指标`、`核心推荐`
 - 推荐级别：核心推荐
@@ -17,7 +17,7 @@
 在 QiushuiAI 中打开**设置 → 插件**，搜索“可观测性”并安装。也可以直接使用无需登录的公开安装包：
 
 ```text
-https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-observability-0.1.18.tgz
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-observability-0.1.19.tgz
 ```
 
 安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。
@@ -27,6 +27,12 @@ https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-observa
 - 入口：`index.ts`
 - 入口：`web/index.ts`
 - 技能：`usage-telemetry-chart`
+
+## 无需外部账号的使用方式
+
+在对话里说“查看当前对话的模型用量”，助手可调用 `observability_usage` 读取真实记录，包括输入、输出、缓存和按模型汇总的用量。金额是模型标价估算，不代表 Codex 订阅实际扣费。
+
+Azure、Graphite 和多实例图表需要用户提供实际服务配置；未配置时不代表已启用或已验证。
 
 ## 配置与安全
 

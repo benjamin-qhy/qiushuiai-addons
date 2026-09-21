@@ -4,9 +4,10 @@
  * Run: bun run build.ts
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, copyFileSync, cpSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, copyFileSync, cpSync, rmSync } from "fs";
 import { join, dirname, normalize } from "path";
 import { marked } from "marked";
+import { preparePublishedAddon } from "./scripts/prepare-published-addon.ts";
 
 const ROOT    = dirname(Bun.main);
 const CATALOG = join(ROOT, "catalog.json");
@@ -55,6 +56,12 @@ interface Catalog { version: number; source: string; addons: Addon[]; }
 
 const catalog: Catalog = JSON.parse(readFileSync(CATALOG, "utf8"));
 const addons  = catalog.addons;
+
+// Generated plugin pages and packages must not keep removed plugins installable.
+for (const directory of ["addons", "packages", "assets/og"]) {
+  rmSync(join(OUT, directory), { recursive: true, force: true });
+  mkdirSync(join(OUT, directory), { recursive: true });
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function esc(s: string) {
@@ -792,10 +799,11 @@ for (const addon of addons) {
   const addonDir = join(ROOT, addon.path);
   const baseName = addon.name.replace(/^@[^/]+\//, '');
   const outPath  = join(OUT, "packages", `${baseName}-${addon.version}.tgz`);
-  Bun.spawnSync(["tar", "czf", outPath, "-C", addonDir, "--exclude=./node_modules", "--exclude=./.tmp", "."], {
-    stdout: "inherit",
-    stderr: "inherit",
-  });
+  const prepared = await preparePublishedAddon(addonDir);
+  try {
+    const result = Bun.spawnSync(["tar", "czf", outPath, "-C", prepared.directory, "--exclude=./node_modules", "--exclude=./.tmp", "."], { stdout: "inherit", stderr: "inherit" });
+    if (result.exitCode !== 0) throw new Error(`Failed to pack ${addon.name}`);
+  } finally { prepared.dispose(); }
   console.log(`✓ packed ${addon.name}@${addon.version}`);
 }
 

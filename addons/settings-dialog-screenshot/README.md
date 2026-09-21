@@ -7,7 +7,7 @@
 这是 QiushuiAI 的技能插件，技术标识为 `settings-dialog-screenshot`。
 
 - 软件包：`@qiushuiai/qiushuiai-addon-settings-dialog-screenshot`
-- 当前版本：`0.1.1`
+- 当前版本：`0.1.2`
 - 兼容版本：QiushuiAI `>=3.0.0`
 - 展示标签：`开发工具`、`文档`、`截图`、`界面`
 
@@ -16,7 +16,7 @@
 在 QiushuiAI 中打开**设置 → 插件**，搜索“设置截图”并安装。也可以直接使用无需登录的公开安装包：
 
 ```text
-https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-settings-dialog-screenshot-0.1.1.tgz
+https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-settings-dialog-screenshot-0.1.2.tgz
 ```
 
 安装或更新后，请按 QiushuiAI 的提示重新加载相关运行时入口。

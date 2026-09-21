@@ -174,8 +174,12 @@ async function buildMetadata() {
       .map((entry) => entry?.name?.trim())
       .filter((name): name is string => Boolean(name));
 
+    for (const skillRoot of pkg.pi?.skills ?? []) {
+      const rel = join('addons', slug, skillRoot).replaceAll('\\', '/');
+      if (!existsSync(join(repoRoot, rel))) throw new Error(`addons/${slug}/package.json: missing skill root ${rel}`);
+      skillRoots.push(rel);
+    }
     if (declaredAgentSkills.length) {
-      skillRoots.push(`addons/${slug}/skills`);
       for (const entry of declaredAgentSkills) {
         if (!entry?.name || !entry?.path) {
           throw new Error(`addons/${slug}/package.json: every agents.skills entry needs name and path`);
@@ -211,7 +215,6 @@ async function buildMetadata() {
     keywords: dedupeSorted([...(Array.isArray(rootPackage.keywords) ? rootPackage.keywords as string[] : []), 'pi-package']),
     files: dedupeSorted(['addons', 'catalog.json', 'README.md', 'LICENSE']),
     pi: {
-      ...(typeof rootPackage.pi === 'object' && rootPackage.pi ? rootPackage.pi as Record<string, unknown> : {}),
       extensions: extensionPaths,
       skills: dedupeSorted(skillRoots),
     },

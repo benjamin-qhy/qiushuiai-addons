@@ -1,83 +1,20 @@
 ---
 name: settings-dialog-screenshot
-description: Capture a screenshot of the Pi web settings dialog, cropped tightly to the dialog window only.
+description: 截取 QiushuiAI 本机真实插件设置弹窗，输出紧凑 PNG，用于文档、问题反馈和设置验收。
 distribution: public
 ---
 
-# Settings Dialog Screenshot
+# 设置弹窗截图
 
-Use this skill when documenting Pi or qiushuiai add-ons and the user wants a screenshot of the **settings dialog only**.
+必须截取正在运行的 QiushuiAI 页面，不能重绘界面或使用模拟数据。
 
-## Goal
+1. 确认用户要截图的本机 QiushuiAI Web 地址及插件标识。不要猜测端口。
+2. 定位本技能向上两级的 `scripts/capture-settings.ts`，使用脚本绝对路径执行。传入 `--url` 的真实地址、`--addon` 的已安装插件标识、`--out` 的项目内 PNG 路径。
+3. 脚本使用本机已安装的 Chrome/Chromium、独立临时浏览器会话，打开真实插件设置并只截取可见弹窗，隐藏密码框。不使用用户浏览器资料，不修改插件设置。
+4. 检查实际 PNG，然后通过宿主附件工具交付。截图必须有设置标题和可读字段；未打开弹窗、登录受阻或脚本失败都应如实报告。
 
-Produce a tightly cropped screenshot containing just the visible settings window/dialog.
+支持 `sample-addon`、`observability`、`vent` 等具有设置表单的已安装插件。默认目标是 `sample-addon`。
 
-## Preferred method
+如果当前应用自带的 `browser` 工具可用，也可按相同步骤观察页面、打开设置并截取 dialog 元素。PC Web 环境没有桌面浏览器桥时使用本插件脚本，不把缺少桥接当成截图成功。
 
-Use **DOM-targeted capture** instead of a full-page screenshot.
-
-## Workflow
-
-1. Open the relevant Pi web UI page.
-2. Open the **Settings** dialog or pane to document.
-3. Wait until the dialog is fully rendered.
-4. Identify the top-level visible dialog container.
-5. Capture a screenshot of **that element only**.
-6. Save as PNG.
-7. Attach the PNG if the user wants the image as a deliverable.
-
-## Rules
-
-- Do **not** capture the whole page if an element-level capture is possible.
-- Do **not** include unrelated surrounding UI unless unavoidable.
-- Prefer the outer visible dialog frame, including rounded corners and shadow.
-- If the dialog is scrollable, capture the currently visible state unless the user explicitly asks for a stitched/full-content version.
-- Never expose passwords, tokens, or private data in the screenshot.
-
-## Good selectors
-
-Prefer one of these, in order:
-
-- the nearest stable modal root
-- the element with `role="dialog"`
-- the top-level settings pane container
-- the visible card/window wrapper for the settings UI
-
-If there are multiple nested matches, choose the **outermost visible settings dialog**.
-
-## Playwright pattern
-
-Preferred:
-
-```ts
-const dialog = page.locator('[role="dialog"]').first();
-await dialog.screenshot({ path: 'settings-dialog.png' });
-```
-
-Fallback:
-
-```ts
-const dialog = page.locator('.settings-dialog, .modal, [role="dialog"]').first();
-const box = await dialog.boundingBox();
-await page.screenshot({
-  path: 'settings-dialog.png',
-  clip: box ?? undefined,
-});
-```
-
-## Output expectations
-
-- PNG preferred
-- tight crop
-- readable labels and toggles
-- no unnecessary browser chrome
-- safe to embed in a README or add-on docs page
-
-## Use in documentation
-
-When updating an add-on README:
-
-- prefer a realistic populated example
-- crop to the dialog only
-- avoid clutter
-- keep the screenshot current with the documented UI
+系统需要 Chrome 或 Chromium；特殊安装路径通过 `QIUSHUIAI_CHROME_PATH` 提供。页面要求登录且独立浏览器会话无法进入时，停止并说明实际登录限制，禁止绕过鉴权。

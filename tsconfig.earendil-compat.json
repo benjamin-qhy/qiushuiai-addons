@@ -16,9 +16,7 @@
   },
   "include": [
     "addons/export-timeline-pdf/**/*.ts",
-    "addons/kanban-editor/**/*.ts",
     "addons/observability/**/*.ts",
-    "addons/plan-sidebar/**/*.ts",
     "addons/sample-addon/**/*.ts",
     "addons/settings-dialog-screenshot/**/*.ts",
     "addons/vent/**/*.ts"
