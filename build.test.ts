@@ -43,7 +43,7 @@ test("only the selected foundational add-ons are featured", () => {
     const manifest = JSON.parse(readFileSync(join(repoRoot, path), "utf8"));
     return manifest.qiushuiai?.featured === true ? [path.split("/")[1]] : [];
   });
-  expect(coreSlugs).toEqual(["delegate", "goal", "observability", "plan-sidebar", "session-dashboard"]);
+  expect(coreSlugs).toEqual(["observability", "plan-sidebar"]);
 
   const catalog = JSON.parse(readFileSync(join(repoRoot, "catalog.json"), "utf8"));
   const catalogCoreSlugs = catalog.addons.filter((addon: any) => addon.featured === true).map((addon: any) => addon.slug).sort();

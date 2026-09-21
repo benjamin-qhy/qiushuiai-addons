@@ -14,12 +14,11 @@
     "sync:catalog": "bun scripts/sync-catalog.ts --write",
     "check:catalog": "bun scripts/sync-catalog.ts --check",
     "audit:brand": "bun scripts/audit-brand.ts",
-    "typecheck:earendil-compat": "tsc --noEmit -p tsconfig.earendil-compat.json && tsc --noEmit -p addons/m365/tsconfig.json && tsc --noEmit -p addons/remote-peer/tsconfig.json && tsc --noEmit -p addons/linkr/tsconfig.json && tsc --noEmit -p addons/a2a/tsconfig.json",
-    "test:earendil-compat": "bun test addons/cheapskate/index.test.ts addons/codex-conversion/index.test.ts addons/delegate/index.test.ts addons/m365/tests/*.test.ts addons/skill-model-effort/index.test.ts addons/smart-compaction/index.test.ts addons/autoresearch/supervisor.test.ts addons/linkr/linkr.test.ts addons/a2a",
+    "typecheck:earendil-compat": "tsc --noEmit -p tsconfig.earendil-compat.json",
+    "test:earendil-compat": "bun test addons/kanban-editor addons/observability addons/plan-sidebar addons/sample-addon addons/vent",
     "addon:e2e": "cd tests/addon-e2e && bun run test -- --project=desktop-chrome",
     "addon:e2e:all": "cd tests/addon-e2e && QIUSHUIAI_ADDON=all bun run test -- --project=desktop-chrome",
-    "addon:e2e:report": "cd tests/addon-e2e && bun run report",
-    "typecheck:a2a": "tsc --noEmit -p addons/a2a/tsconfig.json"
+    "addon:e2e:report": "cd tests/addon-e2e && bun run report"
   },
   "homepage": "https://benjamin-qhy.github.io/qiushuiai-addons/",
   "bugs": {
@@ -27,50 +26,11 @@
   },
   "pi": {
     "extensions": [
-      "addons/a2a/index.ts",
-      "addons/ast-grep-tool/index.ts",
-      "addons/autoresearch/index.ts",
-      "addons/cheapskate/index.ts",
-      "addons/code-validator/index.ts",
-      "addons/codex-conversion/src/index.ts",
-      "addons/delegate/index.ts",
-      "addons/dev-tools/index.ts",
-      "addons/drawio-editor/index.ts",
-      "addons/editable-table/index.ts",
-      "addons/eml-viewer/index.ts",
-      "addons/ghostty-terminal/index.ts",
-      "addons/git-query-tools/index.ts",
-      "addons/goal/index.ts",
-      "addons/image-processing/index.ts",
-      "addons/imap/index.ts",
-      "addons/kanban-board-widget/index.ts",
       "addons/kanban-editor/index.ts",
-      "addons/late-night-regrets/index.ts",
-      "addons/linkr/index.ts",
-      "addons/lite-term/index.ts",
-      "addons/m365/index.ts",
-      "addons/mindmap/index.ts",
       "addons/observability/index.ts",
-      "addons/office-tools/index.ts",
-      "addons/office-viewer/index.ts",
       "addons/plan-sidebar/index.ts",
-      "addons/portainer/index.ts",
-      "addons/proxmox/index.ts",
-      "addons/remote-peer/index.ts",
       "addons/sample-addon/index.ts",
-      "addons/session-dashboard/index.ts",
-      "addons/session-tree/index.ts",
-      "addons/skill-model-effort/src/index.ts",
-      "addons/smart-compaction/index.ts",
-      "addons/stealth-browser/index.ts",
-      "addons/telegram/index.ts",
-      "addons/vent/index.ts",
-      "addons/voice-pipeline/index.ts",
-      "addons/web-viewer/index.ts",
-      "addons/whatsapp/index.ts",
-      "addons/win-ui/index.ts",
-      "addons/writer-fonts/index.ts",
-      "addons/yolo-vibe/index.ts"
+      "addons/vent/index.ts"
     ],
     "runtime": {
       "entries": [
@@ -80,119 +40,15 @@
       ]
     },
     "skills": [
-      "addons/a2a/skills",
-      "addons/autoresearch/skills",
-      "addons/delegate/skills",
-      "addons/editable-table/skills",
-      "addons/linkr/skills",
-      "addons/m365/skills",
       "addons/observability/skills",
-      "addons/remote-peer/skills",
-      "addons/settings-dialog-screenshot/skills",
-      "addons/stealth-browser/skills"
+      "addons/settings-dialog-screenshot/skills"
     ]
   },
   "agents": {
     "skills": [
       {
-        "name": "a2a",
-        "path": "./addons/a2a/skills/a2a/SKILL.md"
-      },
-      {
-        "name": "autoresearch-create",
-        "path": "./addons/autoresearch/skills/autoresearch-create"
-      },
-      {
-        "name": "delegate",
-        "path": "./addons/delegate/skills/delegate"
-      },
-      {
-        "name": "editable-table",
-        "path": "./addons/editable-table/skills/editable-table"
-      },
-      {
-        "name": "linkr-boot-selection",
-        "path": "./addons/linkr/skills/linkr-boot-selection/SKILL.md"
-      },
-      {
-        "name": "linkr-control",
-        "path": "./addons/linkr/skills/linkr-control/SKILL.md"
-      },
-      {
-        "name": "linkr-firmware-navigation",
-        "path": "./addons/linkr/skills/linkr-firmware-navigation/SKILL.md"
-      },
-      {
-        "name": "linkr-os-install",
-        "path": "./addons/linkr/skills/linkr-os-install/SKILL.md"
-      },
-      {
-        "name": "linkr-qualify-device",
-        "path": "./addons/linkr/skills/linkr-qualify-device/SKILL.md"
-      },
-      {
-        "name": "linkr-reboot-bios",
-        "path": "./addons/linkr/skills/linkr-reboot-bios/SKILL.md"
-      },
-      {
-        "name": "linkr-recovery",
-        "path": "./addons/linkr/skills/linkr-recovery/SKILL.md"
-      },
-      {
-        "name": "m365-document-link-metadata",
-        "path": "./addons/m365/skills/m365-document-link-metadata"
-      },
-      {
-        "name": "m365-graph-query",
-        "path": "./addons/m365/skills/m365-graph-query"
-      },
-      {
-        "name": "m365-mail",
-        "path": "./addons/m365/skills/m365-mail"
-      },
-      {
-        "name": "m365-onedrive-share-local-file",
-        "path": "./addons/m365/skills/m365-onedrive-share-local-file"
-      },
-      {
-        "name": "m365-profile",
-        "path": "./addons/m365/skills/m365-profile"
-      },
-      {
-        "name": "m365-spo-browse",
-        "path": "./addons/m365/skills/m365-spo-browse"
-      },
-      {
-        "name": "m365-spo-download",
-        "path": "./addons/m365/skills/m365-spo-download"
-      },
-      {
-        "name": "m365-spo-search",
-        "path": "./addons/m365/skills/m365-spo-search"
-      },
-      {
-        "name": "m365-teams-chats",
-        "path": "./addons/m365/skills/m365-teams-chats"
-      },
-      {
-        "name": "m365-teams-messages",
-        "path": "./addons/m365/skills/m365-teams-messages"
-      },
-      {
-        "name": "m365-teams-send",
-        "path": "./addons/m365/skills/m365-teams-send"
-      },
-      {
-        "name": "remote-peer",
-        "path": "./addons/remote-peer/skills/remote-peer"
-      },
-      {
         "name": "settings-dialog-screenshot",
         "path": "./addons/settings-dialog-screenshot/skills/settings-dialog-screenshot"
-      },
-      {
-        "name": "stealth-browse",
-        "path": "./addons/stealth-browser/skills/stealth-browse"
       },
       {
         "name": "usage-telemetry-chart",

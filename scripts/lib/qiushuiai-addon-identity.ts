@@ -144,7 +144,7 @@ export function catalogEntryFromManifest(
   };
 }
 
-export function validateCatalog(catalog: QiushuiAIAddonCatalog, expectedCount = 48): void {
+export function validateCatalog(catalog: QiushuiAIAddonCatalog, expectedCount = 7): void {
   if (catalog.version !== 3) throw new Error('catalog version must be 3');
   if (catalog.source !== QIUSHUIAI_ADDON_SOURCE) {
     throw new Error(`catalog source must be ${QIUSHUIAI_ADDON_SOURCE}`);

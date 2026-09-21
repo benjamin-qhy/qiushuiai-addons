@@ -3,7 +3,7 @@ import { readFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
 import { isAbsolute, join } from 'node:path';
 import { settingsBrowserEnabled, settingsPaneFixture } from './scripts/lib/settings-pane-browser.js';
 
-export const panes = ['a2a','cheapskate','delegate','goal','imap','linkr','observability','portainer','proxmox','remote-peer','sample-addon','telegram','vent','whatsapp'];
+export const panes = ['observability','sample-addon','vent'];
 const textControls='input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="file"]):not([type="range"]):not([type="color"]),textarea,select';
 const browserTest=settingsBrowserEnabled?test:test.skip;
 const fixtures=new Map<string,Awaited<ReturnType<typeof settingsPaneFixture>>>();
@@ -23,18 +23,6 @@ test('new package-local styling imports use exact browser asset filenames',()=>{
   for(const match of source.matchAll(/from ["'](\.\/[^"']+)["']/g))expect(existsSync(join(p,match[1]))).toBe(true);
  }
 });
-
-browserTest('Linkr is reachable from General via a visible named Classic phone navigation button',async()=>{
- const f=await open('linkr','classic',390);try{
-  await f.page.evaluate(()=>window.dispatchEvent(new CustomEvent('qiushuiai:open-settings',{detail:{section:'general'}})));
-  await f.page.locator('.settings-content input[type=text]').first().waitFor();
-  const nav=f.page.locator('.settings-nav').getByRole('button',{name:/Linkr/});
-  await nav.scrollIntoViewIfNeeded();expect(await nav.isVisible()).toBe(true);
-  expect(await nav.locator('svg[aria-label="Linkr"]').isVisible()).toBe(true);
-  await nav.click();await f.page.getByLabel('HTTP(S) origin',{exact:true}).waitFor();
-  expect(f.requests).toEqual([]);expect(f.errors).toEqual([]);
- }finally{await f.page.close();}
-},15000);
 
 function dataFor(slug:string):any {
  switch(slug){

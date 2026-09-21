@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { settingsFieldStyles } from "./settings-fields.ts";
 /**
  * observability/web/index.ts — Settings pane only.
@@ -6,7 +7,6 @@ import { settingsFieldStyles } from "./settings-fields.ts";
  * Browser-side telemetry is intentionally not installed; App Insights user/session
  * UX fields are synthesized from backend log-sink telemetry instead.
  */
-// @ts-nocheck
 const ADDON_ID = "observability";
 const API = `/agent/addons/api/${ADDON_ID}`;
 const KEYCHAIN_ENTRY = "azure/appinsights-connection-string";
