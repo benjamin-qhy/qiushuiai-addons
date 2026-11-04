@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>客户工单助手（示例） — QiushuiAI 插件中心</title>
+<meta name="description" content="用虚拟客户工单展示 QiushuiAI Add-on 的工具、技能、可视化面板、KV、钥匙串和 Runtime 能力">
+<meta property="og:title" content="客户工单助手（示例） — QiushuiAI 插件中心">
+<meta property="og:description" content="用虚拟客户工单展示 QiushuiAI Add-on 的工具、技能、可视化面板、KV、钥匙串和 Runtime 能力">
+<meta property="og:url" content="https://benjamin-qhy.github.io/qiushuiai-addons/addons/customer-support-demo/">
+<meta property="og:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/customer-support-demo.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="客户工单助手（示例） — QiushuiAI 插件中心">
+<meta name="twitter:description" content="用虚拟客户工单展示 QiushuiAI Add-on 的工具、技能、可视化面板、KV、钥匙串和 Runtime 能力">
+<meta name="twitter:image" content="https://benjamin-qhy.github.io/qiushuiai-addons/assets/og/customer-support-demo.png">
+<link rel="canonical" href="https://benjamin-qhy.github.io/qiushuiai-addons/addons/customer-support-demo/">
+<script type="text/javascript">
+(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "wipi60y9s3");
+</script>
+<style>
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-600.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'IBM Plex Sans';src:url('/qiushuiai-addons/assets/fonts/ibm-plex-sans-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Inter';src:url('/qiushuiai-addons/assets/fonts/inter-var.woff2') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/qiushuiai-addons/assets/fonts/jetbrains-mono-500.woff2') format('woff2');font-weight:500;font-display:swap}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--ink:#0f1c2e;--ink-dim:rgba(15,28,46,.6);
+  --surface:#fff;--border:rgba(30,60,120,.12);
+  --accent:#2563eb;--accent-bg:rgba(37,99,235,.07);--blue:#2563eb;
+  --radius:14px;--max-w:900px;
+  --font-head:'IBM Plex Sans',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono','Fira Mono',monospace;
+  --shadow:0 8px 32px rgba(15,28,46,.09);
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0d1117;--ink:#e0e8f0;--ink-dim:rgba(224,232,240,.55);
+  --surface:#141b27;--border:rgba(100,160,255,.13);
+  --accent:#4f8cff;--accent-bg:rgba(79,140,255,.09);
+}}
+html,body{min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.65}
+
+/* ── Index hero ─── */
+.hero{background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);color:#fff;padding:3.5rem 2rem 3rem}
+.hero-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;gap:2.5rem}
+.hero-logo{width:240px;height:240px;border-radius:0;flex-shrink:0;object-fit:contain}
+.hero-text{flex:1;min-width:0}
+.hero-title{font-family:var(--font-head);font-size:3rem;font-weight:800;letter-spacing:-.045em;
+  line-height:1.04;margin-bottom:.6rem}
+.hero-sub{font-size:1.1rem;opacity:.78;max-width:540px;margin:0 0 1.4rem;line-height:1.6}
+.hero-meta{font-size:.82rem;opacity:.55}
+.hero-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.hero-source{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;min-height:2.35rem;
+  padding:.5rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,.25);
+  color:rgba(255,255,255,.85);text-decoration:none;font-size:.8rem;font-weight:700;line-height:1}
+.hero-source svg{display:block;flex:0 0 auto}
+.hero-source:hover{background:rgba(255,255,255,.1)}
+@media(max-width:640px){
+  .hero-inner{flex-direction:column;text-align:center}
+  .hero-logo{width:120px;height:120px}
+  .hero-sub{margin:0 auto 1.4rem}
+  .hero-actions{justify-content:center}
+}
+
+/* ── Search ─── */
+.search-bar{max-width:var(--max-w);margin:2rem auto .4rem;padding:0 1.25rem}
+#search{width:100%;padding:.75rem 1.1rem;border-radius:10px;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--ink);font-size:1rem;outline:none;font-family:var(--font-body)}
+#search:focus{border-color:var(--accent)}
+
+/* ── Grid ─── */
+.grid{max-width:var(--max-w);margin:0 auto 3rem;padding:0 1.25rem;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem}
+.card{position:relative;display:flex;flex-direction:column;gap:.55rem;padding:1.25rem;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  text-decoration:none;color:var(--ink);transition:box-shadow .15s,border-color .15s;overflow:hidden}
+.card:hover{box-shadow:var(--shadow);border-color:var(--accent)}
+.card-core .card-header{padding-right:3.65rem}
+.card-header{display:flex;align-items:center;gap:.85rem}
+.core-bookmark{position:absolute;z-index:1;top:-1px;right:16px;width:48px;height:66px;color:#c81e3a;filter:drop-shadow(0 3px 3px rgba(95,11,21,.3));pointer-events:none}
+.core-bookmark svg{display:block;width:48px;height:66px}
+.core-bookmark-highlight{fill:#ef4764;opacity:.9}
+@media(prefers-color-scheme:dark){.core-bookmark{color:#d52645}}
+.card-icon{width:48px;height:48px;object-fit:contain;flex-shrink:0}
+.card-name{font-family:var(--font-head);font-weight:700;font-size:1.05rem;letter-spacing:-.025em}
+.card-slug,.detail-slug{font-family:var(--font-mono);font-size:.72rem;color:var(--ink-dim);margin-top:.12rem}
+.detail-slug{color:rgba(255,255,255,.72);margin:0}
+.card-sub-row{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;margin-top:.18rem}
+.card-version{font-size:.72rem;color:var(--ink-dim);font-family:var(--font-mono)}
+.card-sub-row .owner-row{margin:0}
+.card-desc{font-size:.875rem;color:var(--ink-dim);line-height:1.55;flex:1}
+.card-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.badge{display:inline-block;padding:.2rem .55rem;border-radius:6px;font-size:.7rem;font-weight:700;
+  letter-spacing:.04em;background:var(--accent-bg);color:var(--accent);text-transform:lowercase}
+.card[hidden]{display:none}
+
+/* ── Detail nav (pinned top-left) ─── */
+.detail-nav{padding:.75rem 1.5rem;background:var(--bg);border-bottom:1px solid var(--border)}
+.back{display:inline-flex;align-items:center;gap:.35rem;color:var(--accent);
+  text-decoration:none;font-size:.82rem;font-weight:700}
+.back:hover{text-decoration:underline}
+
+/* ── Detail hero ─── */
+.detail-hero{background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);color:#fff;padding:3.2rem 1.5rem 2.4rem}
+.detail-hero-inner{max-width:760px;margin:0 auto;display:flex;gap:2rem;align-items:flex-start}
+.detail-icon{width:180px;height:180px;border-radius:0;flex-shrink:0;object-fit:contain}
+.detail-kicker{font-family:var(--font-head);font-size:.72rem;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;opacity:.6;margin-bottom:.55rem}
+.detail-title{font-family:var(--font-head);font-size:clamp(2.2rem,4vw,3rem);font-weight:800;
+  letter-spacing:-.045em;line-height:1.04;margin-bottom:.65rem}
+.detail-sub{font-size:1.05rem;opacity:.8;line-height:1.6;max-width:55ch;margin-bottom:.9rem}
+.detail-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.75rem}
+.detail-tags .badge{background:rgba(255,255,255,.16);color:#fff}
+.detail-meta{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-top:.55rem}
+.detail-version{font-family:var(--font-mono);font-size:.78rem;opacity:.6}
+.download-pill{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;min-height:1.85rem;padding:.32rem .7rem;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.14);color:#fff;text-decoration:none;font-size:.76rem;font-weight:800;line-height:1;white-space:nowrap}
+.download-pill:hover,.download-pill:focus-visible{background:rgba(255,255,255,.23);border-color:rgba(255,255,255,.42);outline:none}
+.detail-type-row,.detail-title-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem}
+.type-badge{display:inline-block;padding:.2rem .6rem;border-radius:6px;font-size:.72rem;
+  font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.type-badge.skills{background:rgba(134,239,172,.2);border-color:rgba(134,239,172,.4);color:#bbf7d0}
+.detail-issues{font-size:.76rem;font-weight:700;color:#fbbf24;background:rgba(251,191,36,.15);
+  border:1px solid rgba(251,191,36,.3);padding:.18rem .5rem;border-radius:6px}
+.issue-badge{display:inline-block;font-size:.7rem;font-weight:700;color:#f59e0b;
+  background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);
+  padding:.18rem .5rem;border-radius:6px;margin-top:.3rem}
+.detail-body{max-width:760px;margin:2.2rem auto 3rem;padding:0 1.5rem}
+.detail-body h2{font-family:var(--font-head);font-size:1.2rem;font-weight:700;margin:2rem 0 .65rem;color:var(--ink)}
+.detail-body h3{font-family:var(--font-head);font-size:1rem;font-weight:600;margin:1.3rem 0 .45rem}
+.detail-body p{margin:.55rem 0;font-size:.925rem;color:var(--ink-dim)}
+.detail-body ul,.detail-body ol{padding-left:1.4rem;margin:.45rem 0}
+.detail-body li{font-size:.925rem;color:var(--ink-dim);margin:.25rem 0}
+.detail-body blockquote{margin:.9rem 0;padding:.15rem 0 .15rem 1rem;border-left:3px solid color-mix(in srgb, var(--accent) 45%, var(--border));color:var(--ink-dim);background:color-mix(in srgb, var(--accent-bg) 55%, transparent);border-radius:0 10px 10px 0}
+.detail-body blockquote > :first-child{margin-top:0}
+.detail-body blockquote > :last-child{margin-bottom:0}
+.detail-body pre{background:rgba(0,0,0,.04);border:1px solid var(--border);border-radius:8px;
+  padding:.95rem 1.1rem;overflow-x:auto;margin:.7rem 0}
+.detail-body code{font-family:var(--font-mono);font-size:.83rem}
+.addon-code-block{margin:.9rem 0;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:color-mix(in srgb, var(--surface) 92%, var(--accent-bg))}
+.addon-code-block-header{display:flex;align-items:center;justify-content:space-between;gap:.65rem;padding:.55rem .7rem;border-bottom:1px solid var(--border);background:color-mix(in srgb, var(--accent-bg) 35%, var(--surface))}
+.addon-code-lang{display:inline-flex;align-items:center;min-width:0;font-family:var(--font-body);font-size:.72rem;line-height:1;text-transform:none;color:var(--ink-dim);letter-spacing:.02em}
+.addon-code-copy-btn{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border);border-radius:999px;padding:4px 9px;background:transparent;color:var(--ink-dim);font-size:.72rem;line-height:1;cursor:pointer;white-space:nowrap}
+.addon-code-copy-btn:hover{background:color-mix(in srgb, var(--accent) 10%, transparent);border-color:color-mix(in srgb, var(--accent) 28%, var(--border));color:var(--ink)}
+.addon-code-copy-btn:focus-visible{outline:none;box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 36%, transparent)}
+.addon-code-copy-btn[data-copy-state="success"]{color:#10b981;border-color:color-mix(in srgb, #10b981 35%, var(--border))}
+.addon-code-copy-btn[data-copy-state="error"]{color:#ef4444;border-color:color-mix(in srgb, #ef4444 35%, var(--border))}
+.addon-code-copy-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px}
+.addon-code-copy-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.addon-code-copy-label{font-weight:600}
+.addon-code-block pre{margin:0;border:none;border-radius:0;background:transparent;padding:1rem 1.1rem;overflow-x:auto}
+.addon-code-block pre code{background:none;padding:0;border:none;font-size:.82rem;display:block;white-space:pre}
+.md-figure{margin:1rem 0}
+.md-figure img,.detail-body p img,.detail-body li img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.detail-body table{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:var(--font-size-sm,.88rem);line-height:1.55;background:color-mix(in srgb,var(--surface) 94%,var(--accent-bg))}
+.detail-body th,.detail-body td{padding:4px 10px;border:1px solid var(--border);text-align:left;vertical-align:top}
+.detail-body th{background:color-mix(in srgb,var(--accent-bg) 58%,transparent);font-family:var(--font-head);font-weight:700;font-size:.78rem;color:var(--ink);letter-spacing:.015em}
+.detail-body td{color:var(--ink-dim)}
+.detail-body tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--accent-bg) 24%,transparent)}
+.detail-body tbody tr:hover td{background:color-mix(in srgb,var(--accent-bg) 48%,transparent)}
+.detail-body th:first-child,.detail-body td:first-child{white-space:normal}
+.detail-body table code{font-size:.78rem}
+.detail-body :not(pre) > code{background:rgba(0,0,0,.04);padding:.1em .35em;border-radius:4px}
+.detail-body a{color:var(--accent)}
+@media(prefers-color-scheme:dark){.detail-body pre{background:rgba(255,255,255,.04)}}
+@media(max-width:640px){
+  .detail-hero-inner{flex-direction:column;align-items:center;text-align:center}
+  .detail-icon{width:120px;height:120px}
+  .detail-title{font-size:2rem}
+  .detail-tags,.detail-meta,.owner-row{justify-content:center}
+}
+
+/* ── Install block ─── */
+.install-block{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.1rem;
+  background:var(--accent-bg);border:1px solid var(--border);border-radius:10px;margin:1.4rem 0}
+.install-icon{color:var(--accent);flex-shrink:0}
+.install-text{font-size:.95rem;color:var(--ink-dim)}
+.install-text strong{color:var(--ink)}
+.install-alt{margin-top:.6rem;font-size:.85rem;color:var(--ink-dim)}
+.install-alt summary{cursor:pointer;font-size:.82rem;color:var(--accent);font-weight:600;
+  list-style:none;display:flex;align-items:center;gap:.3rem}
+.install-alt summary::-webkit-details-marker{display:none}
+.install-alt summary::before{content:'›';font-size:1rem;transition:transform .15s}
+.install-alt[open] summary::before{transform:rotate(90deg)}
+.install-alt pre{margin:.5rem 0 0;background:rgba(0,0,0,.04);border:1px solid var(--border);
+  border-radius:8px;padding:.75rem 1rem;overflow-x:auto}
+.install-alt code{font-family:var(--font-mono);font-size:.82rem;white-space:pre}
+@media(prefers-color-scheme:dark){.install-alt pre{background:rgba(255,255,255,.04)}}
+
+/* ── Owner / contributors ─── */
+.owner-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
+.person-link,.person-chip{display:inline-flex;align-items:center;gap:.28rem;padding:.22rem .6rem;
+  border-radius:7px;border:1px solid var(--border);font-size:.76rem;font-weight:600;
+  color:var(--ink-dim);text-decoration:none;background:var(--surface)}
+.person-link:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent)}
+.person-link.dim,.person-chip.dim{opacity:.65}
+.detail-hero .person-chip,.detail-hero .person-link{background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.85)}
+.detail-hero .person-link:hover{background:rgba(255,255,255,.22)}
+.card .person-chip,.card .person-link{font-size:.69rem;padding:.13rem .42rem}
+
+/* ── Footer ─── */
+footer{text-align:center;padding:1.5rem;font-size:.76rem;color:var(--ink-dim);border-top:1px solid var(--border)}
+footer a{color:var(--accent);text-decoration:none}
+.footer-links{display:block}
+.footer-note{margin-top:.55rem;max-width:46rem;margin-left:auto;margin-right:auto;line-height:1.55}
+.footer-note em{font-style:italic}
+</style>
+</head>
+<body>
+
+<nav class="detail-nav">
+  <a href="/qiushuiai-addons/" class="back">← 返回全部插件</a>
+</nav>
+
+<div class="detail-hero">
+  <div class="detail-hero-inner">
+    <img class="detail-icon" src="/qiushuiai-addons/assets/icons/default-04.png" alt="">
+    <div>
+      <div class="detail-title-row">
+        <div class="detail-title">客户工单助手（示例）</div>
+        <span class="detail-slug">customer-support-demo</span>
+        <span class="type-badge">扩展</span>
+        <span class="type-badge skills">1 项技能</span>
+      </div>
+      <div class="detail-sub">用虚拟客户工单展示 QiushuiAI Add-on 的工具、技能、可视化面板、KV、钥匙串和 Runtime 能力</div>
+      <div class="detail-tags"><span class="badge">业务示例</span><span class="badge">客服</span><span class="badge">工单</span><span class="badge">开发参考</span></div>
+      <div class="detail-meta">
+        <span class="detail-version">v0.1.1</span>
+        <a class="download-pill" href="https://benjamin-qhy.github.io/qiushuiai-addons/packages/qiushuiai-addon-customer-support-demo-0.1.1.tgz" download aria-label="下载 客户工单助手（示例） 0.1.1 安装包">↓ 下载 .tgz</a>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="detail-body">
+  <div class="install-block">
+    <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+    <span class="install-text">打开<strong>设置 → 插件</strong>，选择<strong>客户工单助手（示例）</strong></span>
+  </div>
+  <div class="install-block source-block">
+    <svg class="install-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+    <span class="install-text"><strong>源代码：</strong><a href="https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/customer-support-demo" target="_blank" rel="noopener">addons/customer-support-demo</a></span>
+  </div>
+
+  <p>把它想成一个小客服办公室：<strong>Skill 是操作手册，Extension 是能办事的员工，设置页是办公室规章，工作台是工单白板，Package 是整套办公室。</strong></p>
+<p>所有客户、密钥和工单都是演示数据；不连接真实 CRM，不发送短信、邮件或企微，不做多人审批、附件管理、复杂搜索或定时任务。</p>
+<h2>安装之后，究竟在哪里用？</h2><table>
+<thead>
+<tr>
+<th>入口</th>
+<th>你在这里做什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设置 → 插件 → 查看详情</td>
+<td>看介绍，通过按钮前往设置或工作台；这里不处理工单</td>
+</tr>
+<tr>
+<td>设置 → 客户工单助手</td>
+<td>配置团队、默认负责人、普通/高/紧急时限、启用开关、演示密钥</td>
+</tr>
+<tr>
+<td>聊天右上角 → 工作区 → 客户工单工作台</td>
+<td>看真实工单、手动变更状态、下载简报；聊天修改后约 3 秒自动更新</td>
+</tr>
+<tr>
+<td>聊天输入框</td>
+<td>直接告诉 AI：创建、查询、跟进、关闭、汇总工单</td>
+</tr>
+</tbody></table>
+<p>**还要给项目启用它：**在项目菜单 → 项目配置 → 插件，勾选全局安装的 <code>customer-support-demo</code> 并保存。安装是“买好工具箱”，项目启用才是“让这个项目的 AI 使用它”。新开聊天测试最稳妥。</p>
+<h3>跟着做一遍</h3><ol>
+<li><p>设置页把默认负责人改为“验收客服”，紧急时限改为 3 小时，保存。</p>
+</li>
+<li><p>新建真实聊天，发送：</p>
+<blockquote>
+<p>请先读取 customer-support-workflow 技能和分类、优先级规则，再把海风书店的登录故障记成紧急工单。告诉我编号、负责人和处理时限。</p>
+</blockquote>
+</li>
+<li><p>打开工作台。聊天创建的工单应显示在这里，负责人应为“验收客服”。</p>
+</li>
+<li><p>继续发：</p>
+<blockquote>
+<p>先读刚才的工单，再改为处理中，交给小水。写一份回复客户的草稿，不要发送。</p>
+</blockquote>
+</li>
+<li><p>再发：</p>
+<blockquote>
+<p>客户确认问题已解决，请关闭工单并汇总。生成工单简报，保存到项目目录，并作为可下载文件交付。</p>
+</blockquote>
+</li>
+</ol>
+<p>不要只看 AI 说“成功”。展开聊天调用记录，应能看到读取 Skill、规则或模板，以及实际的 <code>support_ticket</code> 调用；工单状态和文件也必须真实存在。</p>
+<figure class="md-figure"><img src="assets/chat-workbench.png" alt="聊天使用插件，右侧工作台同步显示工单" loading="lazy"></figure>
+<figure class="md-figure"><img src="assets/settings.png" alt="独立设置页" loading="lazy"></figure>
+<h2>这个办公室是怎么协作的？</h2><table>
+<thead>
+<tr>
+<th>能力</th>
+<th>本例的实际效果</th>
+<th>开发位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Package</td>
+<td>一次安装工具、Skill、页面与 Runtime</td>
+<td><code>package.json</code> 的 <code>pi</code> 字段</td>
+</tr>
+<tr>
+<td>Extension 工具</td>
+<td><code>support_ticket</code> 创建、查询、更新、关闭、汇总、重置、载入演示数据、生成报告、查询 Runtime</td>
+<td><code>index.ts</code></td>
+</tr>
+<tr>
+<td>Skill + 参考资料</td>
+<td>AI 按客服流程做事，读分类/优先级规则，用模板写草稿</td>
+<td><code>skills/customer-support-workflow/</code></td>
+</tr>
+<tr>
+<td>生命周期提示</td>
+<td>每轮提醒模型只操作虚拟数据，不谎称发过消息</td>
+<td><code>before_agent_start</code></td>
+</tr>
+<tr>
+<td>设置页</td>
+<td>普通设置保存后影响下一条新工单；关闭开关后工具拒绝执行</td>
+<td><code>CustomerSupportSettings</code></td>
+</tr>
+<tr>
+<td>工作区页面</td>
+<td>与聊天并排看工单，也能手动改状态</td>
+<td><code>CustomerSupportWorkbench</code></td>
+</tr>
+<tr>
+<td>直接配置 API</td>
+<td>页面和工具操作同一套工单服务，不借用斜杠命令</td>
+<td><code>/agent/addons/api/customer-support-demo/</code></td>
+</tr>
+<tr>
+<td>全局 KV</td>
+<td>工单、配置、最近操作跨聊天共享，重启后保留</td>
+<td><code>ticket-store.ts</code>、<code>config.ts</code></td>
+</tr>
+<tr>
+<td>会话 KV</td>
+<td>每个聊天单独统计 <code>sessionCalls</code>，从 1 开始</td>
+<td>宿主真实 chatJid 作为 owner</td>
+</tr>
+<tr>
+<td>Keychain</td>
+<td>假密钥加密保存在系统凭据库；页面只显示“已保存”</td>
+<td><code>/agent/keychain</code></td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>按需注册状态提供者，工具/工作台读取真实摘要</td>
+<td><code>runtime/index.ts</code></td>
+</tr>
+<tr>
+<td>文件产物</td>
+<td>页面下载 Markdown；聊天调用 report 后由宿主文件/交付工具保存并交付</td>
+<td><code>report</code></td>
+</tr>
+<tr>
+<td>主题与语言</td>
+<td>使用宿主 React、shadcn/Base UI、中文/英文及深浅色 token</td>
+<td><code>web/</code></td>
+</tr>
+</tbody></table>
+<p>钥匙串只是演示安全保存，<strong>本例不使用密钥连接任何真实服务</strong>。聊天里的可下载文件由 Add-on 生成内容、宿主负责文件交付，不是 Add-on 自建附件系统。</p>
+<h2>本地开发：不用发布</h2><p>在 <code>qiushuiai-addons</code> 仓库执行：</p>
+<div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">bash</span><button type="button" class="addon-code-copy-btn" aria-label="复制代码" title="复制代码" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg></span><span class="addon-code-copy-label">复制</span></button></div><pre><code class="language-bash">bun run addon:dev customer-support-demo --home /你的隔离测试目录/home
+bun run addon:verify customer-support-demo</code></pre></div><p>这是<strong>本地安装源码快照</strong>，不提交代码、不上传、不公开发布。修改源码后再跑一次 <code>addon:dev</code>，重启对应 QiushuiAI 实例、刷新页面并开新聊天测试。原安装保留在 <code>system/addons/dev-backups/</code>。</p>
+<p>为什么不是软链接？当前宿主的任务能力加载器拒绝包目录逃逸。Web 能加载软链接，不代表聊天工具也能加载；不要为了开发体验绕过这层保护。</p>
+<p>启动宿主时同时设置隔离的 <code>QIUSHUIAI_HOME</code>、<code>QIUSHUIAI_STORE</code>、<code>QIUSHUIAI_DATA</code>，并复用该测试环境自己的加密密钥。不要指向生产数据目录。</p>
+<h2>目录导览</h2><div class="addon-code-block"><div class="addon-code-block-header"><span class="addon-code-lang">text</span><button type="button" class="addon-code-copy-btn" aria-label="复制代码" title="复制代码" data-copy-state="idle"><span class="addon-code-copy-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path></svg></span><span class="addon-code-copy-label">复制</span></button></div><pre><code>customer-support-demo/
+├── package.json                    # 整套能力的装箱清单
+├── index.ts                        # AI 工具、生命周期、页面 API
+├── config.ts                       # 配置读取、默认值与校验
+├── ticket-store.ts                 # 工单业务与持久化
+├── compat/extension-kv.ts           # 宿主 KV 桥接；真实宿主失败时拒绝内存回退
+├── runtime/index.ts                # 按需状态提供者，不跑定时任务
+├── web/
+│   ├── index.tsx                   # 分开的设置页与工作台
+│   ├── host.ts                     # React/shadcn 宿主类型契约
+│   ├── api.ts                      # 类型化 API 客户端
+│   ├── translations.ts             # 中文、英文文案
+│   └── styles.ts                   # 只做布局，颜色使用宿主语义 token
+├── skills/customer-support-workflow/
+│   ├── SKILL.md                    # 工作流程
+│   ├── references/
+│   │   ├── category-rules.md        # 分类依据
+│   │   └── priority-rules.md        # 优先级依据
+│   └── assets/reply-template.md    # 回复草稿模板
+├── assets/                         # 真实浏览器截图
+├── ACCEPTANCE.md                   # 实测步骤、证据与能力边界
+└── *.test.ts                       # 工具、业务、Web 契约及 Runtime 测试</code></pre></div><h2>后续开发者必须知道的边界</h2><ul>
+<li>**UI 业务写在插件里，通用入口写在宿主里。**不要在 QiushuiAI 的插件详情弹窗里硬编码客服界面。</li>
+<li>当前 QiushuiAI 的 KV 使用宿主白名单声明。本例需要宿主的 <code>createAddonStorage</code> 和 <code>EXTENSION_STATE_DECLARATIONS</code> 同步登记；复制本插件、只改名字不会自动获得持久化能力。这是当前接口限制，不是通用第三方存储 SDK。</li>
+<li>会话 owner 是宿主 chatJid，不是 Pi 的 session UUID。两者混用会导致“工具修改了工单，但计数写入失败”。</li>
+<li>密钥只进 Keychain；KV 只保存密钥引用。</li>
+<li>已有工单时 <code>seed_demo</code> 拒绝覆盖。先导出，明确确认后才可以 <code>reset_demo</code>；重置不清除设置和密钥。</li>
+<li>本例不是 Piclaw 全部 API 的实现。通道/跨实例消息、外部 HTTP 路由、音视频流等其他 Runtime API 均未演示；这些与用户明确排除的真实业务集成不是本例验收范围。</li>
+</ul>
+<p>设置与工作区分工依据原 Piclaw 的 <code>registerSettingsPane</code> / <code>registerWorkspacePane</code> 设计；其旧前端技术没有照搬。来源见仓库根 <a href="../../PICLAW-ADDONS-UI-USAGE-RESEARCH.md" target="_blank" rel="noopener">Piclaw 调研记录</a>。</p>
+
+</div>
+<div class="detail-body"><h2>技能</h2><ul><li><code>customer-support-workflow</code></li></ul></div>
+
+<footer>
+  <div class="footer-links"><a href="/qiushuiai-addons/">QiushuiAI 插件中心</a> &nbsp;·&nbsp;
+  <a href="https://github.com/benjamin-qhy/qiushuiai-addons/tree/main/addons/customer-support-demo">查看源代码</a></div>
+  <div class="footer-note">QiushuiAI 与 <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a> 无隶属关系；插件保留对 Pi 技术协议的兼容。</div>
+</footer>
+<script type="module">
+  import { mountDetail } from '/qiushuiai-addons/assets/js/addon-island.mjs';
+  mountDetail('customer-support-demo');
+</script>
+</body>
+</html>
